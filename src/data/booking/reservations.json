@@ -1,0 +1,50 @@
+[
+    {
+        "id": "res_001",
+        "reservationNumber": "50517181",
+        "propertyId": "prop_001",
+        "propertyName": "Appartement lumineux avec vue sur jardin",
+        "propertyAddress": "12 Rue des Mimosas, 06400 Cannes",
+        "guestName": "Sophie Lemoine",
+        "guestDetails": "2 adultes",
+        "isGenius": false,
+        "checkIn": "2026-02-10",
+        "checkOut": "2026-02-15",
+        "status": "OK",
+        "paymentMethod": "Paiement par Booking.com",
+        "totalAmount": 425.00,
+        "commission": 63.75
+    },
+    {
+        "id": "res_002",
+        "reservationNumber": "68417842",
+        "propertyId": "prop_002",
+        "propertyName": "Studio moderne centre-ville avec parking",
+        "propertyAddress": "8 Avenue de la Liberté, 13001 Marseille",
+        "guestName": "Marc Dubois",
+        "guestDetails": "2 adultes et 1 enfant (8 ans)",
+        "isGenius": true,
+        "checkIn": "2026-02-12",
+        "checkOut": "2026-02-14",
+        "status": "OK",
+        "paymentMethod": "Paiement par Booking.com",
+        "totalAmount": 180.00,
+        "commission": 27.00
+    },
+    {
+        "id": "res_003",
+        "reservationNumber": "57692885",
+        "propertyId": "prop_001",
+        "propertyName": "Appartement lumineux avec vue sur jardin",
+        "propertyAddress": "12 Rue des Mimosas, 06400 Cannes",
+        "guestName": "Laura Bernard",
+        "guestDetails": "2 adultes",
+        "isGenius": false,
+        "checkIn": "2026-02-18",
+        "checkOut": "2026-02-25",
+        "status": "OK",
+        "paymentMethod": "Paiement par Booking.com",
+        "totalAmount": 630.00,
+        "commission": 94.50
+    }
+]

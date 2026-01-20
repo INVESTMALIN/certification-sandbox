@@ -1,0 +1,36 @@
+[
+    {
+        "id": "prop_001",
+        "propertyId": "15591345",
+        "name": "Appartement lumineux avec vue sur jardin",
+        "address": "12 Rue des Mimosas, 06400 Cannes",
+        "city": "Cannes",
+        "country": "France",
+        "status": "Ouvert / Réservable",
+        "coverImage": "/assets/properties/prop_001.jpg",
+        "rating": 8.9,
+        "totalReviews": 127,
+        "occupancyRate": 82,
+        "monthlyRevenue": 3200,
+        "upcomingArrivals": 2,
+        "upcomingDepartures": 1,
+        "unreadMessages": 0
+    },
+    {
+        "id": "prop_002",
+        "propertyId": "15555459",
+        "name": "Studio moderne centre-ville avec parking",
+        "address": "8 Avenue de la Liberté, 13001 Marseille",
+        "city": "Marseille",
+        "country": "France",
+        "status": "Ouvert / Réservable",
+        "coverImage": "/assets/properties/prop_002.jpg",
+        "rating": 8.4,
+        "totalReviews": 89,
+        "occupancyRate": 75,
+        "monthlyRevenue": 2100,
+        "upcomingArrivals": 0,
+        "upcomingDepartures": 0,
+        "unreadMessages": 3
+    }
+]

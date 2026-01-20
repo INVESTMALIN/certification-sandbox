@@ -1,0 +1,38 @@
+[
+    {
+        "id": "rev_001",
+        "date": "2026-01-15",
+        "propertyId": "prop_001",
+        "bookingId": "14084087",
+        "propertyName": "Appartement lumineux avec vue sur jardin",
+        "guestName": "Thomas Petit",
+        "rating": 9.0,
+        "comment": "Séjour parfait ! L'appartement est exactement comme sur les photos. Très propre, bien équipé et l'hôte est très réactive. Je recommande vivement.",
+        "hasOwnerResponse": true,
+        "ownerResponse": "Merci Thomas pour ce retour positif ! Au plaisir de vous accueillir à nouveau."
+    },
+    {
+        "id": "rev_002",
+        "date": "2026-01-12",
+        "propertyId": "prop_002",
+        "bookingId": "14406368",
+        "propertyName": "Studio moderne centre-ville avec parking",
+        "guestName": "Claire Moreau",
+        "rating": 10,
+        "comment": "Logement propre, bien équipé. Excellent contact avec l'hôte, très réactive.",
+        "hasOwnerResponse": false,
+        "ownerResponse": null
+    },
+    {
+        "id": "rev_003",
+        "date": "2026-01-10",
+        "propertyId": "prop_001",
+        "bookingId": "14406147",
+        "propertyName": "Appartement lumineux avec vue sur jardin",
+        "guestName": "Jean Dupuis",
+        "rating": 8.0,
+        "comment": "Bon séjour dans l'ensemble. L'emplacement est pratique et l'appartement confortable. Petit bémol sur le WiFi qui pourrait être plus stable.",
+        "hasOwnerResponse": true,
+        "ownerResponse": "Merci pour votre retour Jean. Nous avons pris note concernant le WiFi et allons améliorer cela."
+    }
+]
