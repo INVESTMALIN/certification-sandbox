@@ -1,5 +1,6 @@
 import BookingHeader from '../../components/booking/BookingHeader'
 import reviewsData from '../../data/booking/reviews.json'
+import BookingFooter from '../../components/booking/BookingFooter'
 
 function Reviews() {
     const reviews = reviewsData
@@ -190,6 +191,7 @@ function Reviews() {
                     <p>{reviews.length} commentaire{reviews.length > 1 ? 's' : ''} affiché{reviews.length > 1 ? 's' : ''}</p>
                 </div>
             </main>
+            <BookingFooter />
         </div>
     )
 }

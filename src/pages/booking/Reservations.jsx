@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import BookingHeader from '../../components/booking/BookingHeader'
 import reservationsData from '../../data/booking/reservations.json'
+import BookingFooter from '../../components/booking/BookingFooter'
 
 function Reservations() {
     const reservations = reservationsData
@@ -276,6 +277,7 @@ function Reservations() {
                     </div>
                 </div>
             </main>
+            <BookingFooter />
         </div>
     )
 }
