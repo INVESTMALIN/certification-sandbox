@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 import BookingHeader from '../../components/booking/BookingHeader'
 import reservationsData from '../../data/booking/reservations.json'
 import BookingFooter from '../../components/booking/BookingFooter'
@@ -145,9 +146,12 @@ function Reservations() {
 
                                         {/* Nom établissement */}
                                         <td className="px-4 py-4">
-                                            <div className="font-medium text-gray-900 text-sm max-w-[200px]">
+                                            <Link
+                                                to={`/booking/property/${reservation.propertyId}/accueil`}
+                                                className="font-medium text-gray-900 text-sm max-w-[200px] hover:underline block"
+                                            >
                                                 {reservation.propertyName}
-                                            </div>
+                                            </Link>
                                         </td>
 
                                         {/* Adresse */}

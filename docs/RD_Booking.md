@@ -2,8 +2,8 @@
 
 **Projet** : Certification Sandbox - Simulateur Booking.com  
 **Client** : Letahost / Invest Malin  
-**Date de création** : 2026-01-20  
-**Statut** : Draft v1.0  
+**Date de création** : 2026-01-22
+**Statut** : Développement en cours v1.0  
 **Responsable** : Julien (Product Owner)  
 **Supervision** : Victoria (Letahost)
 
@@ -14,7 +14,7 @@
 Créer une réplique fonctionnelle et visuellement fidèle de l'interface Booking.com (extranet propriétaire) pour permettre aux apprenants de la formation "Conciergerie 2.0" de s'entraîner sans risque sur un environnement simulé.
 
 ### Public cible
-- Apprenants de la certification Letahost / Invest Malin
+- Apprenants de la certification Invest Malin
 - Profil : professionnels en reconversion, pas toujours tech-savvy
 - Besoin : interface familière pour faciliter la transition vers la vraie plateforme Booking.com
 
@@ -389,18 +389,17 @@ Le clone Booking se compose de **2 niveaux de navigation** :
 - [x] Setup technique (Vite + React + Tailwind)
 - [x] Déploiement Vercel
 - [x] Repo GitHub
-- [ ] Installation React Router
-- [ ] Structure de dossiers finale
-- [ ] Composants UI de base (Button, Card, Table, etc.)
+- [x] Installation React Router
+- [x] Structure de dossiers finale
 
 ### Phase 2 : Dashboard Groupe (Priorité 1)
-- [ ] Page d'accueil du groupe
-- [ ] Réservations (vue groupe)
-- [ ] Commentaires (vue groupe)
-- [ ] Navigation entre pages
+- [x] Page d'accueil du groupe
+- [x] Réservations (vue groupe)
+- [x] Commentaires (vue groupe)
+- [x] Navigation entre pages
 
 ### Phase 3 : Dashboard Appartement (Priorité 2)
-- [ ] Accueil appartement
+- [x] Accueil appartement
 - [ ] Calendrier et tarifs (3 sous-pages)
 - [ ] Réservations (2 sous-pages)
 - [ ] Promotions
@@ -460,29 +459,6 @@ Le clone Booking se compose de **2 niveaux de navigation** :
 - Facilité d'ajout de nouvelles pages
 - Possibilité de modifier les données mockées sans toucher au code
 
----
-
-## ❓ Questions en suspens
-
-### Design
-- [ ] Palette de couleurs exacte Booking.com (à extraire des screenshots)
-- [ ] Typographie utilisée (Booking Sans ou fallback type Inter/Roboto)
-- [ ] Icônes : reproduire celles de Booking ou utiliser bibliothèque (Lucide, HeroIcons) ?
-
-### Fonctionnalités
-- [ ] Filtres dans tableaux : fonctionnels ou juste visuels ?
-- [ ] Pagination : nécessaire avec seulement 2-3 items par page ?
-- [ ] Recherche : fonctionnelle ou placeholder ?
-
-### Data
-- [ ] Noms fictifs : générés aléatoirement ou liste prédéfinie ?
-- [ ] Dates : relatives (aujourd'hui +X jours) ou fixes ?
-- [ ] Photos : utiliser placeholder (unsplash) ou vraies photos fournies ?
-
-### Technique
-- [ ] Gestion d'état : Context API suffisant ou besoin de Zustand/Redux ?
-- [ ] Internationalisation (i18n) : Français uniquement ou multilingue ?
-- [ ] Accessibilité (a11y) : niveau WCAG 2.1 AA requis ?
 
 ---
 
@@ -490,23 +466,20 @@ Le clone Booking se compose de **2 niveaux de navigation** :
 
 **Product Owner** : Julien (julinhio)  
 **Supervision** : Victoria (Letahost)  
-**Développeur n8n** : Kevin (automatisations futures)  
 
 **Repo GitHub** : https://github.com/INVESTMALIN/certification-sandbox  
 **URL Production** : https://certification-sandbox.vercel.app  
 
 **Références Booking.com** :
-- Screenshots à fournir par Julien (accès extranet prévu demain)
-- Vidéos Loom de Victoria (analyse en cours)
+- Screenshots à fournir par Julien (accès extranet de Letahost)
+- Vidéos Loom de Victoria (disponibles sur demande)
 
 ---
 
 ## 📝 Notes additionnelles
 
 ### Évolutions futures possibles
-- Intégration webhooks n8n (Kevin) pour scénarios avancés
 - Ajout d'un mode "formateur" pour modifier data sans rebuild
-- Export de rapports PDF (certificats de réussite)
 - Mode "évaluation" avec scoring des actions
 
 ### Hors scope actuel
@@ -519,5 +492,4 @@ Le clone Booking se compose de **2 niveaux de navigation** :
 ---
 
 **Version** : 1.0 (Draft)  
-**Dernière mise à jour** : 2026-01-20  
-**Prochaine révision** : Après réception screenshots Booking.com
+**Dernière mise à jour** : 2026-01-22

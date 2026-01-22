@@ -1,0 +1,366 @@
+{
+    "project_name": "Certification Sandbox",
+    "description": "Clone of Booking.com and Airbnb platforms for certification and learning purposes",
+    "version": "0.0.0",
+    "tech_stack": {
+        "framework": "Vite + React 19",
+        "styling": "Tailwind CSS v3.4.19",
+        "language": "JavaScript (not TypeScript)",
+        "bundler": "Vite 7.2.4",
+        "package_manager": "npm",
+        "routing": "React Router DOM v7.12.0",
+        "icons": "Lucide React v0.562.0"
+    },
+    "deployment": {
+        "platform": "Vercel",
+        "production_url": "https://certification-sandbox.vercel.app",
+        "auto_deploy": "Push to main branch triggers deployment"
+    },
+    "repository": {
+        "platform": "GitHub",
+        "organization": "INVESTMALIN",
+        "url": "https://github.com/INVESTMALIN/certification-sandbox",
+        "visibility": "Public",
+        "default_branch": "main"
+    },
+    "project_structure": {
+        "entry_point": "src/main.jsx",
+        "app_component": "src/App.jsx",
+        "global_styles": "src/index.css",
+        "app_styles": "src/App.css",
+        "config_files": [
+            "tailwind.config.js",
+            "postcss.config.js",
+            "vite.config.js",
+            "eslint.config.js"
+        ],
+        "directories": {
+            "src/pages": "Page components (Login, ChoosePlatform, booking pages)",
+            "src/components": "Reusable components (ProtectedRoute, booking components)",
+            "src/data": "Static JSON data files for mock backend",
+            "src/assets": "Static assets (images, fonts, etc.)",
+            "public": "Public static files",
+            "docs": "Documentation files"
+        }
+    },
+    "routing_structure": {
+        "public_routes": [
+            {
+                "path": "/login",
+                "component": "Login.jsx",
+                "description": "Authentication page"
+            },
+            {
+                "path": "/",
+                "redirect": "/login",
+                "description": "Root redirects to login"
+            }
+        ],
+        "protected_routes": [
+            {
+                "path": "/choose-platform",
+                "component": "ChoosePlatform.jsx",
+                "description": "Platform selection (Booking.com or Airbnb)"
+            },
+            {
+                "path": "/booking/dashboard",
+                "component": "DashboardGroup.jsx",
+                "description": "Booking.com group dashboard with property listings"
+            },
+            {
+                "path": "/booking/property/:id/accueil",
+                "component": "PropertyAccueil.jsx",
+                "description": "Individual property dashboard with stats, reservations, messages, reviews"
+            },
+            {
+                "path": "/booking/reservations",
+                "component": "Reservations.jsx",
+                "description": "Reservations management page"
+            },
+            {
+                "path": "/booking/reviews",
+                "component": "Reviews.jsx",
+                "description": "Reviews management page"
+            }
+        ]
+    },
+    "components_architecture": {
+        "shared_components": [
+            {
+                "name": "ProtectedRoute.jsx",
+                "location": "src/components/",
+                "purpose": "Route wrapper for authentication protection"
+            }
+        ],
+        "booking_components": [
+            {
+                "name": "BookingHeader.jsx",
+                "location": "src/components/booking/",
+                "purpose": "Main navigation header for Booking.com pages"
+            },
+            {
+                "name": "PropertyHeader.jsx",
+                "location": "src/components/booking/",
+                "purpose": "Property-specific header with property switcher and navigation"
+            },
+            {
+                "name": "BookingFooter.jsx",
+                "location": "src/components/booking/",
+                "purpose": "Footer component for Booking.com pages"
+            }
+        ]
+    },
+    "pages_architecture": {
+        "authentication": [
+            {
+                "name": "Login.jsx",
+                "route": "/login",
+                "features": [
+                    "Email/password authentication",
+                    "Booking.com styled UI"
+                ]
+            }
+        ],
+        "platform_selection": [
+            {
+                "name": "ChoosePlatform.jsx",
+                "route": "/choose-platform",
+                "features": [
+                    "Platform cards (Booking.com, Airbnb)",
+                    "Navigation to respective dashboards"
+                ]
+            }
+        ],
+        "booking_pages": [
+            {
+                "name": "DashboardGroup.jsx",
+                "route": "/booking/dashboard",
+                "features": [
+                    "Property group overview",
+                    "Property cards with stats",
+                    "Navigation to individual properties",
+                    "Performance metrics"
+                ]
+            },
+            {
+                "name": "PropertyAccueil.jsx",
+                "route": "/booking/property/:id/accueil",
+                "features": [
+                    "Property title and status",
+                    "Demand statistics section (Demande pour <ville>)",
+                    "Reservations section with tabs (Arrivées, Départs, Séjours en cours, Demandes des clients)",
+                    "Recent reservations list with 3-column layout",
+                    "Pending messages section",
+                    "Recent reviews section",
+                    "Performance metrics (Vos notes, Votre performance, Performance dans résultats de recherche)",
+                    "Right sidebar with Actions en attente and Conseils",
+                    "Feedback section"
+                ]
+            },
+            {
+                "name": "Reservations.jsx",
+                "route": "/booking/reservations",
+                "features": [
+                    "Reservations list",
+                    "Filtering and sorting"
+                ]
+            },
+            {
+                "name": "Reviews.jsx",
+                "route": "/booking/reviews",
+                "features": [
+                    "Reviews list",
+                    "Rating display",
+                    "Response management"
+                ]
+            }
+        ]
+    },
+    "data_architecture": {
+        "location": "src/data/booking/",
+        "files": [
+            {
+                "name": "properties.json",
+                "structure": {
+                    "id": "Unique property identifier",
+                    "propertyId": "Booking.com property ID",
+                    "name": "Property name",
+                    "address": "Full address",
+                    "city": "City name (used in demand section)",
+                    "country": "Country",
+                    "status": "Property status (e.g., 'Ouvert / Réservable')",
+                    "coverImage": "Image path",
+                    "rating": "Average rating",
+                    "totalReviews": "Number of reviews",
+                    "occupancyRate": "Occupancy percentage",
+                    "monthlyRevenue": "Monthly revenue",
+                    "upcomingArrivals": "Number of upcoming arrivals",
+                    "upcomingDepartures": "Number of upcoming departures",
+                    "unreadMessages": "Number of unread messages"
+                }
+            },
+            {
+                "name": "reservations.json",
+                "structure": {
+                    "id": "Reservation ID",
+                    "propertyId": "Associated property ID",
+                    "guestName": "Guest name",
+                    "checkIn": "Check-in date",
+                    "checkOut": "Check-out date",
+                    "nights": "Number of nights",
+                    "guestDetails": "Guest count details",
+                    "totalAmount": "Total price",
+                    "status": "Reservation status",
+                    "paymentMethod": "Payment method",
+                    "bookingDate": "Date of booking",
+                    "arrivalTime": "Expected arrival time (optional)"
+                }
+            },
+            {
+                "name": "messages.json",
+                "structure": {
+                    "id": "Message ID",
+                    "propertyId": "Associated property ID",
+                    "guestName": "Guest name",
+                    "date": "Message date",
+                    "message": "Message content",
+                    "hasResponse": "Boolean indicating if responded"
+                }
+            },
+            {
+                "name": "reviews.json",
+                "structure": {
+                    "id": "Review ID",
+                    "propertyId": "Associated property ID",
+                    "guestName": "Guest name",
+                    "rating": "Numeric rating",
+                    "comment": "Review text",
+                    "date": "Review date"
+                }
+            }
+        ]
+    },
+    "development": {
+        "local_dev_server": "npm run dev",
+        "default_port": 5173,
+        "build_command": "npm run build",
+        "preview_command": "npm run preview",
+        "lint_command": "npm run lint"
+    },
+    "ui_requirements": {
+        "target_clones": [
+            "Booking.com",
+            "Airbnb"
+        ],
+        "approach": "Pixel-perfect replicas with simplified backend",
+        "component_library": "Custom components (no UI library like MUI/Chakra)",
+        "responsive": true,
+        "accessibility": "WCAG 2.1 AA compliance target",
+        "design_principles": [
+            "White background containers for main sections",
+            "Consistent spacing and borders",
+            "Booking.com blue (#0071c2) for primary actions",
+            "Grid layouts for data presentation",
+            "Sticky sidebar for tips and actions"
+        ]
+    },
+    "data_strategy": {
+        "backend": "Static JSON files initially",
+        "state_management": "React useState/useContext (no Redux for now)",
+        "api_simulation": "Mock data in src/data/booking/",
+        "future_integration": "Potential n8n webhooks (Kevin's workflows)",
+        "authentication": "Simple localStorage-based auth (demo purposes)"
+    },
+    "styling_conventions": {
+        "framework": "Tailwind CSS v3",
+        "color_palette": {
+            "primary_blue": "#0071c2",
+            "dark_blue": "#003580",
+            "gray_50": "#f9fafb",
+            "gray_100": "#f3f4f6",
+            "gray_200": "#e5e7eb",
+            "gray_600": "#4b5563",
+            "gray_700": "#374151",
+            "gray_900": "#111827",
+            "green_500": "#10b981",
+            "green_600": "#059669",
+            "blue_50": "#eff6ff",
+            "blue_200": "#bfdbfe"
+        },
+        "spacing": {
+            "section_gap": "gap-32 (8rem / 128px) between main columns",
+            "content_spacing": "space-y-6 for vertical sections",
+            "padding": "p-6 for containers, p-4 for smaller components"
+        },
+        "typography": {
+            "headings": "font-bold or font-semibold",
+            "body": "text-sm or text-base",
+            "colors": "text-gray-900 for headings, text-gray-700 for body"
+        }
+    },
+    "key_features": {
+        "authentication": {
+            "type": "Demo authentication",
+            "storage": "localStorage",
+            "protected_routes": "Using ProtectedRoute component wrapper"
+        },
+        "booking_dashboard": {
+            "property_management": "Multiple properties support",
+            "statistics": "Demand, performance, search results metrics",
+            "reservations": "Tabbed interface (Arrivées, Départs, Séjours en cours, Demandes)",
+            "messages": "Unread message tracking",
+            "reviews": "Rating display and management",
+            "tips_sidebar": "Actionable tips with dismiss functionality"
+        },
+        "responsive_design": {
+            "grid_layouts": "3-column grid for main layout (2/3 left, 1/3 right)",
+            "sticky_elements": "Sidebar stays visible on scroll",
+            "mobile_support": "Planned (currently desktop-first)"
+        }
+    },
+    "dependencies": {
+        "production": {
+            "react": "^19.2.0",
+            "react-dom": "^19.2.0",
+            "react-router-dom": "^7.12.0",
+            "lucide-react": "^0.562.0"
+        },
+        "development": {
+            "@vitejs/plugin-react": "^5.1.1",
+            "vite": "^7.2.4",
+            "tailwindcss": "^3.4.19",
+            "autoprefixer": "^10.4.23",
+            "postcss": "^8.5.6",
+            "eslint": "^9.39.1",
+            "eslint-plugin-react-hooks": "^7.0.1",
+            "eslint-plugin-react-refresh": "^0.4.24"
+        }
+    },
+    "notes": {
+        "tailwind_version": "Downgraded from v4 to v3 due to breaking changes in init process",
+        "npx_issue": "Initial npx tailwindcss init failed, resolved by specifying @3 version",
+        "line_endings": "Git warnings about CRLF/LF conversion are normal on Windows",
+        "react_version": "Using React 19 (latest)",
+        "vite_version": "Using Vite 7.2.4 (latest)",
+        "design_fidelity": "PropertyAccueil page is pixel-perfect replica of Booking.com property dashboard"
+    },
+    "future_roadmap": {
+        "planned_features": [
+            "Airbnb clone implementation",
+            "Backend integration with n8n",
+            "Real-time data updates",
+            "Mobile responsive design",
+            "Additional property management features",
+            "Calendar view for reservations",
+            "Analytics dashboard"
+        ],
+        "technical_improvements": [
+            "TypeScript migration (optional)",
+            "State management library (if needed)",
+            "API layer abstraction",
+            "Unit and integration tests",
+            "Performance optimization",
+            "SEO improvements"
+        ]
+    }
+}

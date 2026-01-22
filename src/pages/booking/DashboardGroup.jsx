@@ -32,7 +32,7 @@ function DashboardGroup() {
                     </button>
                 </div>
 
-                {/* Alerte coordonnées bancaires */}
+                {/* Alerte coordonnées bancaires
                 <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-6 rounded">
                     <div className="flex items-start">
                         <div className="flex-shrink-0">
@@ -52,7 +52,7 @@ function DashboardGroup() {
                             </button>
                         </div>
                     </div>
-                </div>
+                </div> */}
 
                 {/* Encadré Programme Genius */}
                 <div className="bg-white border border-gray-200 rounded p-6 mb-6 relative">
@@ -211,6 +211,7 @@ function DashboardGroup() {
                     </button>
                 </div>
 
+
                 {/* Tableau des établissements */}
                 <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
                     <table className="w-full">
@@ -247,7 +248,7 @@ function DashboardGroup() {
                                     </td>
                                     <td className="px-6 py-4">
                                         <Link
-                                            to={`/booking/property/${property.id}/dashboard`}
+                                            to={`/booking/property/${property.id}/accueil`}
                                             className="block hover:underline"
                                         >
                                             <div className="font-medium text-gray-900">{property.name}</div>

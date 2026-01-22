@@ -1,0 +1,74 @@
+[
+    {
+        "id": "msg_001",
+        "propertyId": "prop_001",
+        "reservationId": "res_001",
+        "guestName": "Sophie Lemoine",
+        "date": "2026-01-19T14:32:00",
+        "subject": "Question sur l'arrivée",
+        "message": "Bonjour, nous arrivons vers 22h, est-ce que c'est possible de récupérer les clés aussi tard ?",
+        "isRead": false,
+        "hasResponse": false,
+        "priority": "normal"
+    },
+    {
+        "id": "msg_002",
+        "propertyId": "prop_001",
+        "reservationId": "res_003",
+        "guestName": "Laura Bernard",
+        "date": "2026-01-18T10:15:00",
+        "subject": "Demande d'informations parking",
+        "message": "Bonjour, je voyage avec une voiture électrique. Y a-t-il une borne de recharge à proximité ?",
+        "isRead": false,
+        "hasResponse": false,
+        "priority": "normal"
+    },
+    {
+        "id": "msg_003",
+        "propertyId": "prop_002",
+        "reservationId": "res_002",
+        "guestName": "Marc Dubois",
+        "date": "2026-01-17T16:45:00",
+        "subject": "Demande lit bébé",
+        "message": "Bonjour, est-il possible d'avoir un lit parapluie pour notre enfant de 8 ans ? Merci d'avance.",
+        "isRead": true,
+        "hasResponse": true,
+        "priority": "normal"
+    },
+    {
+        "id": "msg_004",
+        "propertyId": "prop_001",
+        "reservationId": null,
+        "guestName": "Thomas Martin",
+        "date": "2026-01-16T09:20:00",
+        "subject": "Question avant réservation",
+        "message": "Bonjour, acceptez-vous les animaux de compagnie ? Nous avons un petit chien très calme.",
+        "isRead": true,
+        "hasResponse": true,
+        "priority": "normal"
+    },
+    {
+        "id": "msg_005",
+        "propertyId": "prop_002",
+        "reservationId": "res_002",
+        "guestName": "Marc Dubois",
+        "date": "2026-01-15T11:30:00",
+        "subject": "Modification de réservation",
+        "message": "Bonjour, serait-il possible de décaler notre arrivée d'une journée ? Nous arriverions donc le 13 février au lieu du 12.",
+        "isRead": true,
+        "hasResponse": true,
+        "priority": "high"
+    },
+    {
+        "id": "msg_006",
+        "propertyId": "prop_001",
+        "reservationId": "res_001",
+        "guestName": "Sophie Lemoine",
+        "date": "2026-01-14T18:00:00",
+        "subject": "Confirmation équipements",
+        "message": "Bonjour, je voulais confirmer que l'appartement dispose bien d'une machine à laver et d'un lave-vaisselle ? Merci.",
+        "isRead": true,
+        "hasResponse": true,
+        "priority": "normal"
+    }
+]
