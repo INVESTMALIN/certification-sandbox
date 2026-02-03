@@ -1,0 +1,114 @@
+{
+    "prop_001": [
+        {
+            "id": "photo_1",
+            "url": "https://images.unsplash.com/photo-1616047006789-b7af5afb8c20?w=600&h=400&fit=crop",
+            "category": "living_room",
+            "quality": "good",
+            "room": "Salon principal",
+            "isMainPhoto": true,
+            "needsTagging": false
+        },
+        {
+            "id": "photo_2",
+            "url": "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=600&h=400&fit=crop",
+            "category": "living_room",
+            "quality": "good",
+            "room": "Salon",
+            "isMainPhoto": false,
+            "needsTagging": false
+        },
+        {
+            "id": "photo_3",
+            "url": "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?w=600&h=400&fit=crop",
+            "category": "bedroom",
+            "quality": "good",
+            "room": "Chambre principale",
+            "isMainPhoto": false,
+            "needsTagging": true
+        },
+        {
+            "id": "photo_4",
+            "url": "https://images.unsplash.com/photo-1616594039964-ae9021a400a0?w=600&h=400&fit=crop",
+            "category": "bedroom",
+            "quality": "bad",
+            "room": "Chambre 2",
+            "isMainPhoto": false,
+            "needsTagging": false
+        },
+        {
+            "id": "photo_5",
+            "url": "https://images.unsplash.com/photo-1556909212-d5b604d0c90d?w=600&h=400&fit=crop",
+            "category": "kitchen",
+            "quality": "good",
+            "room": "Cuisine",
+            "isMainPhoto": false,
+            "needsTagging": false
+        },
+        {
+            "id": "photo_6",
+            "url": "https://images.unsplash.com/photo-1556912172-45b7abe8b7e1?w=600&h=400&fit=crop",
+            "category": "kitchen",
+            "quality": "bad",
+            "room": "Cuisine",
+            "isMainPhoto": false,
+            "needsTagging": true
+        },
+        {
+            "id": "photo_7",
+            "url": "https://images.unsplash.com/photo-1620626011761-996317b8d101?w=600&h=400&fit=crop",
+            "category": "bathroom",
+            "quality": "good",
+            "room": "Salle de bains",
+            "isMainPhoto": false,
+            "needsTagging": false
+        },
+        {
+            "id": "photo_8",
+            "url": "https://images.unsplash.com/photo-1513584684374-8bab748fbf90?w=600&h=400&fit=crop",
+            "category": "exterior",
+            "quality": "good",
+            "room": "Extérieur",
+            "isMainPhoto": false,
+            "needsTagging": false
+        },
+        {
+            "id": "photo_9",
+            "url": "https://images.unsplash.com/photo-1615874959474-d609969a20ed?w=600&h=400&fit=crop",
+            "category": "bedroom",
+            "quality": "good",
+            "room": "Chambre 3",
+            "isMainPhoto": false,
+            "needsTagging": false
+        },
+        {
+            "id": "photo_10",
+            "url": "https://images.unsplash.com/photo-1554995207-c18c203602cb?w=600&h=400&fit=crop",
+            "category": "living_room",
+            "quality": "bad",
+            "room": "Salon",
+            "isMainPhoto": false,
+            "needsTagging": false
+        }
+    ],
+    "prop_002": [
+        {
+            "id": "photo_11",
+            "url": "https://images.unsplash.com/photo-1493809842364-78817add7ffb?w=600&h=400&fit=crop",
+            "category": "bedroom",
+            "quality": "good",
+            "room": "Chambre principale",
+            "isMainPhoto": true,
+            "needsTagging": false
+        },
+        {
+            "id": "photo_12",
+            "url": "https://images.unsplash.com/photo-1556020685-ae41abfc9365?w=600&h=400&fit=crop",
+            "category": "kitchen",
+            "quality": "good",
+            "room": "Cuisine moderne",
+            "isMainPhoto": false,
+            "needsTagging": false
+        }
+    ]
+}

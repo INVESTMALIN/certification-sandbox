@@ -1,8 +1,8 @@
 # PRD - Clone Booking.com (Certification Sandbox)
 
-**Projet** : Certification Sandbox - Simulateur Booking.com  
+**Projet** : Certification Sandbox - Simulateur Booking.com & Airbnb
 **Client** : Letahost / Invest Malin  
-**Date de création** : 2026-01-22
+**Date de création** : 2026-01-20
 **Statut** : Développement en cours v1.0  
 **Responsable** : Julien (Product Owner)  
 **Supervision** : Victoria (Letahost)
@@ -16,7 +16,7 @@ Créer une réplique fonctionnelle et visuellement fidèle de l'interface Bookin
 ### Public cible
 - Apprenants de la certification Invest Malin
 - Profil : professionnels en reconversion, pas toujours tech-savvy
-- Besoin : interface familière pour faciliter la transition vers la vraie plateforme Booking.com
+- Besoin : interface familière pour faciliter la transition vers Booking.com & Airbnb
 
 ---
 
@@ -33,12 +33,11 @@ Créer une réplique fonctionnelle et visuellement fidèle de l'interface Bookin
 - **Interactions** : Limitées au strict nécessaire pour la formation
   - Redirections entre pages (React Router)
   - Quelques éléments dynamiques si pertinent pédagogiquement
-  - Pas de filtres complexes si données insuffisantes (ex: 2 réservations seulement)
 
 ### Stack technique
 - **Framework** : Vite + React 18
 - **Styling** : Tailwind CSS v3
-- **Routing** : React Router (à installer)
+- **Routing** : React Router
 - **Data** : JSON statiques dans `/src/data/booking/`
 - **Déploiement** : Vercel (auto-deploy depuis GitHub)
 
@@ -49,8 +48,8 @@ Créer une réplique fonctionnelle et visuellement fidèle de l'interface Bookin
 ### Structure générale
 Le clone Booking se compose de **2 niveaux de navigation** :
 
-1. **Niveau 1 : Dashboard Groupe** (vue globale, tous les appartements)
-2. **Niveau 2 : Dashboard Appartement** (vue détaillée d'un appartement spécifique)
+1. **Niveau 1 : Admin Groupe** (vue globale, tous les appartements)
+2. **Niveau 2 : Admon Propriété** (vue détaillée d'un logement spécifique)
 
 ---
 
@@ -73,12 +72,12 @@ Le clone Booking se compose de **2 niveaux de navigation** :
 **Route** : `/booking/dashboard`
 
 **Contenu** :
-- Vue globale avec liste des appartements (initialement 1 appartement, extensible à 2+)
-- Chaque appartement est **cliquable** et redirige vers son dashboard dédié (Niveau 2)
+- Vue globale avec liste des propirétés (2 logements)
+- Chaque logement est **cliquable** et redirige vers son dashboard dédié (Niveau 2)
 - Statistiques globales (à définir selon screenshots)
 
 **Data mockées** :
-- 1 appartement minimum (extensible)
+- 2 logements (extensible)
 - Nom, adresse, photo de couverture
 - Métriques de base (réservations, revenus, notation)
 
