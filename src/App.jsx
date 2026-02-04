@@ -29,6 +29,10 @@ import Descriptions from './pages/booking/etablissement/Descriptions'
 import PreferencesMessages from './pages/booking/etablissement/PreferencesMessages'
 import CommentairesListe from './pages/booking/commentaires/CommentairesListe'
 import ExperienceClient from './pages/booking/commentaires/ExperienceClient'
+import ReservationDetail from './pages/booking/reservations/ReservationDetail'
+import Inbox from './pages/booking/inbox/Inbox'
+import SignalerComportement from './pages/booking/reservations/SignalerComportement'
+
 
 function App() {
   return (
@@ -274,6 +278,36 @@ function App() {
           </ProtectedRoute>
         }
       />
+
+      <Route
+        path="/booking/property/:id/reservations/:reservationId"
+        element={
+          <ProtectedRoute>
+            <ReservationDetail />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/booking/property/:id/reservations/:reservationId/report-behavior"
+        element={
+          <ProtectedRoute>
+            <SignalerComportement />
+          </ProtectedRoute>
+        }
+      />
+
+
+      <Route
+        path="/booking/property/:id/inbox"
+        element={
+          <ProtectedRoute>
+            <Inbox />
+          </ProtectedRoute>
+        }
+      />
+
+
 
       {/* Redirection racine vers login */}
       <Route path="/" element={<Navigate to="/login" replace />} />

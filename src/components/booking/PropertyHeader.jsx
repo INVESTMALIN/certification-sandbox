@@ -90,8 +90,18 @@ function PropertyHeader() {
             ]
         },
         { label: 'Boostez votre performance', path: `#`, icon: Rocket, enabled: false },
-        { label: 'Boîte de réception', path: `/booking/property/${id}/inbox`, icon: Mail, enabled: true },
         {
+            label: 'Boîte de réception',
+            path: `/booking/property/${id}/inbox`,
+            icon: Mail,
+            enabled: true,
+            hasSubmenu: true,
+            submenuItems: [
+                { label: 'Messages relatifs aux réservations', path: `/booking/property/${id}/inbox`, enabled: true },
+                { label: 'Messages de Booking.com', path: '#', enabled: false },
+                { label: 'Questions des clients', path: '#', enabled: false }
+            ]
+        }, {
             label: 'Commentaires clients',
             path: `/booking/property/${id}/commentaires`,
             icon: Heart,
