@@ -80,8 +80,12 @@ function PropertyAccueil() {
                             <div className="border-b border-gray-200">
                                 <nav className="flex px-6">
                                     <button className="px-4 py-3 text-sm font-medium text-[#0071c2] border-b-2 border-[#0071c2] flex items-center gap-2">
-                                        Arrivées
+                                        Demandes de réservations
                                         <span className="inline-flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-[#0071c2] rounded-full">0</span>
+                                    </button>
+                                    <button className="px-4 py-3 text-sm font-medium text-gray-600 hover:text-gray-900 flex items-center gap-2">
+                                        Arrivées
+                                        <span className="inline-flex items-center justify-center w-5 h-5 text-xs font-bold text-gray-600 bg-gray-200 rounded-full">0</span>
                                     </button>
                                     <button className="px-4 py-3 text-sm font-medium text-gray-600 hover:text-gray-900 flex items-center gap-2">
                                         Départs
@@ -153,7 +157,9 @@ function PropertyAccueil() {
                                         {/* Colonne 3: Prix et date de réservation */}
                                         <div className="text-right">
                                             <div className="text-lg font-semibold text-gray-900 mb-1">€ {reservation.totalAmount}</div>
-                                            <div className="text-sm text-gray-600">{formatDate(reservation.bookingDate || reservation.checkIn)}</div>
+                                            <div className="text-sm text-gray-600">    {formatDate(new Date(new Date(reservation.checkIn).getTime() - 15 * 24 * 60 * 60 * 1000).toISOString().split('T')[0])}
+
+                                            </div>
                                         </div>
                                     </div>
                                 ))}

@@ -34,5 +34,53 @@
         "comment": "Bon séjour dans l'ensemble. L'emplacement est pratique et l'appartement confortable. Petit bémol sur le WiFi qui pourrait être plus stable.",
         "hasOwnerResponse": true,
         "ownerResponse": "Merci pour votre retour Jean. Nous avons pris note concernant le WiFi et allons améliorer cela."
+    },
+    {
+        "id": "rev_004",
+        "date": "2026-01-08",
+        "propertyId": "prop_003",
+        "bookingId": "14502891",
+        "propertyName": "Loft spacieux avec vue sur Tour Eiffel",
+        "guestName": "Sophie Martin",
+        "rating": 9.5,
+        "comment": "Expérience exceptionnelle ! La vue sur la Tour Eiffel est à couper le souffle. Le loft est spacieux, moderne et impeccablement propre. Communication parfaite avec l'hôte. On reviendra sans hésiter !",
+        "hasOwnerResponse": true,
+        "ownerResponse": "Merci Sophie pour ce magnifique retour ! Ce fut un plaisir de vous accueillir. À très bientôt !"
+    },
+    {
+        "id": "rev_005",
+        "date": "2026-01-05",
+        "propertyId": "prop_002",
+        "bookingId": "14398472",
+        "propertyName": "Studio moderne centre-ville avec parking",
+        "guestName": "Lucas Benoit",
+        "rating": 7.5,
+        "comment": "Studio correct pour le prix. L'emplacement est pratique avec le parking inclus. Quelques petits défauts (douche qui fuit légèrement) mais rien de rédhibitoire.",
+        "hasOwnerResponse": false,
+        "ownerResponse": null
+    },
+    {
+        "id": "rev_006",
+        "date": "2026-01-03",
+        "propertyId": "prop_003",
+        "bookingId": "14289563",
+        "propertyName": "Loft spacieux avec vue sur Tour Eiffel",
+        "guestName": "Marie Lefebvre",
+        "rating": 8.5,
+        "comment": "Très beau loft, bien situé. L'espace est agréable et la décoration soignée. Seul petit point négatif : un peu bruyant côté rue le weekend.",
+        "hasOwnerResponse": true,
+        "ownerResponse": "Merci Marie pour votre retour. Nous sommes ravis que le loft vous ait plu. Pour le bruit, nous mettons à disposition des bouchons d'oreilles et pouvons vous recommander la chambre côté cour pour un prochain séjour."
+    },
+    {
+        "id": "rev_007",
+        "date": "2025-12-28",
+        "propertyId": "prop_001",
+        "bookingId": "14156827",
+        "propertyName": "Appartement lumineux avec vue sur jardin",
+        "guestName": "Alexandre Rousseau",
+        "rating": 9.2,
+        "comment": "Appartement magnifique et très bien situé à Cannes. La vue sur le jardin est apaisante. Literie confortable, cuisine bien équipée. Hôte disponible et arrangeant. Excellente expérience !",
+        "hasOwnerResponse": true,
+        "ownerResponse": "Merci beaucoup Alexandre ! Ravis que votre séjour se soit si bien passé. Au plaisir de vous revoir !"
     }
 ]

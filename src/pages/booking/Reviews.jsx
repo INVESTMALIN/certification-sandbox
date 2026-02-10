@@ -1,9 +1,52 @@
+import { useState } from 'react'
 import BookingHeader from '../../components/booking/BookingHeader'
 import reviewsData from '../../data/booking/reviews.json'
+import propertiesData from '../../data/booking/properties.json'
 import BookingFooter from '../../components/booking/BookingFooter'
+
 
 function Reviews() {
     const reviews = reviewsData
+
+
+    // States pour les filtres
+    const [cityFilter, setCityFilter] = useState('all')
+    const [startDate, setStartDate] = useState('2026-01-01')
+    const [endDate, setEndDate] = useState('2026-12-31')
+    const [propertyIdFilter, setPropertyIdFilter] = useState('')
+
+    // Extraire les villes uniques
+    const uniqueCities = [...new Set(propertiesData.map(p => p.city))]
+
+    // Filtrer les reviews
+    const filteredReviews = reviews.filter(review => {
+        // Filtre par ville
+        if (cityFilter !== 'all') {
+            const property = propertiesData.find(p => p.id === review.propertyId)
+            if (!property || property.city !== cityFilter) {
+                return false
+            }
+        }
+
+        // Filtre par dates
+        const reviewDate = new Date(review.date)
+        const start = new Date(startDate)
+        const end = new Date(endDate)
+
+        if (reviewDate < start || reviewDate > end) {
+            return false
+        }
+
+        // Filtre par identifiant property
+        if (propertyIdFilter.trim()) {
+            const property = propertiesData.find(p => p.id === review.propertyId)
+            if (!property || !property.propertyId.includes(propertyIdFilter.trim())) {
+                return false
+            }
+        }
+
+        return true
+    })
 
     // Formater les dates en français
     const formatDate = (dateString) => {
@@ -32,48 +75,70 @@ function Reviews() {
                 <h1 className="text-3xl font-bold text-gray-900 mb-8">Commentaires</h1>
 
                 {/* Filtres */}
-                <div className="bg-white border border-gray-200 rounded-lg p-6 mb-6">
-                    <div className="grid grid-cols-2 gap-6 mb-4">
-                        {/* Filtrer par dates */}
+                <div className="mb-6">
+                    <div className="flex items-end gap-3">
+                        {/* Filter par ville */}
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                                Filtrer par ville
+                            </label>
+                            <select
+                                value={cityFilter}
+                                onChange={(e) => setCityFilter(e.target.value)}
+                                className="w-56 px-4 py-2 border border-gray-300 rounded bg-white text-sm focus:ring-2 focus:ring-[#0071c2] focus:border-transparent"
+                            >
+                                <option value="all">Toutes les villes</option>
+                                {uniqueCities.map(city => {
+                                    const count = propertiesData.filter(p => p.city === city).length
+                                    return (
+                                        <option key={city} value={city}>
+                                            {city} ({count} hébergement{count > 1 ? 's' : ''})
+                                        </option>
+                                    )
+                                })}
+                            </select>
+                        </div>
+
+                        {/* Filter par dates */}
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-2">
                                 Filtrer par dates
                             </label>
-                            <input
-                                type="text"
-                                defaultValue="12 janv. 2026 — 14 janv. 2026"
-                                className="w-full px-4 py-2 border border-gray-300 rounded text-sm"
-                                readOnly
-                            />
+                            <div className="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded bg-white">
+                                <input
+                                    type="date"
+                                    value={startDate}
+                                    onChange={(e) => setStartDate(e.target.value)}
+                                    className="border-none outline-none text-sm w-32"
+                                />
+                                <span className="text-gray-400">—</span>
+                                <input
+                                    type="date"
+                                    value={endDate}
+                                    onChange={(e) => setEndDate(e.target.value)}
+                                    className="border-none outline-none text-sm w-32"
+                                />
+                            </div>
                         </div>
 
-                        {/* Filtrer par identifiants */}
+                        {/* Filter par identifiants */}
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-2">
                                 Filtrer par un ou plusieurs identifiants d'hébergement
                             </label>
                             <input
                                 type="text"
-                                placeholder="Saisissez un ou plusieurs identifiants"
-                                className="w-full px-4 py-2 border border-gray-300 rounded text-sm"
+                                placeholder="Saisissez un ou plusieurs identifiants d'hébergement"
+                                value={propertyIdFilter}
+                                onChange={(e) => setPropertyIdFilter(e.target.value)}
+                                className="w-96 px-4 py-2 border border-gray-300 rounded text-sm focus:ring-2 focus:ring-[#0071c2] focus:border-transparent"
                             />
                         </div>
-                    </div>
 
-                    <div className="flex items-center gap-4">
-                        {/* Bouton Afficher */}
-                        <button className="px-6 py-2 bg-[#0071c2] hover:bg-[#005999] text-white rounded font-medium text-sm transition-colors">
+                        {/* Bouton Afficher les commentaires */}
+                        <button className="px-6 py-2 bg-[#0071c2] text-white rounded font-medium text-sm hover:bg-[#005999] transition-colors">
                             Afficher les commentaires
                         </button>
-
-                        {/* Recherche */}
-                        <div className="flex-1 max-w-md">
-                            <input
-                                type="text"
-                                placeholder="Recherchez par note, date, commentaire..."
-                                className="w-full px-4 py-2 border border-gray-300 rounded text-sm"
-                            />
-                        </div>
                     </div>
                 </div>
 
@@ -105,7 +170,7 @@ function Reviews() {
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-gray-200">
-                            {reviews.map((review) => (
+                            {filteredReviews.map((review) => (
                                 <tr key={review.id} className="hover:bg-gray-50 transition-colors">
                                     {/* Date */}
                                     <td className="px-6 py-4 text-sm text-gray-900 whitespace-nowrap align-top">
@@ -188,8 +253,7 @@ function Reviews() {
 
                 {/* Footer simple */}
                 <div className="mt-4 text-sm text-gray-600">
-                    <p>{reviews.length} commentaire{reviews.length > 1 ? 's' : ''} affiché{reviews.length > 1 ? 's' : ''}</p>
-                </div>
+                    <p>{filteredReviews.length} commentaire{filteredReviews.length > 1 ? 's' : ''} affiché{filteredReviews.length > 1 ? 's' : ''}</p>                </div>
             </main>
             <BookingFooter />
         </div>

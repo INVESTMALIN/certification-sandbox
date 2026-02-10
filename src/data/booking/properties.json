@@ -26,11 +26,28 @@
         "status": "Ouvert / Réservable",
         "coverImage": "/assets/properties/prop_002.jpg",
         "rating": 8.4,
-        "totalReviews": 89,
+        "totalReviews": 29,
         "occupancyRate": 75,
         "monthlyRevenue": 2100,
         "upcomingArrivals": 0,
         "upcomingDepartures": 0,
         "unreadMessages": 3
+    },
+    {
+        "id": "prop_003",
+        "propertyId": "15591353",
+        "name": "Loft spacieux avec vue sur Tour Eiffel",
+        "address": "2 bis Rue des Troubadours, 75012 Paris",
+        "city": "Paris",
+        "country": "France",
+        "status": "Ouvert / Réservable",
+        "coverImage": "/assets/properties/prop_003.jpg",
+        "rating": 9.2,
+        "totalReviews": 47,
+        "occupancyRate": 175,
+        "monthlyRevenue": 5200,
+        "upcomingArrivals": 5,
+        "upcomingDepartures": 1,
+        "unreadMessages": 0
     }
 ]

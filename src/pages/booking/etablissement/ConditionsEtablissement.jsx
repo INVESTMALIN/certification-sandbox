@@ -2,10 +2,44 @@ import PropertyHeader from '../../../components/booking/PropertyHeader'
 import BookingFooter from '../../../components/booking/BookingFooter'
 import { X, AlertCircle } from 'lucide-react'
 import { useState } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
+import InternetParkingModal from '../../../components/booking/InternetParkingModal'
+import InformationsClientsModal from '../../../components/booking/InformationsClientsModal'
+import ReglesMaisonModal from '../../../components/booking/ReglesMaisonModal'
+import Sejours30NuitsModal from '../../../components/booking/Sejours30NuitsModal'
 
 function ConditionsEtablissement() {
+
+    const navigate = useNavigate()
+    const { id } = useParams()
+
     const [showTopAlert, setShowTopAlert] = useState(true)
     const [showBottomAlert, setShowBottomAlert] = useState(true)
+
+    const [showInternetModal, setShowInternetModal] = useState(false)
+
+    const handleSaveInternet = (data) => {
+        console.log('Internet data:', data)
+        // Logique de sauvegarde ici
+    }
+
+    const [showInfosClientsModal, setShowInfosClientsModal] = useState(false)
+
+    const handleSaveInfosClients = (data) => {
+        console.log('Infos clients data:', data)
+    }
+
+    const [showReglesMaisonModal, setShowReglesMaisonModal] = useState(false)
+
+    const handleSaveReglesMaison = (data) => {
+        console.log('Règles maison data:', data)
+    }
+
+    const [showSejours30Modal, setShowSejours30Modal] = useState(false)
+
+    const handleSaveSejours30 = (data) => {
+        console.log('Séjours 30 nuits data:', data)
+    }
 
     return (
         <div className="min-h-screen bg-gray-50">
@@ -83,7 +117,10 @@ function ConditionsEtablissement() {
                                     <li>Vous n'avez pas fixé de tarifs enfants.</li>
                                 </ul>
                             </div>
-                            <button className="px-4 py-2 bg-[#0071c2] text-white rounded hover:bg-[#005999] transition-colors text-sm font-medium">
+                            <button
+                                onClick={() => navigate(`/booking/property/${id}/etablissement/conditions-etablissement/enfants`)}
+                                className="px-4 py-2 bg-[#0071c2] text-white rounded hover:bg-[#005999] transition-colors text-sm font-medium"
+                            >
                                 Modifier
                             </button>
                         </div>
@@ -103,7 +140,10 @@ function ConditionsEtablissement() {
                                     <li>Vous n'avez ajouté aucun lit d'appoint.</li>
                                 </ul>
                             </div>
-                            <button className="px-4 py-2 bg-[#0071c2] text-white rounded hover:bg-[#005999] transition-colors text-sm font-medium">
+                            <button
+                                onClick={() => navigate(`/booking/property/${id}/etablissement/conditions-etablissement/lits`)}
+                                className="px-4 py-2 bg-[#0071c2] text-white rounded hover:bg-[#005999] transition-colors text-sm font-medium"
+                            >
                                 Modifier
                             </button>
                         </div>
@@ -163,7 +203,10 @@ function ConditionsEtablissement() {
                                         </a>.
                                     </p>
                                 </div>
-                                <button className="px-4 py-2 bg-[#0071c2] text-white rounded hover:bg-[#005999] transition-colors text-sm font-medium">
+                                <button
+                                    onClick={() => setShowInternetModal(true)}
+                                    className="px-4 py-2 bg-[#0071c2] text-white rounded hover:bg-[#005999] transition-colors text-sm font-medium"
+                                >
                                     Modifier
                                 </button>
                             </div>
@@ -198,7 +241,10 @@ function ConditionsEtablissement() {
                                         <li>Pas de couvre-feu</li>
                                     </ul>
                                 </div>
-                                <button className="px-4 py-2 bg-[#0071c2] text-white rounded hover:bg-[#005999] transition-colors text-sm font-medium">
+                                <button
+                                    onClick={() => setShowInfosClientsModal(true)}
+                                    className="px-4 py-2 bg-[#0071c2] text-white rounded hover:bg-[#005999] transition-colors text-sm font-medium"
+                                >
                                     Modifier
                                 </button>
                             </div>
@@ -213,7 +259,10 @@ function ConditionsEtablissement() {
                                         <li>Ménage à 40 €/séjour - non compris dans le tarif</li>
                                     </ul>
                                 </div>
-                                <button className="px-4 py-2 bg-[#0071c2] text-white rounded hover:bg-[#005999] transition-colors text-sm font-medium">
+                                <button
+                                    onClick={() => navigate(`/booking/property/${id}/etablissement/conditions-etablissement/frais`)}
+                                    className="px-4 py-2 bg-[#0071c2] text-white rounded hover:bg-[#005999] transition-colors text-sm font-medium"
+                                >
                                     Modifier
                                 </button>
                             </div>
@@ -238,7 +287,10 @@ function ConditionsEtablissement() {
                                         Si vous prévoyez demander jusqu'à €200 par séjour pour les frais refusés aux clients dans votre hébergement, envisagez une demande de paiement. Les documents couvrant la charge suivants ce départ du client de votre hébergement ou recevoir la confirmation en votre nom.
                                     </p>
                                 </div>
-                                <button className="px-4 py-2 bg-[#0071c2] text-white rounded hover:bg-[#005999] transition-colors text-sm font-medium">
+                                <button
+                                    onClick={() => navigate(`/booking/property/${id}/etablissement/conditions-etablissement/dommages`)}
+                                    className="px-4 py-2 bg-[#0071c2] text-white rounded hover:bg-[#005999] transition-colors text-sm font-medium"
+                                >
                                     Modifier
                                 </button>
                             </div>
@@ -256,7 +308,10 @@ function ConditionsEtablissement() {
                                         <li>Arrivée à l'adresse, entrée avec le code sur l'interphone. Dans la cour, trouvez le bâtiment, puis la grande porte d'entrée. Utilisez le pont-clé pour l'appartement n° 7 au 2e étage. Vidéo d'accès: https://drive.google.com/drive/folders/1yC5C-xH_cwjgeKA0yY7i5c4J5rJaD3</li>
                                     </ul>
                                 </div>
-                                <button className="px-4 py-2 bg-[#0071c2] text-white rounded hover:bg-[#005999] transition-colors text-sm font-medium">
+                                <button
+                                    onClick={() => navigate(`/booking/property/${id}/etablissement/conditions-etablissement/remise-cles`)}
+                                    className="px-4 py-2 bg-[#0071c2] text-white rounded hover:bg-[#005999] transition-colors text-sm font-medium"
+                                >
                                     Modifier
                                 </button>
                             </div>
@@ -278,7 +333,10 @@ function ConditionsEtablissement() {
                                     </ul>
                                 </div>
                                 <div className="flex gap-3">
-                                    <button className="px-4 py-2 bg-[#0071c2] text-white rounded hover:bg-[#005999] transition-colors text-sm font-medium">
+                                    <button
+                                        onClick={() => setShowReglesMaisonModal(true)}
+                                        className="px-4 py-2 bg-[#0071c2] text-white rounded hover:bg-[#005999] transition-colors text-sm font-medium"
+                                    >
                                         Modifier
                                     </button>
                                     <button className="px-4 py-2 text-[#0071c2] border border-[#0071c2] rounded hover:bg-blue-50 transition-colors text-sm font-medium">
@@ -299,7 +357,10 @@ function ConditionsEtablissement() {
                                         Selon une étude récente, près de 75 % des clients considèrent l'annulation gratuite comme l'un des facteurs déterminants lorsqu'il s'agit de réserver. Grâce au programme Réservations sans risque, vous pouvez mettre des conditions plus flexibles pour attirer davantage de clients en général peu de risque.
                                     </p>
                                 </div>
-                                <button className="px-4 py-2 bg-[#0071c2] text-white rounded hover:bg-[#005999] transition-colors text-sm font-medium">
+                                <button
+                                    disabled
+                                    className="px-4 py-2 bg-gray-300 text-gray-500 rounded cursor-not-allowed text-sm font-medium"
+                                >
                                     En savoir plus
                                 </button>
                             </div>
@@ -316,7 +377,10 @@ function ConditionsEtablissement() {
                                         <li>Vous acceptez les réservations pour des séjours de plus de 30 nuits (jusqu'à 90 nuits).</li>
                                     </ul>
                                 </div>
-                                <button className="px-4 py-2 bg-[#0071c2] text-white rounded hover:bg-[#005999] transition-colors text-sm font-medium">
+                                <button
+                                    onClick={() => setShowSejours30Modal(true)}
+                                    className="px-4 py-2 bg-[#0071c2] text-white rounded hover:bg-[#005999] transition-colors text-sm font-medium"
+                                >
                                     Modifier
                                 </button>
                             </div>
@@ -330,7 +394,10 @@ function ConditionsEtablissement() {
                                         Tous les clients peuvent réserver instantanément
                                     </p>
                                 </div>
-                                <button className="px-4 py-2 bg-[#0071c2] text-white rounded hover:bg-[#005999] transition-colors text-sm font-medium">
+                                <button
+                                    onClick={() => navigate(`/booking/property/${id}/etablissement/conditions-etablissement/recevoir-reservations`)}
+                                    className="px-4 py-2 bg-[#0071c2] text-white rounded hover:bg-[#005999] transition-colors text-sm font-medium"
+                                >
                                     Modifier
                                 </button>
                             </div>
@@ -363,6 +430,30 @@ function ConditionsEtablissement() {
             </main>
 
             <BookingFooter />
+
+            <InternetParkingModal
+                isOpen={showInternetModal}
+                onClose={() => setShowInternetModal(false)}
+                onSave={handleSaveInternet}
+            />
+            {/* Modal Informations clients */}
+            <InformationsClientsModal
+                isOpen={showInfosClientsModal}
+                onClose={() => setShowInfosClientsModal(false)}
+                onSave={handleSaveInfosClients}
+            />
+            {/* Modal Règles de la maison */}
+            <ReglesMaisonModal
+                isOpen={showReglesMaisonModal}
+                onClose={() => setShowReglesMaisonModal(false)}
+                onSave={handleSaveReglesMaison}
+            />
+            {/* Modal Séjours 30 nuits */}
+            <Sejours30NuitsModal
+                isOpen={showSejours30Modal}
+                onClose={() => setShowSejours30Modal(false)}
+                onSave={handleSaveSejours30}
+            />
         </div>
     )
 }

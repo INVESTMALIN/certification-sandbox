@@ -20,6 +20,12 @@ import InfosStatut from './pages/booking/etablissement/InfosStatut'
 import TvaTaxes from './pages/booking/etablissement/TvaTaxes'
 import Photos from './pages/booking/etablissement/Photos'
 import ConditionsEtablissement from './pages/booking/etablissement/ConditionsEtablissement'
+import ConditionsEnfants from './pages/booking/etablissement/conditions/ConditionsEnfants'
+import ConditionsLits from './pages/booking/etablissement/conditions/ConditionsLits'
+import FraisSupplementaires from './pages/booking/etablissement/conditions/FraisSupplementaires'
+import ConditionsDommages from './pages/booking/etablissement/conditions/ConditionsDommages'
+import RemiseCles from './pages/booking/etablissement/conditions/RemiseCles'
+import CommentRecevoirReservations from './pages/booking/etablissement/conditions/CommentRecevoirReservations'
 import ConditionsReservation from './pages/booking/etablissement/ConditionsReservation'
 import EquipementsServices from './pages/booking/etablissement/EquipementsServices'
 import Hebergements from './pages/booking/etablissement/Hebergements'
@@ -30,8 +36,13 @@ import PreferencesMessages from './pages/booking/etablissement/PreferencesMessag
 import CommentairesListe from './pages/booking/commentaires/CommentairesListe'
 import ExperienceClient from './pages/booking/commentaires/ExperienceClient'
 import ReservationDetail from './pages/booking/reservations/ReservationDetail'
+import ReservationsDemandes from './pages/booking/reservations/ReservationsDemandes'
 import Inbox from './pages/booking/inbox/Inbox'
 import SignalerComportement from './pages/booking/reservations/SignalerComportement'
+import DamageClaim from './pages/booking/reservations/DamageClaim'
+import DamageClaimStep1 from './pages/booking/reservations/DamageClaimStep1'
+import DamageClaimStep2 from './pages/booking/reservations/DamageClaimStep2'
+import DamageClaimStep3 from './pages/booking/reservations/DamageClaimStep3'
 
 
 function App() {
@@ -66,6 +77,7 @@ function App() {
             <Reservations />
           </ProtectedRoute>
         }
+
       />
       <Route
         path="/booking/reviews"
@@ -155,6 +167,23 @@ function App() {
         }
       />
 
+      <Route
+        path="/booking/property/:id/reservations/liste"
+        element={
+          <ProtectedRoute>
+            <PropertyReservations />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/booking/property/:id/reservations/demandes"
+        element={
+          <ProtectedRoute>
+            <ReservationsDemandes />
+          </ProtectedRoute>
+        }
+      />
+
       {/* Routes Établissement */}
       <Route
         path="/booking/property/:id/etablissement/note-qualite"
@@ -204,6 +233,31 @@ function App() {
           </ProtectedRoute>
         }
       />
+      <Route
+        path="/booking/property/:id/etablissement/conditions-etablissement/enfants"
+        element={
+          <ProtectedRoute>
+            <ConditionsEnfants />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/booking/property/:id/etablissement/conditions-etablissement/lits"
+        element={
+          <ProtectedRoute>
+            <ConditionsLits />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/booking/property/:id/etablissement/conditions-etablissement/frais"
+        element={
+          <ProtectedRoute>
+            <FraisSupplementaires />
+          </ProtectedRoute>
+        }
+      />
+
       <Route
         path="/booking/property/:id/etablissement/conditions-reservation"
         element={
@@ -307,7 +361,64 @@ function App() {
         }
       />
 
+      <Route
+        path="/booking/property/:id/reservations/:reservationId/damage-claim"
+        element={
+          <ProtectedRoute>
+            <DamageClaim />
+          </ProtectedRoute>
+        }
+      />
 
+      <Route
+        path="/booking/property/:id/reservations/:reservationId/damage-claim/step1"
+        element={
+          <ProtectedRoute>
+            <DamageClaimStep1 />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/booking/property/:id/reservations/:reservationId/damage-claim/step2"
+        element={
+          <ProtectedRoute>
+            <DamageClaimStep2 />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/booking/property/:id/reservations/:reservationId/damage-claim/step3"
+        element={
+          <ProtectedRoute>
+            <DamageClaimStep3 />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/booking/property/:id/etablissement/conditions-etablissement/dommages"
+        element={
+          <ProtectedRoute>
+            <ConditionsDommages />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/booking/property/:id/etablissement/conditions-etablissement/remise-cles"
+        element={
+          <ProtectedRoute>
+            <RemiseCles />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/booking/property/:id/etablissement/conditions-etablissement/recevoir-reservations"
+        element={
+          <ProtectedRoute>
+            <CommentRecevoirReservations />
+          </ProtectedRoute>
+        }
+      />
 
       {/* Redirection racine vers login */}
       <Route path="/" element={<Navigate to="/login" replace />} />

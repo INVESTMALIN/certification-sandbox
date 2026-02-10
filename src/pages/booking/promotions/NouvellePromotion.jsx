@@ -22,7 +22,7 @@ function NouvellePromotion() {
                     </button>
                 </div>
 
-                {/* Informations utiles */}
+                {/* Informations utiles *
                 <div className="mb-8">
                     <h2 className="text-lg font-semibold text-gray-900 mb-4">Informations utiles</h2>
                     <p className="text-sm text-gray-600 mb-4">
@@ -30,7 +30,8 @@ function NouvellePromotion() {
                     </p>
 
                     <div className="grid grid-cols-3 gap-4">
-                        {/* Card 1 */}
+
+
                         <div className="bg-white border border-gray-200 rounded-lg p-4">
                             <div className="flex items-start justify-between mb-3">
                                 <div className="flex-1">
@@ -71,7 +72,8 @@ function NouvellePromotion() {
                             </div>
                         </div>
 
-                        {/* Card 2 */}
+
+
                         <div className="bg-white border border-gray-200 rounded-lg p-4">
                             <div className="flex items-start justify-between mb-3">
                                 <div className="flex-1">
@@ -112,7 +114,8 @@ function NouvellePromotion() {
                             </div>
                         </div>
 
-                        {/* Card 3 */}
+
+
                         <div className="bg-white border border-gray-200 rounded-lg p-4">
                             <div className="flex items-start justify-between mb-3">
                                 <div className="flex-1">
@@ -159,66 +162,71 @@ function NouvellePromotion() {
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> */}
 
                 {/* Campagnes */}
                 <div className="mb-8">
                     <h2 className="text-lg font-semibold text-gray-900 mb-2">Campagnes</h2>
                     <p className="text-sm text-gray-600 mb-4">
-                        Profitez d'une réduction pour gagner en visibilité dans nos e-mails et nos notifications, mais aussi sur nos sites affiliés et nos autres canaux.
+                        Proposez une réduction pour gagner en visibilité dans nos e-mails et nos notifications, mais aussi sur nos sites affiliés et nos autres canaux.
                     </p>
 
                     <div className="bg-white border border-gray-200 rounded-lg p-6">
-                        <div className="flex items-start gap-4">
-                            <div className="w-16 h-16 bg-blue-100 rounded flex items-center justify-center flex-shrink-0">
-                                <Calendar className="w-8 h-8 text-blue-600" />
+                        <div className="grid grid-cols-[auto_1fr_1fr_1fr] gap-6 items-start">
+                            {/* Colonne 1 : Icône */}
+                            <div className="flex-shrink-0">
+                                <img
+                                    src="/campaign_calendar2.svg"
+                                    alt="Calendrier"
+                                    className="w-20 h-20"
+                                />
                             </div>
-                            <div className="flex-1">
-                                <div className="flex items-center gap-2 mb-2">
-                                    <h3 className="text-base font-semibold text-gray-900">Offre Début 2026</h3>
-                                    <span className="px-2 py-0.5 bg-orange-100 text-orange-800 text-xs font-medium rounded">Nouveau</span>
-                                    <span className="px-2 py-0.5 bg-gray-100 text-gray-700 text-xs rounded">Durée limitée</span>
-                                </div>
-                                <div className="text-sm text-gray-900 mb-1">Réduction recommandée : au moins 25 %</div>
-                                <div className="text-sm text-gray-600 mb-3">
-                                    Offre de séjour : 1er janv. 2026–1er avr. 2026
-                                </div>
-                            </div>
-                            <div className="text-right">
-                                <div className="text-sm text-gray-600 mb-2">Distribuez-vous des réservations anticipées et commencez la nouvelle année en beauté !</div>
-                                <button className="px-4 py-2 border border-[#0071c2] text-[#0071c2] rounded hover:bg-blue-50 transition-colors text-sm font-medium">
-                                    Ajouter cette promotion
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
 
-                {/* Offres spéciales */}
-                <div className="mb-8">
-                    <h2 className="text-lg font-semibold text-gray-900 mb-2">Offres spéciales</h2>
-                    <p className="text-sm text-gray-600 mb-4">
-                        Augmentez votre taux d'occupation et bénéficiez d'une visibilité accrue en configurant vos objectifs via nos outils de tarification. Les offres spéciales se consultent également directement depuis vos objectifs.
-                    </p>
+                            {/* Colonne 2 : Titre + badges */}
+                            <div>
+                                <h3 className="text-xl font-bold text-gray-900 mb-2">Offre Début 2026</h3>
+                                <span className="inline-block px-2 py-1 bg-green-600 text-white text-xs font-semibold rounded mb-3">
+                                    Nouveau
+                                </span>
+                                <div className="text-base font-bold text-gray-900 mb-3">
+                                    Réduction recommandée : au moins 20 %
+                                </div>
+                                <div className="flex items-center gap-2">
+                                    <span className="px-3 py-1 border border-gray-300 text-gray-700 text-sm rounded">
+                                        Badge
+                                    </span>
+                                    <span className="px-3 py-1 border border-gray-300 text-gray-700 text-sm rounded">
+                                        Visibilité
+                                    </span>
+                                </div>
+                            </div>
 
-                    <div className="bg-white border border-gray-200 rounded-lg p-6">
-                        <div className="flex items-start gap-4">
-                            <div className="w-16 h-16 bg-orange-100 rounded flex items-center justify-center flex-shrink-0">
-                                <Zap className="w-8 h-8 text-orange-600" />
-                            </div>
-                            <div className="flex-1">
-                                <h3 className="text-base font-semibold text-gray-900 mb-2">Offre à Durée Limitée</h3>
-                                <div className="text-sm text-gray-900 mb-1">Au moins 15 % de réduction</div>
-                                <div className="text-sm text-gray-600">Toutes les dates</div>
-                                <div className="flex gap-2 mt-2">
-                                    <span className="px-2 py-0.5 bg-gray-100 text-gray-700 text-xs rounded">Durée limitée</span>
+                            {/* Colonne 3 : Dates */}
+                            <div className="min-w-[200px]">
+                                <div className="mb-4">
+                                    <div className="text-sm font-medium text-gray-700 mb-1">
+                                        Période réservable
+                                    </div>
+                                    <div className="text-sm text-gray-900">
+                                        6 déc. 2025–1er avr. 2026
+                                    </div>
+                                </div>
+                                <div>
+                                    <div className="text-sm font-medium text-gray-700 mb-1">
+                                        Dates de séjour
+                                    </div>
+                                    <div className="text-sm text-gray-900">
+                                        1er janv. 2026–1er avr. 2026
+                                    </div>
                                 </div>
                             </div>
-                            <div className="text-right">
-                                <div className="text-sm text-gray-600 mb-2">
-                                    Boostez le classement de votre établissement dans les résultats de recherche, pendant 45 jours.
+
+                            {/* Colonne 4 : Texte + bouton */}
+                            <div className="min-w-[280px] text-right">
+                                <div className="text-sm text-gray-700 mb-4">
+                                    Garantissez-vous des réservations anticipées et commencez la nouvelle année en beauté !
                                 </div>
-                                <button className="px-4 py-2 border border-[#0071c2] text-[#0071c2] rounded hover:bg-blue-50 transition-colors text-sm font-medium">
+                                <button className="px-6 py-2 border border-[#0071c2] text-[#0071c2] rounded hover:bg-blue-50 transition-colors text-sm font-semibold">
                                     Ajouter cette promotion
                                 </button>
                             </div>
@@ -230,57 +238,88 @@ function NouvellePromotion() {
                 <div className="mb-8">
                     <h2 className="text-lg font-semibold text-gray-900 mb-2">Tarifs ciblés</h2>
                     <p className="text-sm text-gray-600 mb-4">
-                        Attirez des voyageurs spécifiques ou de devenir un établissement de choix pour les segments de clients à forte valeur ajoutée.
+                        Proposez des réductions à des utilisateurs spécifiques afin de devenir un établissement de choix pour des segments de clients à forte valeur ajoutée.
                     </p>
 
-                    <div className="space-y-4">
-                        {/* Tarif Mobiles */}
-                        <div className="bg-white border border-gray-200 rounded-lg p-6">
-                            <div className="flex items-start gap-4">
-                                <div className="w-16 h-16 bg-orange-100 rounded flex items-center justify-center flex-shrink-0">
-                                    <Smartphone className="w-8 h-8 text-orange-600" />
+                    {/* Tarif Mobiles */}
+                    <div className="bg-white border border-gray-200 rounded-lg p-6 mb-4">
+                        <div className="grid grid-cols-[auto_1fr_1fr_1fr] gap-6 items-start">
+                            {/* Colonne 1 : Icône */}
+                            <div className="flex-shrink-0">
+                                <img
+                                    src="/targeting_mobile.svg"
+                                    alt="Mobile"
+                                    className="w-20 h-20"
+                                />
+                            </div>
+
+                            {/* Colonne 2 : Titre + badges */}
+                            <div>
+                                <h3 className="text-xl font-bold text-gray-900 mb-3">Tarif Mobiles</h3>
+                                <div className="text-base font-bold text-gray-900 mb-3">
+                                    Au moins 10 % de réduction
                                 </div>
-                                <div className="flex-1">
-                                    <h3 className="text-base font-semibold text-gray-900 mb-2">Tarif Mobiles</h3>
-                                    <div className="text-sm text-gray-900 mb-1">Au moins 15 % de réduction</div>
-                                    <div className="text-sm text-gray-600">Toutes les dates</div>
-                                    <div className="flex gap-2 mt-2">
-                                        <span className="px-2 py-0.5 bg-gray-100 text-gray-700 text-xs rounded">Durée</span>
-                                    </div>
-                                </div>
-                                <div className="text-right">
-                                    <div className="text-sm text-gray-600 mb-2">
-                                        Toujours actif (possibilité d'inclure un nombre illimité de pays)
-                                    </div>
-                                    <button className="px-4 py-2 border border-[#0071c2] text-[#0071c2] rounded hover:bg-blue-50 transition-colors text-sm font-medium">
-                                        Ajouter cette promotion
-                                    </button>
+                                <div className="flex items-center gap-2">
+                                    <span className="px-3 py-1 border border-gray-300 text-gray-700 text-sm rounded">
+                                        Badge
+                                    </span>
                                 </div>
                             </div>
-                        </div>
 
-                        {/* Tarif géocible */}
-                        <div className="bg-white border border-gray-200 rounded-lg p-6">
-                            <div className="flex items-start gap-4">
-                                <div className="w-16 h-16 bg-orange-100 rounded flex items-center justify-center flex-shrink-0">
-                                    <Globe className="w-8 h-8 text-orange-600" />
+                            {/* Colonne 3 : Description */}
+                            <div className="min-w-[280px]">
+                                <div className="text-sm text-gray-700">
+                                    Toujours actif (possibilité d'exclure un nombre illimité de jours)
                                 </div>
-                                <div className="flex-1">
-                                    <h3 className="text-base font-semibold text-gray-900 mb-2">Tarif géocible</h3>
-                                    <div className="text-sm text-gray-900 mb-1">Réduction recommandée : au moins 15 %</div>
-                                    <div className="text-sm text-gray-600">Toujours actif (possibilité d'inclure un nombre illimité de pays)</div>
-                                    <div className="flex gap-2 mt-2">
-                                        <span className="px-2 py-0.5 bg-gray-100 text-gray-700 text-xs rounded">Durée</span>
-                                    </div>
+                            </div>
+
+                            {/* Colonne 4 : Texte + bouton */}
+                            <div className="min-w-[280px] text-right">
+                                <div className="text-sm text-gray-700 mb-4">
+                                    Devenez un établissement de choix pour les clients réservant sur leur smartphone.
                                 </div>
-                                <div className="text-right">
-                                    <div className="text-sm text-gray-600 mb-2">
-                                        Attirez les clients de régions définies et augmentez vos revenus.
-                                    </div>
-                                    <button className="px-4 py-2 border border-[#0071c2] text-[#0071c2] rounded hover:bg-blue-50 transition-colors text-sm font-medium">
-                                        Ajouter cette promotion
-                                    </button>
+                                <button className="px-6 py-2 border border-[#0071c2] text-[#0071c2] rounded hover:bg-blue-50 transition-colors text-sm font-semibold">
+                                    Ajouter cette promotion
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Tarif géociblé */}
+                    <div className="bg-white border border-gray-200 rounded-lg p-6">
+                        <div className="grid grid-cols-[auto_1fr_1fr_1fr] gap-6 items-start">
+                            {/* Colonne 1 : Icône */}
+                            <div className="flex-shrink-0">
+                                <img
+                                    src="/targeting_pin.svg"
+                                    alt="Géolocalisation"
+                                    className="w-20 h-20"
+                                />
+                            </div>
+
+                            {/* Colonne 2 : Titre + badges */}
+                            <div>
+                                <h3 className="text-xl font-bold text-gray-900 mb-3">Tarif géociblé</h3>
+                                <div className="text-base font-bold text-gray-900 mb-3">
+                                    Réduction recommandée : au moins 10 %
                                 </div>
+                            </div>
+
+                            {/* Colonne 3 : Description */}
+                            <div className="min-w-[280px]">
+                                <div className="text-sm text-gray-700">
+                                    Toujours actif (possibilité d'exclure un nombre illimité de jours)
+                                </div>
+                            </div>
+
+                            {/* Colonne 4 : Texte + bouton */}
+                            <div className="min-w-[280px] text-right">
+                                <div className="text-sm text-gray-700 mb-4">
+                                    Attirez les clients de régions définies et augmentez vos revenus.
+                                </div>
+                                <button className="px-6 py-2 border border-[#0071c2] text-[#0071c2] rounded hover:bg-blue-50 transition-colors text-sm font-semibold">
+                                    Ajouter cette promotion
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -290,73 +329,122 @@ function NouvellePromotion() {
                 <div className="mb-8">
                     <h2 className="text-lg font-semibold text-gray-900 mb-2">Offres du catalogue</h2>
                     <p className="text-sm text-gray-600 mb-4">
-                        Augmentez votre taux d'occupation grâce à des réductions offre personnalisables en fonction de vos besoins.
+                        Augmentez votre taux d'occupation grâce à de nombreuses offres personnalisables en fonction de vos besoins.
                     </p>
 
-                    <div className="space-y-4">
-                        {/* Offre Standard */}
-                        <div className="bg-white border border-gray-200 rounded-lg p-6">
-                            <div className="flex items-start gap-4">
-                                <div className="w-16 h-16 bg-orange-100 rounded flex items-center justify-center flex-shrink-0">
-                                    <Star className="w-8 h-8 text-orange-600" />
-                                </div>
-                                <div className="flex-1">
-                                    <h3 className="text-base font-semibold text-gray-900 mb-2">Offre Standard</h3>
-                                    <div className="text-sm text-gray-900 mb-1">Réduction recommandée : au moins 15 %</div>
-                                    <div className="text-sm text-gray-600">Toutes les dates</div>
-                                </div>
-                                <div className="text-right">
-                                    <div className="text-sm text-gray-600 mb-2">
-                                        Récompensez une offre pour l'adapter à vos besoins.
-                                    </div>
-                                    <button className="px-4 py-2 border border-[#0071c2] text-[#0071c2] rounded hover:bg-blue-50 transition-colors text-sm font-medium">
-                                        Ajouter cette promotion
-                                    </button>
+                    {/* Offre Standard */}
+                    <div className="bg-white border border-gray-200 rounded-lg p-6 mb-4">
+                        <div className="grid grid-cols-[auto_1fr_1fr_1fr] gap-6 items-start">
+                            {/* Colonne 1 : Icône */}
+                            <div className="flex-shrink-0">
+                                <img
+                                    src="/deal_label.svg"
+                                    alt="Offre Standard"
+                                    className="w-20 h-20"
+                                />
+                            </div>
+
+                            {/* Colonne 2 : Titre */}
+                            <div>
+                                <h3 className="text-xl font-bold text-gray-900 mb-3">Offre Standard</h3>
+                                <div className="text-base font-bold text-gray-900">
+                                    Réduction recommandée : au moins 10 %
                                 </div>
                             </div>
-                        </div>
 
-                        {/* Offre de Dernière Minute */}
-                        <div className="bg-white border border-gray-200 rounded-lg p-6">
-                            <div className="flex items-start gap-4">
-                                <div className="w-16 h-16 bg-orange-100 rounded flex items-center justify-center flex-shrink-0">
-                                    <Clock className="w-8 h-8 text-orange-600" />
-                                </div>
-                                <div className="flex-1">
-                                    <h3 className="text-base font-semibold text-gray-900 mb-2">Offre de Dernière Minute</h3>
-                                    <div className="text-sm text-gray-900 mb-1">Réduction recommandée : au moins 15 %</div>
-                                    <div className="text-sm text-gray-600">Toutes les dates</div>
-                                </div>
-                                <div className="text-right">
-                                    <div className="text-sm text-gray-600 mb-2">
-                                        Remplissez vos hébergements vides.
-                                    </div>
-                                    <button className="px-4 py-2 border border-[#0071c2] text-[#0071c2] rounded hover:bg-blue-50 transition-colors text-sm font-medium">
-                                        Ajouter cette promotion
-                                    </button>
+                            {/* Colonne 3 : Dates */}
+                            <div>
+                                <div className="text-sm text-gray-700">
+                                    Toutes les dates
                                 </div>
                             </div>
-                        </div>
 
-                        {/* Offre de Réservation Anticipée */}
-                        <div className="bg-white border border-gray-200 rounded-lg p-6">
-                            <div className="flex items-start gap-4">
-                                <div className="w-16 h-16 bg-orange-100 rounded flex items-center justify-center flex-shrink-0">
-                                    <Gift className="w-8 h-8 text-orange-600" />
+                            {/* Colonne 4 : Texte + bouton */}
+                            <div className="text-right">
+                                <div className="text-sm text-gray-700 mb-4">
+                                    Personnalisez une offre pour l'adapter à vos besoins.
                                 </div>
-                                <div className="flex-1">
-                                    <h3 className="text-base font-semibold text-gray-900 mb-2">Offre de Réservation Anticipée</h3>
-                                    <div className="text-sm text-gray-900 mb-1">Réduction recommandée : au moins 15 %</div>
-                                    <div className="text-sm text-gray-600">Toutes les dates</div>
+                                <button className="px-6 py-2 border border-[#0071c2] text-[#0071c2] rounded hover:bg-blue-50 transition-colors text-sm font-semibold">
+                                    Ajouter cette promotion
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Offre de Dernière Minute */}
+                    <div className="bg-white border border-gray-200 rounded-lg p-6 mb-4">
+                        <div className="grid grid-cols-[auto_1fr_1fr_1fr] gap-6 items-start">
+                            {/* Colonne 1 : Icône */}
+                            <div className="flex-shrink-0">
+                                <img
+                                    src="/deal_clock.svg"
+                                    alt="Offre de Dernière Minute"
+                                    className="w-20 h-20"
+                                />
+                            </div>
+
+                            {/* Colonne 2 : Titre */}
+                            <div>
+                                <h3 className="text-xl font-bold text-gray-900 mb-3">Offre de Dernière Minute</h3>
+                                <div className="text-base font-bold text-gray-900">
+                                    Réduction recommandée : au moins 10 %
                                 </div>
-                                <div className="text-right">
-                                    <div className="text-sm text-gray-600 mb-2">
-                                        Encouragez les clients à augmenter le nombre de réservations effectuées à l'avance.
-                                    </div>
-                                    <button className="px-4 py-2 border border-[#0071c2] text-[#0071c2] rounded hover:bg-blue-50 transition-colors text-sm font-medium">
-                                        Ajouter cette promotion
-                                    </button>
+                            </div>
+
+                            {/* Colonne 3 : Dates */}
+                            <div>
+                                <div className="text-sm text-gray-700">
+                                    Toutes les dates
                                 </div>
+                            </div>
+
+                            {/* Colonne 4 : Texte + bouton */}
+                            <div className="text-right">
+                                <div className="text-sm text-gray-700 mb-4">
+                                    Remplissez vos hébergements vides.
+                                </div>
+                                <button className="px-6 py-2 border border-[#0071c2] text-[#0071c2] rounded hover:bg-blue-50 transition-colors text-sm font-semibold">
+                                    Ajouter cette promotion
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Offre de Réservation Anticipée */}
+                    <div className="bg-white border border-gray-200 rounded-lg p-6">
+                        <div className="grid grid-cols-[auto_1fr_1fr_1fr] gap-6 items-start">
+                            {/* Colonne 1 : Icône */}
+                            <div className="flex-shrink-0">
+                                <img
+                                    src="/deal_bird.svg"
+                                    alt="Offre de Réservation Anticipée"
+                                    className="w-20 h-20"
+                                />
+                            </div>
+
+                            {/* Colonne 2 : Titre */}
+                            <div>
+                                <h3 className="text-xl font-bold text-gray-900 mb-3">Offre de Réservation Anticipée</h3>
+                                <div className="text-base font-bold text-gray-900">
+                                    Réduction recommandée : au moins 10 %
+                                </div>
+                            </div>
+
+                            {/* Colonne 3 : Dates */}
+                            <div>
+                                <div className="text-sm text-gray-700">
+                                    Toutes les dates
+                                </div>
+                            </div>
+
+                            {/* Colonne 4 : Texte + bouton */}
+                            <div className="text-right">
+                                <div className="text-sm text-gray-700 mb-4">
+                                    Anticipez mieux votre activité en augmentant le nombre de réservations effectuées à l'avance.
+                                </div>
+                                <button className="px-6 py-2 border border-[#0071c2] text-[#0071c2] rounded hover:bg-blue-50 transition-colors text-sm font-semibold">
+                                    Ajouter cette promotion
+                                </button>
                             </div>
                         </div>
                     </div>

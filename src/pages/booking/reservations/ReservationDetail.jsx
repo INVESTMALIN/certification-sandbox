@@ -475,7 +475,7 @@ function ReservationDetail() {
 
                                 <div className="space-y-3">
                                     <button className="w-full px-4 py-3 border border-gray-300 text-gray-400 bg-white rounded cursor-not-allowed text-sm font-medium">
-                                        Modifier les dates de séjour
+                                        Modifier les tarifs et les dates
                                     </button>
                                     <button
                                         onClick={() => setIsNoShowModalOpen(true)}
@@ -499,6 +499,12 @@ function ReservationDetail() {
                                         className="w-full px-4 py-3 border border-gray-300 text-[#0071c2] bg-white rounded hover:bg-gray-50 text-sm font-medium block text-center"
                                     >
                                         Signaler un comportement inapproprié du client
+                                    </Link>
+                                    <Link
+                                        to={`/booking/property/${id}/reservations/${reservationId}/damage-claim`}
+                                        className="w-full px-4 py-3 border border-gray-300 text-[#0071c2] bg-white rounded hover:bg-gray-50 text-sm font-medium block text-center"
+                                    >
+                                        Faire une demande de paiement des dommages
                                     </Link>
                                 </div>
                             </div>

@@ -65,8 +65,17 @@ function PropertyHeader() {
                 { label: 'Voir mes promotions actives', path: `/booking/property/${id}/promotions/actives`, enabled: true }
             ]
         },
-        { label: 'Réservations', path: `/booking/property/${id}/reservations`, icon: ClipboardList, enabled: true, },
         {
+            label: 'Réservations',
+            path: `/booking/property/${id}/reservations`,
+            icon: ClipboardList,
+            enabled: true,
+            hasSubmenu: true,
+            submenuItems: [
+                { label: 'Liste des réservations', path: `/booking/property/${id}/reservations/liste`, enabled: true },
+                { label: 'Demandes de réservation', path: `/booking/property/${id}/reservations/demandes`, enabled: true }
+            ]
+        }, {
             label: 'Établissement',
             path: `/booking/property/${id}/etablissement`,
             icon: Pen,
