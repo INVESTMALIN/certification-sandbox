@@ -107,7 +107,7 @@ function PropertyHeader() {
             hasSubmenu: true,
             submenuItems: [
                 { label: 'Messages relatifs aux réservations', path: `/booking/property/${id}/inbox`, enabled: true },
-                { label: 'Messages de Booking.com', path: '#', enabled: false },
+                { label: 'Messages de Booking.com', path: `/booking/property/${id}/inbox/booking-messages`, enabled: true },
                 { label: 'Questions des clients', path: '#', enabled: false }
             ]
         }, {

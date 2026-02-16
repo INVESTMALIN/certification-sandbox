@@ -87,7 +87,7 @@ function Reservations() {
                 (statusFilters.ok && res.status === 'OK') ||
                 (statusFilters.cancelled && res.status === 'Annulée') ||
                 (statusFilters.noShow && res.status === 'Non-présentation') ||
-                (statusFilters.paymentByBooking && res.paymentMethod === 'Booking.com')
+                (statusFilters.paymentByBooking && res.statusDetail === 'Paiement par Booking.com')
 
             if (!matchesStatus) {
                 return false

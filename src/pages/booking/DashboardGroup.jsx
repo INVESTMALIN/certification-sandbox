@@ -9,12 +9,15 @@ import { ClipboardList, LogIn, LogOut, XCircle, Star, ChevronDown } from 'lucide
 function DashboardGroup() {
     const properties = propertiesData
 
+    // Extraire les villes uniques dès le début pour l'initialisation
+    const uniqueCities = [...new Set(properties.map(p => p.city))]
+
     const [activeTab, setActiveTab] = useState('activite')
 
     // States pour le dropdown de destination
     const [isDestinationOpen, setIsDestinationOpen] = useState(false)
-    const [selectedCities, setSelectedCities] = useState(['Cannes', 'Marseille']) // Toutes sélectionnées par défaut
-    const [tempSelectedCities, setTempSelectedCities] = useState(['Cannes', 'Marseille'])
+    const [selectedCities, setSelectedCities] = useState(uniqueCities) // Toutes sélectionnées par défaut
+    const [tempSelectedCities, setTempSelectedCities] = useState(uniqueCities)
 
     // States pour le dropdown de type d'établissement
     const [isTypeOpen, setIsTypeOpen] = useState(false)
@@ -88,8 +91,6 @@ function DashboardGroup() {
         return `${selectedTypes.length} types sélectionnés`
     }
 
-    // Extraire les villes uniques
-    const uniqueCities = [...new Set(properties.map(p => p.city))]
     const totalProperties = properties.length
 
     // Calculer le nombre de propriétés par ville
@@ -204,6 +205,175 @@ function DashboardGroup() {
                         </div>
                     </div>
                 </div>
+
+                {/* Filtres */}
+                <div className="flex items-center gap-4 mb-6">
+                    {/* Filtrer par destination - Dropdown custom */}
+                    <div className="relative">
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Filtrer par destination
+                        </label>
+                        <button
+                            onClick={() => setIsDestinationOpen(!isDestinationOpen)}
+                            className="w-64 px-4 py-2 border border-gray-300 rounded bg-white text-sm text-left flex items-center justify-between hover:border-gray-400"
+                        >
+                            <span>{getButtonText()}</span>
+                            <ChevronDown className={`w-4 h-4 text-gray-600 transition-transform ${isDestinationOpen ? 'rotate-180' : ''}`} />
+                        </button>
+
+                        {/* Dropdown Panel */}
+                        {isDestinationOpen && (
+                            <div className="absolute z-50 mt-1 w-80 bg-white border border-gray-300 rounded-lg shadow-lg">
+                                <div className="p-4">
+                                    {/* Tout sélectionner */}
+                                    <label className="flex items-center gap-3 mb-3 cursor-pointer hover:bg-gray-50 p-2 rounded">
+                                        <input
+                                            type="checkbox"
+                                            checked={tempSelectedCities.length === uniqueCities.length}
+                                            onChange={handleToggleAll}
+                                            className="w-5 h-5 text-[#0071c2] border-gray-300 rounded focus:ring-[#0071c2]"
+                                        />
+                                        <span className="text-sm font-medium text-gray-900">Tout sélectionner</span>
+                                    </label>
+
+                                    {/* Séparateur */}
+                                    <div className="border-t border-gray-200 my-2"></div>
+
+                                    {/* France avec sous-villes */}
+                                    <div className="mb-2">
+                                        <label className="flex items-center gap-3 cursor-pointer hover:bg-gray-50 p-2 rounded">
+                                            <input
+                                                type="checkbox"
+                                                checked={tempSelectedCities.length === uniqueCities.length}
+                                                onChange={handleToggleAll}
+                                                className="w-5 h-5 text-[#0071c2] border-gray-300 rounded focus:ring-[#0071c2]"
+                                            />
+                                            <span className="text-sm font-semibold text-gray-900">
+                                                France
+                                            </span>
+                                            <span className="text-sm text-gray-500">
+                                                ({totalProperties} hébergement{totalProperties > 1 ? 's' : ''})
+                                            </span>
+                                        </label>
+
+                                        {/* Villes indentées */}
+                                        <div className="ml-8 mt-1 space-y-1">
+                                            {uniqueCities.map(city => (
+                                                <label
+                                                    key={city}
+                                                    className="flex items-center gap-3 cursor-pointer hover:bg-gray-50 p-2 rounded"
+                                                >
+                                                    <input
+                                                        type="checkbox"
+                                                        checked={tempSelectedCities.includes(city)}
+                                                        onChange={() => handleToggleCity(city)}
+                                                        className="w-5 h-5 text-[#0071c2] border-gray-300 rounded focus:ring-[#0071c2]"
+                                                    />
+                                                    <span className="text-sm text-gray-700">{city}</span>
+                                                    <span className="text-sm text-gray-500">
+                                                        ({getCityCount(city)} hébergement{getCityCount(city) > 1 ? 's' : ''})
+                                                    </span>
+                                                </label>
+                                            ))}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Boutons Fermer et Appliquer */}
+                                <div className="border-t border-gray-200 p-3 flex items-center justify-end gap-3">
+                                    <button
+                                        onClick={handleClose}
+                                        className="px-4 py-2 text-sm text-[#0071c2] hover:bg-blue-50 rounded font-medium"
+                                    >
+                                        Fermer
+                                    </button>
+                                    <button
+                                        onClick={handleApply}
+                                        className="px-4 py-2 text-sm bg-[#0071c2] text-white rounded hover:bg-[#005999] font-medium"
+                                    >
+                                        Appliquer
+                                    </button>
+                                </div>
+                            </div>
+                        )}
+                    </div>
+
+                    {/* Filtrer par type d'établissement - Dropdown custom */}
+                    <div className="relative">
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Filtrer par type d'établissement
+                        </label>
+                        <button
+                            onClick={() => setIsTypeOpen(!isTypeOpen)}
+                            className="w-64 px-4 py-2 border border-gray-300 rounded bg-white text-sm text-left flex items-center justify-between hover:border-gray-400"
+                        >
+                            <span className={selectedTypes.length === 0 ? 'text-gray-500' : 'text-gray-900'}>
+                                {getTypeButtonText()}
+                            </span>
+                            <ChevronDown className={`w-4 h-4 text-gray-600 transition-transform ${isTypeOpen ? 'rotate-180' : ''}`} />
+                        </button>
+
+                        {/* Dropdown Panel */}
+                        {isTypeOpen && (
+                            <div className="absolute z-50 mt-1 w-80 bg-white border border-gray-300 rounded-lg shadow-lg max-h-96 flex flex-col">
+                                <div className="p-4 overflow-y-auto flex-1">
+                                    {/* Liste des types */}
+                                    <div className="space-y-1">
+                                        {propertyTypes.map(type => (
+                                            <label
+                                                key={type}
+                                                className="flex items-center gap-3 cursor-pointer hover:bg-gray-50 p-2 rounded"
+                                            >
+                                                <input
+                                                    type="checkbox"
+                                                    checked={tempSelectedTypes.includes(type)}
+                                                    onChange={() => handleToggleType(type)}
+                                                    className="w-5 h-5 text-[#0071c2] border-gray-300 rounded focus:ring-[#0071c2]"
+                                                />
+                                                <span className="text-sm text-gray-700">{type}</span>
+                                            </label>
+                                        ))}
+                                    </div>
+                                </div>
+
+                                {/* Boutons Effacer et Appliquer */}
+                                <div className="border-t border-gray-200 p-3 flex items-center justify-between">
+                                    <button
+                                        onClick={() => setTempSelectedTypes([])}
+                                        className="px-4 py-2 text-sm text-[#0071c2] hover:bg-blue-50 rounded font-medium"
+                                    >
+                                        Effacer
+                                    </button>
+                                    <button
+                                        onClick={handleApplyTypes}
+                                        className="px-4 py-2 text-sm bg-[#0071c2] text-white rounded hover:bg-[#005999] font-medium"
+                                    >
+                                        Appliquer
+                                    </button>
+                                </div>
+                            </div>
+                        )}
+                    </div>
+
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Recherche
+                        </label>
+                        <div className="relative">
+                            <input
+                                type="text"
+                                placeholder="Filtrez par identifiant"
+                                className="w-64 px-4 py-2 pr-10 border border-gray-300 rounded text-sm"
+                            />
+                            <button className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400">
+                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
                 {/* Onglets */}
                 <div className="flex gap-1 border-b border-gray-200 mb-6">
                     <button
@@ -235,175 +405,6 @@ function DashboardGroup() {
                 {/* Contenu Activité */}
                 {activeTab === 'activite' && (
                     <>
-
-                        {/* Filtres */}
-                        <div className="flex items-center gap-4 mb-6">
-                            {/* Filtrer par destination - Dropdown custom */}
-                            <div className="relative">
-                                <label className="block text-sm font-medium text-gray-700 mb-2">
-                                    Filtrer par destination
-                                </label>
-                                <button
-                                    onClick={() => setIsDestinationOpen(!isDestinationOpen)}
-                                    className="w-64 px-4 py-2 border border-gray-300 rounded bg-white text-sm text-left flex items-center justify-between hover:border-gray-400"
-                                >
-                                    <span>{getButtonText()}</span>
-                                    <ChevronDown className={`w-4 h-4 text-gray-600 transition-transform ${isDestinationOpen ? 'rotate-180' : ''}`} />
-                                </button>
-
-                                {/* Dropdown Panel */}
-                                {isDestinationOpen && (
-                                    <div className="absolute z-50 mt-1 w-80 bg-white border border-gray-300 rounded-lg shadow-lg">
-                                        <div className="p-4">
-                                            {/* Tout sélectionner */}
-                                            <label className="flex items-center gap-3 mb-3 cursor-pointer hover:bg-gray-50 p-2 rounded">
-                                                <input
-                                                    type="checkbox"
-                                                    checked={tempSelectedCities.length === uniqueCities.length}
-                                                    onChange={handleToggleAll}
-                                                    className="w-5 h-5 text-[#0071c2] border-gray-300 rounded focus:ring-[#0071c2]"
-                                                />
-                                                <span className="text-sm font-medium text-gray-900">Tout sélectionner</span>
-                                            </label>
-
-                                            {/* Séparateur */}
-                                            <div className="border-t border-gray-200 my-2"></div>
-
-                                            {/* France avec sous-villes */}
-                                            <div className="mb-2">
-                                                <label className="flex items-center gap-3 cursor-pointer hover:bg-gray-50 p-2 rounded">
-                                                    <input
-                                                        type="checkbox"
-                                                        checked={tempSelectedCities.length === uniqueCities.length}
-                                                        onChange={handleToggleAll}
-                                                        className="w-5 h-5 text-[#0071c2] border-gray-300 rounded focus:ring-[#0071c2]"
-                                                    />
-                                                    <span className="text-sm font-semibold text-gray-900">
-                                                        France
-                                                    </span>
-                                                    <span className="text-sm text-gray-500">
-                                                        ({totalProperties} hébergement{totalProperties > 1 ? 's' : ''})
-                                                    </span>
-                                                </label>
-
-                                                {/* Villes indentées */}
-                                                <div className="ml-8 mt-1 space-y-1">
-                                                    {uniqueCities.map(city => (
-                                                        <label
-                                                            key={city}
-                                                            className="flex items-center gap-3 cursor-pointer hover:bg-gray-50 p-2 rounded"
-                                                        >
-                                                            <input
-                                                                type="checkbox"
-                                                                checked={tempSelectedCities.includes(city)}
-                                                                onChange={() => handleToggleCity(city)}
-                                                                className="w-5 h-5 text-[#0071c2] border-gray-300 rounded focus:ring-[#0071c2]"
-                                                            />
-                                                            <span className="text-sm text-gray-700">{city}</span>
-                                                            <span className="text-sm text-gray-500">
-                                                                ({getCityCount(city)} hébergement{getCityCount(city) > 1 ? 's' : ''})
-                                                            </span>
-                                                        </label>
-                                                    ))}
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        {/* Boutons Fermer et Appliquer */}
-                                        <div className="border-t border-gray-200 p-3 flex items-center justify-end gap-3">
-                                            <button
-                                                onClick={handleClose}
-                                                className="px-4 py-2 text-sm text-[#0071c2] hover:bg-blue-50 rounded font-medium"
-                                            >
-                                                Fermer
-                                            </button>
-                                            <button
-                                                onClick={handleApply}
-                                                className="px-4 py-2 text-sm bg-[#0071c2] text-white rounded hover:bg-[#005999] font-medium"
-                                            >
-                                                Appliquer
-                                            </button>
-                                        </div>
-                                    </div>
-                                )}
-                            </div>
-
-                            {/* Filtrer par type d'établissement - Dropdown custom */}
-                            <div className="relative">
-                                <label className="block text-sm font-medium text-gray-700 mb-2">
-                                    Filtrer par type d'établissement
-                                </label>
-                                <button
-                                    onClick={() => setIsTypeOpen(!isTypeOpen)}
-                                    className="w-64 px-4 py-2 border border-gray-300 rounded bg-white text-sm text-left flex items-center justify-between hover:border-gray-400"
-                                >
-                                    <span className={selectedTypes.length === 0 ? 'text-gray-500' : 'text-gray-900'}>
-                                        {getTypeButtonText()}
-                                    </span>
-                                    <ChevronDown className={`w-4 h-4 text-gray-600 transition-transform ${isTypeOpen ? 'rotate-180' : ''}`} />
-                                </button>
-
-                                {/* Dropdown Panel */}
-                                {isTypeOpen && (
-                                    <div className="absolute z-50 mt-1 w-80 bg-white border border-gray-300 rounded-lg shadow-lg max-h-96 flex flex-col">
-                                        <div className="p-4 overflow-y-auto flex-1">
-                                            {/* Liste des types */}
-                                            <div className="space-y-1">
-                                                {propertyTypes.map(type => (
-                                                    <label
-                                                        key={type}
-                                                        className="flex items-center gap-3 cursor-pointer hover:bg-gray-50 p-2 rounded"
-                                                    >
-                                                        <input
-                                                            type="checkbox"
-                                                            checked={tempSelectedTypes.includes(type)}
-                                                            onChange={() => handleToggleType(type)}
-                                                            className="w-5 h-5 text-[#0071c2] border-gray-300 rounded focus:ring-[#0071c2]"
-                                                        />
-                                                        <span className="text-sm text-gray-700">{type}</span>
-                                                    </label>
-                                                ))}
-                                            </div>
-                                        </div>
-
-                                        {/* Boutons Effacer et Appliquer */}
-                                        <div className="border-t border-gray-200 p-3 flex items-center justify-between">
-                                            <button
-                                                onClick={() => setTempSelectedTypes([])}
-                                                className="px-4 py-2 text-sm text-[#0071c2] hover:bg-blue-50 rounded font-medium"
-                                            >
-                                                Effacer
-                                            </button>
-                                            <button
-                                                onClick={handleApplyTypes}
-                                                className="px-4 py-2 text-sm bg-[#0071c2] text-white rounded hover:bg-[#005999] font-medium"
-                                            >
-                                                Appliquer
-                                            </button>
-                                        </div>
-                                    </div>
-                                )}
-                            </div>
-
-                            <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-2">
-                                    Recherche
-                                </label>
-                                <div className="relative">
-                                    <input
-                                        type="text"
-                                        placeholder="Filtrez par identifiant"
-                                        className="w-64 px-4 py-2 pr-10 border border-gray-300 rounded text-sm"
-                                    />
-                                    <button className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400">
-                                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                                        </svg>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-
                         {/* Section Aujourd'hui */}
                         <div className="mb-6">
                             <h2 className="text-xl font-semibold text-gray-900 mb-4">Aujourd'hui</h2>
@@ -587,7 +588,7 @@ function DashboardGroup() {
                                     <div className="text-sm text-gray-600 mb-3">Prix moyen par nuitée réservée</div>
                                     <div className="text-3xl font-bold text-gray-900 mb-2">€ 85,78</div>
                                     <div className="flex items-center gap-2">
-                                        <span className="text-sm text-red-600 bg-red-50 px-2 py-1 rounded">-1%</span>
+                                        <span className="text-sm text-red-600 bg-red-50 px-2 py-1 rounded">+12%</span>
                                         <span className="text-sm text-gray-600">par rapport à la semaine précédente</span>
                                     </div>
                                 </div>
@@ -597,7 +598,7 @@ function DashboardGroup() {
                                     <div className="text-sm text-gray-600 mb-3">Prix moyen par nuitée effectuée</div>
                                     <div className="text-3xl font-bold text-gray-900 mb-2">€ 86,29</div>
                                     <div className="flex items-center gap-2">
-                                        <span className="text-sm text-red-600 bg-red-50 px-2 py-1 rounded">-1%</span>
+                                        <span className="text-sm text-red-600 bg-red-50 px-2 py-1 rounded">+8%</span>
                                         <span className="text-sm text-gray-600">par rapport à la semaine précédente</span>
                                     </div>
                                 </div>
@@ -617,7 +618,7 @@ function DashboardGroup() {
                                     <div className="text-sm text-gray-600 mb-3">Nuitées effectuées</div>
                                     <div className="text-3xl font-bold text-gray-900 mb-2">225</div>
                                     <div className="flex items-center gap-2">
-                                        <span className="text-sm text-red-600 bg-red-50 px-2 py-1 rounded">-7%</span>
+                                        <span className="text-sm text-red-600 bg-red-50 px-2 py-1 rounded">+7%</span>
                                         <span className="text-sm text-gray-600">par rapport à la semaine précédente</span>
                                     </div>
                                 </div>
@@ -628,9 +629,9 @@ function DashboardGroup() {
                                 {/* Revenus associés aux séjours effectués */}
                                 <div className="border-r border-gray-200 pr-6">
                                     <div className="text-sm text-gray-600 mb-3">Revenus associés aux séjours effectués</div>
-                                    <div className="text-3xl font-bold text-gray-900 mb-2">€ 15 359,51</div>
+                                    <div className="text-3xl font-bold text-gray-900 mb-2">€ 6 884,25</div>
                                     <div className="flex items-center gap-2">
-                                        <span className="text-sm text-red-600 bg-red-50 px-2 py-1 rounded">-4%</span>
+                                        <span className="text-sm text-red-600 bg-red-50 px-2 py-1 rounded">+4%</span>
                                         <span className="text-sm text-gray-600">par rapport à la semaine précédente</span>
                                     </div>
                                 </div>
@@ -658,7 +659,7 @@ function DashboardGroup() {
                                 {/* Ouvert / Réservable */}
                                 <div>
                                     <div className="text-sm text-gray-600 mb-3">Ouvert / Réservable</div>
-                                    <div className="text-3xl font-bold text-gray-900 mb-2">461/629</div>
+                                    <div className="text-3xl font-bold text-gray-900 mb-2">3/3</div>
                                     <div className="text-sm text-gray-600">établissements dans ce groupe</div>
                                 </div>
                             </div>
@@ -792,7 +793,7 @@ function DashboardGroup() {
 
                             {/* Bouton Voir la performance */}
                             <button className="px-6 py-2 bg-[#0071c2] text-white rounded font-medium text-sm hover:bg-[#005999] transition-colors">
-                                Voir la performance
+                                Voir les données
                             </button>
                         </div>
 
@@ -813,11 +814,21 @@ function DashboardGroup() {
                                             <th className="px-4 py-3 text-center text-xs font-semibold text-gray-700">Réservations d'hébergements</th>
                                             <th className="px-4 py-3 text-center text-xs font-semibold text-gray-700">
                                                 Taux de clics (30 derniers jours)
-                                                <span className="inline-block ml-1 w-4 h-4 bg-gray-300 rounded-full text-center leading-4 text-white text-xs cursor-help">i</span>
+                                                <span
+                                                    className="inline-block ml-1 w-4 h-4 bg-gray-300 rounded-full text-center leading-4 text-white text-xs cursor-help"
+                                                    title="Ces données sont seulement disponibles pour les 30 derniers jours, contrairement aux autres données de performance qui concernent la période filtrée."
+                                                >
+                                                    i
+                                                </span>
                                             </th>
                                             <th className="px-4 py-3 text-center text-xs font-semibold text-gray-700">
                                                 Conversion (30 derniers jours)
-                                                <span className="inline-block ml-1 w-4 h-4 bg-gray-300 rounded-full text-center leading-4 text-white text-xs cursor-help">i</span>
+                                                <span
+                                                    className="inline-block ml-1 w-4 h-4 bg-gray-300 rounded-full text-center leading-4 text-white text-xs cursor-help"
+                                                    title="Ces données sont seulement disponibles pour les 30 derniers jours, contrairement aux autres données de performance qui concernent la période filtrée."
+                                                >
+                                                    i
+                                                </span>
                                             </th>
                                         </tr>
                                     </thead>

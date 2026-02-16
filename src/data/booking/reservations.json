@@ -50,7 +50,7 @@
         "checkOut": "2026-06-25",
         "bookedOn": "2026-01-11",
         "status": "Annulée",
-        "statusDetail": "",
+        "statusDetail": "Annulée",
         "paymentMethod": "Virement bancaire",
         "totalAmount": 630.00,
         "rateDetail": "Virement bancaire",

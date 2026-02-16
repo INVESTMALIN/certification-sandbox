@@ -1,0 +1,56 @@
+[
+    {
+        "propertyId": "prop_airbnb_001",
+        "name": "Appartement lumineux au cœur de Rennes",
+        "address": "1599 • Pomme de Pin | Piscine & Tennis • Parking",
+        "city": "Messigny-et-Vantoux",
+        "country": "France",
+        "image": "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=200&h=200&fit=crop",
+        "hostSince": "2015"
+    },
+    {
+        "propertyId": "prop_airbnb_002",
+        "name": "Studio au Cœur d'Avignon",
+        "address": "12 Rue du Centre • Avignon",
+        "city": "Avignon",
+        "country": "France",
+        "image": "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=200&h=200&fit=crop",
+        "hostSince": "2015"
+    },
+    {
+        "propertyId": "prop_airbnb_003",
+        "name": "Vue imprenable à 360° au pied des 3 Vallées",
+        "address": "Chalet Les Arcs • Savoie",
+        "city": "Les Arcs",
+        "country": "France",
+        "image": "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=200&h=200&fit=crop",
+        "hostSince": "2015"
+    },
+    {
+        "propertyId": "prop_airbnb_004",
+        "name": "Balnéo Privée Wifi Fibre Chic & Détente Romantique",
+        "address": "Villa Spa • Nice",
+        "city": "Nice",
+        "country": "France",
+        "image": "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=200&h=200&fit=crop",
+        "hostSince": "2015"
+    },
+    {
+        "propertyId": "prop_airbnb_005",
+        "name": "Maison de Ville et garage fermé. Ménage inclus",
+        "address": "45 Avenue de la République • Lyon",
+        "city": "Lyon",
+        "country": "France",
+        "image": "https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=200&h=200&fit=crop",
+        "hostSince": "2015"
+    },
+    {
+        "propertyId": "prop_airbnb_006",
+        "name": "Séjour tout confort dans un cadre raffiné",
+        "address": "Appartement Premium • Paris",
+        "city": "Paris",
+        "country": "France",
+        "image": "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=200&h=200&fit=crop",
+        "hostSince": "2015"
+    }
+]

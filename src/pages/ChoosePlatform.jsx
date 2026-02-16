@@ -86,8 +86,8 @@ function ChoosePlatform() {
 
                 {/* Côté AIRBNB (droite) */}
                 <button
-                    disabled
-                    className="relative w-1/2 bg-gradient-to-br from-gray-400 to-gray-500 flex items-center justify-center transition-all duration-500 group overflow-hidden cursor-not-allowed opacity-60"
+                    onClick={() => navigate('/airbnb/dashboard')}
+                    className="relative w-1/2 bg-gradient-to-br from-[#FF385C] to-[#E61E4D] flex items-center justify-center transition-all duration-500 hover:w-[55%] group overflow-hidden"
                 >
                     {/* Background pattern */}
                     <div className="absolute inset-0 opacity-5">
@@ -98,11 +98,11 @@ function ChoosePlatform() {
                     </div>
 
                     {/* Contenu */}
-                    <div className="relative z-10 text-center px-12">
+                    <div className="relative z-10 text-center px-12 transform transition-all duration-500 group-hover:scale-110">
                         {/* Logo simulé Airbnb */}
                         <div className="mb-8">
-                            <div className="inline-block px-8 py-4 bg-white rounded-lg shadow-2xl opacity-50">
-                                <span className="text-5xl font-bold text-[#FF5A5F]">Airbnb</span>
+                            <div className="inline-block px-8 py-4 bg-white rounded-lg shadow-2xl">
+                                <span className="text-5xl font-bold text-[#FF385C]">Airbnb</span>
                             </div>
                         </div>
 
@@ -112,23 +112,26 @@ function ChoosePlatform() {
                         </h2>
 
                         {/* Description */}
-                        <p className="text-xl text-white/80 mb-8 max-w-md mx-auto">
+                        <p className="text-xl text-white/90 mb-8 max-w-md mx-auto">
                             Tableau de bord hôte - Gestion des annonces et voyageurs
                         </p>
 
                         {/* Badge */}
-                        <div className="inline-flex items-center gap-2 px-6 py-3 bg-white/20 text-white font-semibold rounded-full border border-white/30">
-                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                        <div className="inline-flex items-center gap-2 px-6 py-3 bg-white text-[#FF385C] font-semibold rounded-full shadow-xl transform transition-transform group-hover:scale-105">
+                            <span>Accéder à l'interface</span>
+                            <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
                             </svg>
-                            <span>En développement</span>
                         </div>
 
                         {/* Icône décorative */}
                         <div className="mt-8 text-white/20 text-6xl">
-                            🏡
+                            🏠
                         </div>
                     </div>
+
+                    {/* Effet de lumière au hover */}
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent transform -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
                 </button>
             </div>
 
@@ -142,14 +145,18 @@ function ChoosePlatform() {
                 </p>
             </div>
 
-            {/* Info en bas */}
-            <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-30 max-w-2xl px-6">
-                <div className="bg-white/10 backdrop-blur-md rounded-xl p-4 border border-white/20">
-                    <p className="text-white text-sm text-center leading-relaxed">
-                        <svg className="inline w-4 h-4 mr-1 mb-0.5" fill="currentColor" viewBox="0 0 20 20">
+            {/* Disclaimer */}
+            <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 z-50 max-w-4xl px-6">
+                <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-lg p-4 text-center">
+                    <p className="text-white text-sm leading-relaxed">
+                        <span className="font-semibold">                        <svg className="inline w-4 h-4 mr-1 mb-0.5" fill="currentColor" viewBox="0 0 20 20">
                             <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
-                        </svg>
-                        Environnement de formation - Toutes les données sont fictives
+                        </svg> Environnement de simulation pédagogique</span>
+                        <br />
+                        Cet outil reproduit les interfaces de Booking.com et Airbnb dans un but pédagogique uniquement.
+                        <br />
+                        Toutes les données affichées sont fictives.
+                        <br />
                     </p>
                 </div>
             </div>

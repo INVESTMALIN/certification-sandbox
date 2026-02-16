@@ -112,9 +112,9 @@ function PropertyAccueil() {
                                 <p className="text-gray-600 text-sm mb-4">
                                     Les informations présentées dans cette section vous aideront à mieux planifier vos journées. Les arrivées, départs et autres évènements peuvent être filtrés par date et par période.
                                 </p>
-                                <button className="px-4 py-2 border border-[#0071c2] text-[#0071c2] rounded text-sm font-medium hover:bg-blue-50">
+                                <Link to={`/booking/property/${id}/reservations`} className="inline-block px-4 py-2 border border-[#0071c2] text-[#0071c2] rounded text-sm font-medium hover:bg-blue-50">
                                     Voir toutes les réservations
-                                </button>
+                                </Link>
                             </div>
                         </div>
 
