@@ -1,0 +1,38 @@
+[
+    {
+        "id": "dem_airbnb_001",
+        "propertyId": "prop_airbnb_001",
+        "propertyName": "Vue Marina, Piscine, Terrasse & Fibre",
+        "propertyAddress": "1461 · Vue Marina, Piscine, Terrasse & Fibre",
+        "propertyImage": "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=200&h=200&fit=crop",
+        "guestName": "Clio",
+        "guestAvatar": "https://i.pravatar.cc/150?img=47",
+        "guestCount": "2 voyageurs",
+        "checkInOffset": 1,
+        "checkOutOffset": 2,
+        "nights": 1,
+        "totalAmount": 154.66,
+        "hoursRemaining": 8,
+        "guestMessage": "Bonsoir, étape avant de reprendre la route demain suite arrêt au restaurant",
+        "messageTimeAgo": "il y a 15 heures",
+        "status": "pending"
+    },
+    {
+        "id": "dem_airbnb_002",
+        "propertyId": "prop_airbnb_003",
+        "propertyName": "T3 moderne, lumineux avec terrasse & parking",
+        "propertyAddress": "T3 moderne, lumineux avec terrasse & parking",
+        "propertyImage": "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=200&h=200&fit=crop",
+        "guestName": "Julien",
+        "guestAvatar": "https://i.pravatar.cc/150?img=68",
+        "guestCount": "2 voyageurs",
+        "checkInOffset": 14,
+        "checkOutOffset": 16,
+        "nights": 2,
+        "totalAmount": 210.00,
+        "hoursRemaining": 23,
+        "guestMessage": "Bonjour, nous serons de passage pour un week-end en famille. Avez-vous des recommandations de restaurants ?",
+        "messageTimeAgo": "il y a 2 heures",
+        "status": "pending"
+    }
+]

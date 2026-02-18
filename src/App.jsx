@@ -48,8 +48,18 @@ import DamageClaimStep3 from './pages/booking/reservations/DamageClaimStep3'
 
 
 // Airbnb
+import AirbnbHome from './pages/airbnb/AirbnbHome'
 import AirbnbDashboard from './pages/airbnb/AirbnbDashboard'
 import AirbnbReservationDetail from './pages/airbnb/ReservationDetail'
+import DemandeDetail from './pages/airbnb/DemandeDetail'
+import RemboursementDetail from './pages/airbnb/RemboursementDetail'
+import CommentaireStep1 from './pages/airbnb/CommentaireStep1'
+import CommentaireStep2 from './pages/airbnb/CommentaireStep2'
+import CommentaireStep3 from './pages/airbnb/CommentaireStep3'
+import CommentaireStep4 from './pages/airbnb/CommentaireStep4'
+import CommentaireStep5 from './pages/airbnb/CommentaireStep5'
+import CommentaireStep6 from './pages/airbnb/CommentaireStep6'
+import CommentaireStep7 from './pages/airbnb/CommentaireStep7'
 
 function App() {
   return (
@@ -438,6 +448,15 @@ function App() {
 
 
       {/* Routes Airbnb protégées */}
+
+      <Route
+        path="/airbnb/home"
+        element={
+          <ProtectedRoute>
+            <AirbnbHome />
+          </ProtectedRoute>
+        }
+      />
       <Route
         path="/airbnb/dashboard"
         element={
@@ -456,7 +475,85 @@ function App() {
         }
       />
 
+      <Route
+        path="/airbnb/demande/:id"
+        element={
+          <ProtectedRoute>
+            <DemandeDetail />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/airbnb/remboursement/:id"
+        element={
+          <ProtectedRoute>
+            <RemboursementDetail />
+          </ProtectedRoute>
+        }
+      />
 
+      <Route
+        path="/airbnb/commentaire/:reservationId/step1"
+        element={
+          <ProtectedRoute>
+            <CommentaireStep1 />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/airbnb/commentaire/:reservationId/step2"
+        element={
+          <ProtectedRoute>
+            <CommentaireStep2 />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/airbnb/commentaire/:reservationId/step3"
+        element={
+          <ProtectedRoute>
+            <CommentaireStep3 />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/airbnb/commentaire/:reservationId/step4"
+        element={
+          <ProtectedRoute>
+            <CommentaireStep4 />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/airbnb/commentaire/:reservationId/step5"
+        element={
+          <ProtectedRoute>
+            <CommentaireStep5 />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/airbnb/commentaire/:reservationId/step6"
+        element={
+          <ProtectedRoute>
+            <CommentaireStep6 />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/airbnb/commentaire/:reservationId/step7"
+        element={
+          <ProtectedRoute>
+            <CommentaireStep7 />
+          </ProtectedRoute>
+        }
+      />
 
 
 

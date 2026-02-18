@@ -86,7 +86,7 @@ function ChoosePlatform() {
 
                 {/* Côté AIRBNB (droite) */}
                 <button
-                    onClick={() => navigate('/airbnb/dashboard')}
+                    onClick={() => navigate('/airbnb/home')}
                     className="relative w-1/2 bg-gradient-to-br from-[#FF385C] to-[#E61E4D] flex items-center justify-center transition-all duration-500 hover:w-[55%] group overflow-hidden"
                 >
                     {/* Background pattern */}

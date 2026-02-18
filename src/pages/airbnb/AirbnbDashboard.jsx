@@ -5,6 +5,11 @@ import AirbnbHeader from '../../components/airbnb/AirbnbHeader'
 import AirbnbFooter from '../../components/airbnb/AirbnbFooter'
 import reservations from '../../data/airbnb/reservations.json'
 import properties from '../../data/airbnb/properties.json'
+import demandes from '../../data/airbnb/demandes.json'
+import { hydrateReservation, hydrateDemande, formatDateShort } from '../../data/airbnb/dateUtils.js'
+
+const hydratedReservations = reservations.map(hydrateReservation)
+const hydratedDemandes = demandes.map(hydrateDemande)
 
 function AirbnbDashboard() {
     const navigate = useNavigate()
@@ -31,8 +36,8 @@ function AirbnbDashboard() {
     })
 
     // Filtrer les réservations selon l'onglet actif
-    const todayReservations = reservations.filter(res => res.status === 'confirmed')
-    const upcomingReservations = reservations.filter(res => res.status === 'upcoming')
+    const todayReservations = hydratedReservations.filter(res => res.status === 'confirmed')
+    const upcomingReservations = hydratedReservations.filter(res => res.status === 'upcoming')
 
     let currentReservations = activeTab === 'today' ? todayReservations : upcomingReservations
 
@@ -65,10 +70,7 @@ function AirbnbDashboard() {
     }
 
     // Formater les dates en français
-    const formatDate = (dateString) => {
-        const date = new Date(dateString)
-        return date.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' })
-    }
+    const formatDate = (date) => formatDateShort(date)
 
     return (
         <div className="font-airbnb min-h-screen bg-white flex flex-col">
@@ -124,14 +126,14 @@ function AirbnbDashboard() {
                     </div>
                 </div>
                 <div className="max-w-4xl mx-auto px-6">
-                    {/* Toggle Aujourd'hui / À venir (centré) */}
-                    <div className="py-8 relative">
+                    {/* Toggle Aujourd'hui / À venir (centré) + Bouton Filtrer */}
+                    <div className="py-8 flex items-center justify-between">
                         {/* Toggles centrés */}
-                        <div className="flex items-center justify-center gap-3">
+                        <div className="flex-1 flex justify-center gap-2">
                             <button
                                 onClick={() => setActiveTab('today')}
-                                className={`px-6 py-2.5 rounded-full font-medium transition-colors text-sm ${activeTab === 'today'
-                                    ? 'bg-[#3f3f3f] text-white'
+                                className={`px-6 py-2 rounded-full font-semibold transition-colors ${activeTab === 'today'
+                                    ? 'bg-gray-900 text-white'
                                     : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                                     }`}
                             >
@@ -139,8 +141,8 @@ function AirbnbDashboard() {
                             </button>
                             <button
                                 onClick={() => setActiveTab('upcoming')}
-                                className={`px-6 py-2.5 rounded-full font-medium transition-colors text-sm ${activeTab === 'upcoming'
-                                    ? 'bg-[#3f3f3f] text-white'
+                                className={`px-6 py-2 rounded-full font-semibold transition-colors ${activeTab === 'upcoming'
+                                    ? 'bg-gray-900 text-white'
                                     : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                                     }`}
                             >
@@ -148,10 +150,10 @@ function AirbnbDashboard() {
                             </button>
                         </div>
 
-                        {/* Bouton Filtrer (position absolute, tout à droite) */}
+                        {/* Bouton Filtrer (collé au bord droit) */}
                         <button
                             onClick={() => setIsFilterOpen(true)}
-                            className="absolute right-0 top-1/2 -translate-y-1/2 px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-full text-sm font-medium text-gray-900 flex items-center gap-2 transition-colors"
+                            className="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-full text-sm font-semibold text-gray-900 flex items-center gap-2 transition-colors"
                         >
                             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
@@ -163,6 +165,34 @@ function AirbnbDashboard() {
                                 </span>
                             )}
                         </button>
+                    </div>
+
+                    {/* Section Demandes */}
+                    <div className="mb-10">
+                        <h2 className="text-3xl font-semibold text-gray-900 mb-6 text-center">
+                            {demandes.length} demandes
+                        </h2>
+                        <div className="grid grid-cols-2 gap-4 max-w-lg mx-auto">
+                            {hydratedDemandes.map((demande) => (
+                                <div
+                                    key={demande.id}
+                                    onClick={() => navigate(`/airbnb/demande/${demande.id}`)}
+                                    className="bg-white rounded-2xl shadow-md p-6 cursor-pointer hover:shadow-lg transition-shadow text-center"
+                                >
+                                    <p className="text-xs text-gray-500 mb-4">Il reste {demande.hoursRemaining} heures</p>
+                                    <img
+                                        src={demande.guestAvatar}
+                                        alt={demande.guestName}
+                                        className="w-14 h-14 rounded-full object-cover mx-auto mb-4"
+                                    />
+                                    <p className="text-sm font-semibold text-gray-900 mb-1">Demande pour la...</p>
+                                    <p className="text-sm text-gray-700 mb-1">
+                                        {formatDateShort(demande.checkIn)}–{formatDateShort(demande.checkOut)}
+                                    </p>
+                                    <p className="text-xs text-gray-500 line-clamp-1">{demande.propertyName}</p>
+                                </div>
+                            ))}
+                        </div>
                     </div>
 
                     {/* Titre avec nombre de réservations (centré) */}
@@ -178,20 +208,22 @@ function AirbnbDashboard() {
                                 className="flex items-center gap-6 p-6 bg-white rounded-xl shadow-lg cursor-pointer"
                                 onClick={() => navigate(`/airbnb/reservation/${reservation.id}`)}
                             >
-                                {/* Date */}
+                                {/* Heure */}
                                 <div className="text-left min-w-[100px]">
                                     <p className="text-sm text-gray-900 font-medium">
-                                        {formatDate(reservation.checkIn)}–{formatDate(reservation.checkOut)}
+                                        {reservation.checkOutOffset === 0
+                                            ? reservation.checkOutTime
+                                            : reservation.checkInTime}
                                     </p>
                                 </div>
 
                                 {/* Infos principales */}
                                 <div className="flex-1">
-                                    <h3 className="font-medium text-gray-900 mb-1">
-                                        Groupe géré par {reservation.guestName} et composé de {reservation.guestDetails}
+                                    <h3 className="font-semibold text-gray-900 mb-1">
+                                        Le groupe géré par {reservation.guestName} et composé de {reservation.guestCount} {reservation.checkOutOffset === 0 ? 'part' : 'arrive'} aujourd'hui
                                     </h3>
                                     <p className="text-sm text-gray-600">
-                                        {reservation.propertyName}
+                                        {properties.find(p => p.propertyId === reservation.propertyId)?.name}
                                     </p>
                                 </div>
 
@@ -238,7 +270,15 @@ function AirbnbDashboard() {
                                     { guest: 'Clotaire', avatar: 'https://i.pravatar.cc/150?img=12', action: 'Laissez un commentaire sur', property: 'La Treille en Cant...', image: 'https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=100&h=100&fit=crop' },
                                     { guest: 'Logan', avatar: 'https://i.pravatar.cc/150?img=13', action: 'Découvrez l\'évaluation 5 étoile(s) laissée par', property: 'La Paix Occitane', image: 'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=100&h=100&fit=crop' }
                                 ].map((task, index) => (
-                                    <div key={index} className="p-4 bg-white border border-gray-200 rounded-xl hover:shadow-sm transition-shadow cursor-pointer">
+                                    <div
+                                        key={index}
+                                        className="p-4 bg-white border border-gray-200 rounded-xl hover:shadow-sm transition-shadow cursor-pointer"
+                                        onClick={() => {
+                                            if (index === 0) navigate('/airbnb/remboursement/remb_001')
+                                            if (index === 1) navigate('/airbnb/remboursement/remb_002')
+                                            if (index === 2) navigate('/airbnb/commentaire/res_airbnb_010/step1')
+                                        }}
+                                    >
                                         <div className="flex items-start gap-3 mb-3">
                                             <img
                                                 src={task.avatar}

@@ -134,7 +134,7 @@ function PropertyAccueil() {
                                                 </div>
                                             </div>
                                             <div>
-                                                <div className="font-semibold text-gray-900">{reservation.guestName}</div>
+                                                <Link to={`/booking/property/${id}/reservations`} className="font-semibold text-[#0071c2] hover:underline">{reservation.guestName}</Link>
                                                 <div className="text-sm text-[#0071c2]">{reservation.id}</div>
                                             </div>
                                         </div>

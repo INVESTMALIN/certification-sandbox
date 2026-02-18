@@ -1,0 +1,93 @@
+[
+    {
+        "id": "remb_001",
+        "reservationId": "res_airbnb_008",
+        "propertyId": "prop_airbnb_001",
+        "guestName": "Anaëlle Fontaine",
+        "guestAvatar": "https://i.pravatar.cc/150?img=10",
+        "managedBy": "Agnès Hilaire",
+        "managedByAvatar": "https://i.pravatar.cc/150?img=20",
+        "totalAmount": 199.99,
+        "currency": "EUR",
+        "status": "versé",
+        "airbnbPaidTo": "Agnès Hilaire",
+        "incidentDate": -14,
+        "damagedItem": "Tiroir sur la structure du lit",
+        "damagedItemType": "Élément endommagé",
+        "damagedItemImage": "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=100&h=100&fit=crop",
+        "messageToGuest": "Bonjour, Notre équipe de ménage a constaté que vous avez cassé le tiroir du lit lors de votre séjour. Nous vous remercions de bien vouloir rembourser le montant correspondant à la structure qui va devoir être remplacée. Cordialement",
+        "justificatifs": [
+            "photo_dommage_1.jpg",
+            "photo_dommage_2.jpg",
+            "Snapchat-2...580875.jpg"
+        ],
+        "chronologie": [
+            {
+                "id": 1,
+                "label": "Agnès Hilaire a demandé 199,99 € à Anaëlle Fontaine",
+                "dateOffset": -14,
+                "heure": "09:40 CET",
+                "message": null
+            },
+            {
+                "id": 2,
+                "label": "Agnès Hilaire a demandé de l'aide à Airbnb, car Anaëlle ne lui a pas répondu",
+                "dateOffset": -11,
+                "heure": "10:52 CET",
+                "message": "Bonjour, Je souhaite déposer une réclamation dans le cadre de la garantie AirCover, suite aux dégradations constatées dans mon logement après le départ du voyageur."
+            },
+            {
+                "id": 3,
+                "label": "Airbnb a versé 199,99 € EUR à Agnès Hilaire",
+                "dateOffset": -7,
+                "heure": "18:24 CET",
+                "message": null
+            }
+        ]
+    },
+    {
+        "id": "remb_002",
+        "reservationId": "res_airbnb_009",
+        "propertyId": "prop_airbnb_002",
+        "guestName": "Rossy",
+        "guestAvatar": "https://i.pravatar.cc/150?img=11",
+        "managedBy": "Yann & Fanny",
+        "managedByAvatar": "https://i.pravatar.cc/150?img=21",
+        "totalAmount": 300.00,
+        "currency": "EUR",
+        "status": "versé",
+        "airbnbPaidTo": "Yann & Fanny",
+        "incidentDate": -12,
+        "damagedItem": "Canapé tâché et rideau déchiré",
+        "damagedItemType": "Éléments endommagés",
+        "damagedItemImage": "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=100&h=100&fit=crop",
+        "messageToGuest": "Bonjour Rossy, Nous avons constaté des dégradations dans le logement suite à votre séjour. Le canapé présente des tâches importantes et le rideau du salon a été déchiré. Nous vous demandons de bien vouloir rembourser les frais de remplacement.",
+        "justificatifs": [
+            "photo_canape.jpg",
+            "photo_rideau.jpg"
+        ],
+        "chronologie": [
+            {
+                "id": 1,
+                "label": "Yann & Fanny a demandé 300,00 € à Rossy",
+                "dateOffset": -12,
+                "heure": "09:40 CET",
+                "message": null
+            },
+            {
+                "id": 2,
+                "label": "Yann & Fanny a demandé de l'aide à Airbnb, car Rossy ne lui a pas répondu",
+                "dateOffset": -9,
+                "heure": "10:52 CET",
+                "message": "Bonjour, Je souhaite déposer une réclamation dans le cadre de la garantie AirCover, suite aux dégradations constatées dans mon logement après le départ du voyageur."
+            },
+            {
+                "id": 3,
+                "label": "Airbnb a versé 300,00 € EUR à Yann & Fanny",
+                "dateOffset": -5,
+                "heure": "18:24 CET",
+                "message": null
+            }
+        ]
+    }
+]

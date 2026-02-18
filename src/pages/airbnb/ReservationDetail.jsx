@@ -5,6 +5,7 @@ import AirbnbFooter from '../../components/airbnb/AirbnbFooter'
 import reservations from '../../data/airbnb/reservations.json'
 import properties from '../../data/airbnb/properties.json'
 import { useState } from 'react'
+import { hydrateReservation, formatDateShort, formatDateLong } from '../../data/airbnb/dateUtils.js'
 
 function ReservationDetail() {
     const { id } = useParams()
@@ -12,7 +13,8 @@ function ReservationDetail() {
     const [selectedProperties, setSelectedProperties] = useState([])
 
     // Trouver la réservation et la propriété
-    const reservation = reservations.find(r => r.id === id)
+    const rawReservation = reservations.find(r => r.id === id)
+    const reservation = rawReservation ? hydrateReservation(rawReservation) : null
     const property = properties.find(p => p.propertyId === reservation?.propertyId)
 
     if (!reservation || !property) {
@@ -51,15 +53,7 @@ function ReservationDetail() {
     }
 
     // Formater les dates
-    const formatDate = (dateString) => {
-        const date = new Date(dateString)
-        return date.toLocaleDateString('fr-FR', {
-            weekday: 'short',
-            day: 'numeric',
-            month: 'short',
-            year: 'numeric'
-        })
-    }
+    const formatDate = (date) => formatDateLong(date)
 
     return (
         <div className="font-airbnb min-h-screen bg-white flex flex-col">
@@ -69,16 +63,15 @@ function ReservationDetail() {
                 {/* Panneau gauche - Liste des réservations */}
                 <div className="w-[480px] border-r border-gray-200 overflow-y-auto h-[calc(100vh-80px)] sticky top-[80px]">
                     <div className="p-6">
-                        <Link
-                            to="/airbnb/dashboard"
-                            className="flex items-center gap-2 text-gray-900 hover:text-gray-700 mb-4"
-                        >
-                            <ChevronLeft className="w-5 h-5" />
-                            <span className="font-medium">Aujourd'hui</span>
-                        </Link>
 
                         <div className="flex items-center justify-between mb-4">
-                            <h2 className="text-2xl font-semibold">Aujourd'hui</h2>
+                            <Link
+                                to="/airbnb/dashboard"
+                                className="flex items-center gap-2 text-gray-900 hover:text-gray-700 mb-4"
+                            >
+                                <ChevronLeft className="w-5 h-5" />
+                                <span className="font-medium">Aujourd'hui</span>
+                            </Link>
                             <button
                                 onClick={() => setIsFilterOpen(true)}
                                 className="p-2 hover:bg-gray-100 rounded-lg relative"
@@ -96,10 +89,12 @@ function ReservationDetail() {
 
                         {/* Liste des réservations */}
                         <div className="space-y-3">
+                            {/* Aujourd'hui */}
+                            <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">Aujourd'hui</p>
                             {reservations
+                                .map(hydrateReservation)
                                 .filter(r => r.status === 'confirmed')
                                 .filter(r => {
-                                    // Appliquer le filtre par propriété si des propriétés sont sélectionnées
                                     if (selectedProperties.length > 0) {
                                         const prop = properties.find(p => p.propertyId === r.propertyId)
                                         return selectedProperties.includes(prop?.name)
@@ -109,43 +104,68 @@ function ReservationDetail() {
                                 .map((res) => {
                                     const prop = properties.find(p => p.propertyId === res.propertyId)
                                     const isActive = res.id === id
-
                                     return (
                                         <Link
                                             key={res.id}
                                             to={`/airbnb/reservation/${res.id}`}
-                                            className={`block p-4 rounded-xl border transition-all ${isActive
-                                                ? 'border-gray-900 bg-gray-50'
-                                                : 'border-gray-200 hover:border-gray-300'
-                                                }`}
+                                            className={`block p-4 rounded-xl border transition-all ${isActive ? 'border-gray-900 bg-gray-50' : 'border-gray-200 hover:border-gray-300'}`}
                                         >
-                                            <p className="text-xs text-gray-600 mb-2">10:00</p>
+                                            <p className="text-xs text-gray-600 mb-2">{res.checkOutOffset === 0 ? res.checkOutTime : res.checkInTime}</p>
                                             <div className="flex items-start justify-between gap-3">
                                                 <div className="flex-1">
                                                     <h3 className="text-sm font-medium text-gray-900 mb-1 line-clamp-2">
-                                                        Le groupe géré par {res.guestName} et composé de {res.guestCount} part aujourd'hui
+                                                        Le groupe géré par {res.guestName} et composé de {res.guestCount} {res.checkOutOffset === 0 ? 'part' : 'arrive'} aujourd'hui
                                                     </h3>
-                                                    <p className="text-xs text-gray-600 line-clamp-1">
-                                                        {prop?.address}
-                                                    </p>
+                                                    <p className="text-xs text-gray-600 line-clamp-1">{prop?.address}</p>
                                                 </div>
                                                 <div className="flex items-center flex-shrink-0">
-                                                    <img
-                                                        src={res.guestAvatar}
-                                                        alt={res.guestName}
-                                                        className="w-10 h-10 rounded-full border-2 border-white"
-                                                    />
-                                                    <img
-                                                        src={prop?.image}
-                                                        alt={prop?.name}
-                                                        className="w-10 h-10 rounded-full border-2 border-white -ml-3 object-cover"
-                                                    />
+                                                    <img src={res.guestAvatar} alt={res.guestName} className="w-10 h-10 rounded-full border-2 border-white" />
+                                                    <img src={prop?.image} alt={prop?.name} className="w-10 h-10 rounded-full border-2 border-white -ml-3 object-cover" />
+                                                </div>
+                                            </div>
+                                        </Link>
+                                    )
+                                })}
+
+                            {/* À venir */}
+                            <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mt-6 mb-2">À venir</p>
+                            {reservations
+                                .map(hydrateReservation)
+                                .filter(r => r.status === 'upcoming')
+                                .filter(r => {
+                                    if (selectedProperties.length > 0) {
+                                        const prop = properties.find(p => p.propertyId === r.propertyId)
+                                        return selectedProperties.includes(prop?.name)
+                                    }
+                                    return true
+                                })
+                                .map((res) => {
+                                    const prop = properties.find(p => p.propertyId === res.propertyId)
+                                    const isActive = res.id === id
+                                    return (
+                                        <Link
+                                            key={res.id}
+                                            to={`/airbnb/reservation/${res.id}`}
+                                            className={`block p-4 rounded-xl border transition-all ${isActive ? 'border-gray-900 bg-gray-50' : 'border-gray-200 hover:border-gray-300'}`}
+                                        >
+                                            <p className="text-xs text-gray-600 mb-2">{res.checkInTime}</p>
+                                            <div className="flex items-start justify-between gap-3">
+                                                <div className="flex-1">
+                                                    <h3 className="text-sm font-medium text-gray-900 mb-1 line-clamp-2">
+                                                        Le groupe géré par {res.guestName} et composé de {res.guestCount}
+                                                    </h3>
+                                                    <p className="text-xs text-gray-600 line-clamp-1">{prop?.address}</p>
+                                                </div>
+                                                <div className="flex items-center flex-shrink-0">
+                                                    <img src={res.guestAvatar} alt={res.guestName} className="w-10 h-10 rounded-full border-2 border-white" />
+                                                    <img src={prop?.image} alt={prop?.name} className="w-10 h-10 rounded-full border-2 border-white -ml-3 object-cover" />
                                                 </div>
                                             </div>
                                         </Link>
                                     )
                                 })}
                         </div>
+
                     </div>
                 </div>
 

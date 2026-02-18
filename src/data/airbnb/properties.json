@@ -1,18 +1,18 @@
 [
     {
         "propertyId": "prop_airbnb_001",
-        "name": "Appartement lumineux au cœur de Rennes",
-        "address": "1599 • Pomme de Pin | Piscine & Tennis • Parking",
-        "city": "Messigny-et-Vantoux",
+        "name": "Appartement lumineux avec vue sur jardin",
+        "address": "12 Rue des Mimosas, 06400 Cannes | Piscine & Tennis • Parking",
+        "city": "Cannes",
         "country": "France",
         "image": "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=200&h=200&fit=crop",
         "hostSince": "2015"
     },
     {
         "propertyId": "prop_airbnb_002",
-        "name": "Studio au Cœur d'Avignon",
-        "address": "12 Rue du Centre • Avignon",
-        "city": "Avignon",
+        "name": "Studio moderne centre-ville avec parking",
+        "address": "8 Avenue de la Liberté, 13001 Marseille",
+        "city": "Marseille",
         "country": "France",
         "image": "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=200&h=200&fit=crop",
         "hostSince": "2015"
