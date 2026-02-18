@@ -72,6 +72,14 @@ function AirbnbDashboard() {
     // Formater les dates en français
     const formatDate = (date) => formatDateShort(date)
 
+    // Formater une plage de dates "19-20 fév"
+    const formatDateRange = (checkIn, checkOut) => {
+        const inDate = new Date(checkIn)
+        const outDate = new Date(checkOut)
+        const month = outDate.toLocaleDateString('fr-FR', { month: 'short' })
+        return `${inDate.getDate()}-${outDate.getDate()} ${month}`
+    }
+
     return (
         <div className="font-airbnb min-h-screen bg-white flex flex-col">
             <AirbnbHeader />
@@ -208,12 +216,14 @@ function AirbnbDashboard() {
                                 className="flex items-center gap-6 p-6 bg-white rounded-xl shadow-lg cursor-pointer"
                                 onClick={() => navigate(`/airbnb/reservation/${reservation.id}`)}
                             >
-                                {/* Heure */}
+                                {/* Heure / Date */}
                                 <div className="text-left min-w-[100px]">
                                     <p className="text-sm text-gray-900 font-medium">
-                                        {reservation.checkOutOffset === 0
-                                            ? reservation.checkOutTime
-                                            : reservation.checkInTime}
+                                        {activeTab === 'today'
+                                            ? (reservation.checkOutOffset === 0
+                                                ? reservation.checkOutTime
+                                                : reservation.checkInTime)
+                                            : formatDateRange(reservation.checkIn, reservation.checkOut)}
                                     </p>
                                 </div>
 

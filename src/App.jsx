@@ -60,6 +60,7 @@ import CommentaireStep4 from './pages/airbnb/CommentaireStep4'
 import CommentaireStep5 from './pages/airbnb/CommentaireStep5'
 import CommentaireStep6 from './pages/airbnb/CommentaireStep6'
 import CommentaireStep7 from './pages/airbnb/CommentaireStep7'
+import AirbnbCalendar from './pages/airbnb/AirbnbCalendar'
 
 function App() {
   return (
@@ -462,6 +463,15 @@ function App() {
         element={
           <ProtectedRoute>
             <AirbnbDashboard />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/airbnb/calendrier"
+        element={
+          <ProtectedRoute>
+            <AirbnbCalendar />
           </ProtectedRoute>
         }
       />

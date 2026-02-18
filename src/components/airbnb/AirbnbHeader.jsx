@@ -1,11 +1,12 @@
 import { useState, useRef, useEffect } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { Menu, X, Bell, Home, Wallet, BarChart3, Settings, Globe, BookOpen, HelpCircle, Users, Plus, UserPlus, LogOut, ArrowLeft } from 'lucide-react'
 
 function AirbnbHeader() {
     const [isMenuOpen, setIsMenuOpen] = useState(false)
     const menuRef = useRef(null)
     const navigate = useNavigate()
+    const location = useLocation()
 
     const handleBackToPlatforms = () => {
         navigate('/choose-platform')
@@ -48,13 +49,19 @@ function AirbnbHeader() {
                     <nav className="absolute left-1/2 -translate-x-1/2 hidden md:flex items-center gap-8">
                         <Link
                             to="/airbnb/dashboard"
-                            className="text-gray-900 font-medium pb-3 border-b-2 border-gray-900"
+                            className={`font-medium pb-3 border-b-2 transition-colors ${location.pathname === '/airbnb/dashboard'
+                                    ? 'text-gray-900 border-gray-900'
+                                    : 'text-gray-500 border-transparent hover:text-gray-900'
+                                }`}
                         >
                             Aujourd'hui
                         </Link>
                         <Link
-                            to="#"
-                            className="text-gray-500 hover:text-gray-900 transition-colors"
+                            to="/airbnb/calendrier"
+                            className={`font-medium pb-3 border-b-2 transition-colors ${location.pathname === '/airbnb/calendrier'
+                                    ? 'text-gray-900 border-gray-900'
+                                    : 'text-gray-500 border-transparent hover:text-gray-900'
+                                }`}
                         >
                             Calendrier
                         </Link>
