@@ -50,8 +50,8 @@ function AirbnbHeader() {
                         <Link
                             to="/airbnb/dashboard"
                             className={`font-medium pb-3 border-b-2 transition-colors ${location.pathname === '/airbnb/dashboard'
-                                    ? 'text-gray-900 border-gray-900'
-                                    : 'text-gray-500 border-transparent hover:text-gray-900'
+                                ? 'text-gray-900 border-gray-900'
+                                : 'text-gray-500 border-transparent hover:text-gray-900'
                                 }`}
                         >
                             Aujourd'hui
@@ -59,21 +59,27 @@ function AirbnbHeader() {
                         <Link
                             to="/airbnb/calendrier"
                             className={`font-medium pb-3 border-b-2 transition-colors ${location.pathname === '/airbnb/calendrier'
-                                    ? 'text-gray-900 border-gray-900'
-                                    : 'text-gray-500 border-transparent hover:text-gray-900'
+                                ? 'text-gray-900 border-gray-900'
+                                : 'text-gray-500 border-transparent hover:text-gray-900'
                                 }`}
                         >
                             Calendrier
                         </Link>
                         <Link
-                            to="#"
-                            className="text-gray-500 hover:text-gray-900 transition-colors"
+                            to="/airbnb/annonces"
+                            className={`font-medium pb-3 border-b-2 transition-colors ${location.pathname === '/airbnb/annonces'
+                                ? 'text-gray-900 border-gray-900'
+                                : 'text-gray-500 border-transparent hover:text-gray-900'
+                                }`}
                         >
                             Annonces
                         </Link>
                         <Link
-                            to="#"
-                            className="text-gray-500 hover:text-gray-900 transition-colors relative"
+                            to="/airbnb/messages"
+                            className={`font-medium pb-3 border-b-2 transition-colors relative ${location.pathname === '/airbnb/messages'
+                                ? 'text-gray-900 border-gray-900'
+                                : 'text-gray-500 border-transparent hover:text-gray-900'
+                                }`}
                         >
                             Messages
                             <span className="absolute -top-1 -right-2 w-2 h-2 bg-[#FF385C] rounded-full"></span>

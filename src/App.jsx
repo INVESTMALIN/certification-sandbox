@@ -61,6 +61,12 @@ import CommentaireStep5 from './pages/airbnb/CommentaireStep5'
 import CommentaireStep6 from './pages/airbnb/CommentaireStep6'
 import CommentaireStep7 from './pages/airbnb/CommentaireStep7'
 import AirbnbCalendar from './pages/airbnb/AirbnbCalendar'
+import AirbnbCalendarMono from './pages/airbnb/AirbnbCalendarMono'
+import AirbnbAnnonces from './pages/airbnb/AirbnbAnnonces'
+import AirbnbMessages from './pages/airbnb/AirbnbMessages'
+import AirbnbCentreAide from './pages/airbnb/AirbnbCentreAide'
+import AirbnbVoyageurProfile from './pages/airbnb/AirbnbVoyageurProfile'
+import AirbnbReservationRecap from './pages/airbnb/AirbnbReservationRecap'
 
 function App() {
   return (
@@ -477,6 +483,42 @@ function App() {
       />
 
       <Route
+        path="/airbnb/calendar/:propertyId"
+        element={
+          <ProtectedRoute>
+            <AirbnbCalendarMono />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/airbnb/annonces"
+        element={
+          <ProtectedRoute>
+            <AirbnbAnnonces />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/airbnb/messages"
+        element={
+          <ProtectedRoute>
+            <AirbnbMessages />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/airbnb/centre-aide"
+        element={
+          <ProtectedRoute>
+            <AirbnbCentreAide />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
         path="/airbnb/reservation/:id"
         element={
           <ProtectedRoute>
@@ -565,7 +607,23 @@ function App() {
         }
       />
 
+      <Route
+        path="/airbnb/voyageur/:reservationId"
+        element={
+          <ProtectedRoute>
+            <AirbnbVoyageurProfile />
+          </ProtectedRoute>
+        }
+      />
 
+      <Route
+        path="/airbnb/recap/:id"
+        element={
+          <ProtectedRoute>
+            <AirbnbReservationRecap />
+          </ProtectedRoute>
+        }
+      />
 
       {/* Redirection racine vers login */}
       <Route path="/" element={<Navigate to="/login" replace />} />

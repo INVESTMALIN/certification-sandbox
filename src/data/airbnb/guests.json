@@ -1,0 +1,308 @@
+[
+    {
+        "guestId": "guest_001",
+        "reservationIds": [
+            "res_airbnb_001",
+            "res_airbnb_008"
+        ],
+        "guestAvatar": "https://i.pravatar.cc/150?img=1",
+        "guestName": "Pascale Andree Claude Pierron",
+        "firstName": "Pascale",
+        "location": "Lyon, France",
+        "languages": [
+            "Français",
+            "Anglais"
+        ],
+        "bio": "Nous voyageons en famille, nous aimons découvrir de beaux logements et respecter les lieux qui nous accueillent.",
+        "trips": 18,
+        "reviewsCount": 8,
+        "yearsOnAirbnb": 9,
+        "identityVerified": true,
+        "isHost": false,
+        "hostComments": [
+            {
+                "hostName": "Aline",
+                "hostAvatar": "https://i.pravatar.cc/150?img=20",
+                "date": "janvier 2026",
+                "text": "Pascale et sa famille ont été des voyageurs exemplaires. Le logement était impeccable à leur départ, les règles ont été respectées à la lettre. Je recommande vivement !"
+            },
+            {
+                "hostName": "Maxime",
+                "hostAvatar": "https://i.pravatar.cc/150?img=21",
+                "date": "août 2025",
+                "text": "Très bon séjour avec Pascale. Communication fluide et réactive, logement rendu dans un état irréprochable. Ce fut un plaisir de les accueillir."
+            },
+            {
+                "hostName": "Sophie",
+                "hostAvatar": "https://i.pravatar.cc/150?img=22",
+                "date": "juin 2025",
+                "text": "Pascale est une voyageuse sérieuse et respectueuse. Aucun problème durant le séjour, je n'hésiterai pas à l'accueillir à nouveau."
+            }
+        ]
+    },
+    {
+        "guestId": "guest_002",
+        "reservationIds": [
+            "res_airbnb_002"
+        ],
+        "guestAvatar": "https://i.pravatar.cc/150?img=2",
+        "guestName": "Speranza",
+        "firstName": "Speranza",
+        "location": "Marseille, France",
+        "languages": [
+            "Français",
+            "Italien"
+        ],
+        "bio": "Amoureuse des voyages et des belles rencontres. Je prends soin des logements comme si c'était le mien.",
+        "trips": 12,
+        "reviewsCount": 5,
+        "yearsOnAirbnb": 6,
+        "identityVerified": true,
+        "isHost": false,
+        "hostComments": [
+            {
+                "hostName": "Pierre",
+                "hostAvatar": "https://i.pravatar.cc/150?img=23",
+                "date": "décembre 2025",
+                "text": "Speranza a été une hôte parfaite. Très propre, respectueuse des voisins et des règles de la maison. Je la recommande sans hésitation."
+            },
+            {
+                "hostName": "Marie",
+                "hostAvatar": "https://i.pravatar.cc/150?img=24",
+                "date": "septembre 2025",
+                "text": "Excellent séjour avec Speranza. Logement rendu propre et en ordre. Communication agréable tout au long du séjour."
+            },
+            {
+                "hostName": "Julien",
+                "hostAvatar": "https://i.pravatar.cc/150?img=25",
+                "date": "juillet 2025",
+                "text": "Très bonne expérience. Speranza a respecté toutes les consignes et a laissé le logement dans un état impeccable."
+            }
+        ]
+    },
+    {
+        "guestId": "guest_003",
+        "reservationIds": [
+            "res_airbnb_003"
+        ],
+        "guestAvatar": "https://i.pravatar.cc/150?img=3",
+        "guestName": "Griffin",
+        "firstName": "Griffin",
+        "location": "Paris, France",
+        "languages": [
+            "Français",
+            "Anglais",
+            "Espagnol"
+        ],
+        "bio": "Voyageur passionné, toujours à la recherche de nouvelles expériences et de logements originaux.",
+        "trips": 24,
+        "reviewsCount": 0,
+        "yearsOnAirbnb": 4,
+        "identityVerified": false,
+        "isHost": false,
+        "hostComments": []
+    },
+    {
+        "guestId": "guest_004",
+        "reservationIds": [
+            "res_airbnb_004"
+        ],
+        "guestAvatar": "https://i.pravatar.cc/150?img=4",
+        "guestName": "Lucio",
+        "firstName": "Lucio",
+        "location": "Nice, France",
+        "languages": [
+            "Français",
+            "Italien",
+            "Anglais"
+        ],
+        "bio": "Je voyage souvent pour le travail et le plaisir. J'apprécie les logements bien tenus et les hôtes disponibles.",
+        "trips": 31,
+        "reviewsCount": 12,
+        "yearsOnAirbnb": 7,
+        "identityVerified": true,
+        "isHost": true,
+        "hostComments": [
+            {
+                "hostName": "Claire",
+                "hostAvatar": "https://i.pravatar.cc/150?img=26",
+                "date": "novembre 2025",
+                "text": "Lucio a été un voyageur discret et respectueux. Le logement était en parfait état à son départ. Un plaisir de l'accueillir."
+            },
+            {
+                "hostName": "Thomas",
+                "hostAvatar": "https://i.pravatar.cc/150?img=27",
+                "date": "octobre 2025",
+                "text": "Excellent voyageur, communication parfaite. Lucio a pris grand soin du logement et a respecté toutes les règles."
+            }
+        ]
+    },
+    {
+        "guestId": "guest_005",
+        "reservationIds": [
+            "res_airbnb_005"
+        ],
+        "guestAvatar": "https://i.pravatar.cc/150?img=5",
+        "guestName": "Camille",
+        "firstName": "Camille",
+        "location": "Bordeaux, France",
+        "languages": [
+            "Français"
+        ],
+        "bio": "J'adore les longs séjours pour vraiment m'imprégner d'un endroit. Je respecte les logements comme ma propre maison.",
+        "trips": 9,
+        "reviewsCount": 4,
+        "yearsOnAirbnb": 3,
+        "identityVerified": true,
+        "isHost": false,
+        "hostComments": [
+            {
+                "hostName": "Isabelle",
+                "hostAvatar": "https://i.pravatar.cc/150?img=28",
+                "date": "janvier 2026",
+                "text": "Camille a occupé mon logement pendant un long séjour et tout s'est parfaitement passé. Très sérieuse et respectueuse."
+            },
+            {
+                "hostName": "Marc",
+                "hostAvatar": "https://i.pravatar.cc/150?img=29",
+                "date": "août 2025",
+                "text": "Très bon séjour avec Camille. Propre, discrète, et toujours disponible pour communiquer si nécessaire."
+            }
+        ]
+    },
+    {
+        "guestId": "guest_006",
+        "reservationIds": [
+            "res_airbnb_006"
+        ],
+        "guestAvatar": "https://i.pravatar.cc/150?img=6",
+        "guestName": "Jean Michel",
+        "firstName": "Jean Michel",
+        "location": "Toulouse, France",
+        "languages": [
+            "Français"
+        ],
+        "bio": "Retraité actif, je profite de ma liberté pour visiter la France et ses plus beaux coins.",
+        "trips": 15,
+        "reviewsCount": 0,
+        "yearsOnAirbnb": 5,
+        "identityVerified": false,
+        "isHost": false,
+        "hostComments": []
+    },
+    {
+        "guestId": "guest_007",
+        "reservationIds": [
+            "res_airbnb_007"
+        ],
+        "guestAvatar": "https://i.pravatar.cc/150?img=7",
+        "guestName": "Alain",
+        "firstName": "Alain",
+        "location": "Strasbourg, France",
+        "languages": [
+            "Français",
+            "Allemand"
+        ],
+        "bio": "Amateur de nature et de randonnée. Je voyage léger et respecte toujours les lieux que je visite.",
+        "trips": 22,
+        "reviewsCount": 9,
+        "yearsOnAirbnb": 8,
+        "identityVerified": true,
+        "isHost": true,
+        "hostComments": [
+            {
+                "hostName": "Nathalie",
+                "hostAvatar": "https://i.pravatar.cc/150?img=30",
+                "date": "février 2026",
+                "text": "Alain est un voyageur exemplaire. Très propre, discret et respectueux. Je le recommande chaleureusement."
+            },
+            {
+                "hostName": "Patrick",
+                "hostAvatar": "https://i.pravatar.cc/150?img=31",
+                "date": "décembre 2025",
+                "text": "Excellent séjour avec Alain. Il a laissé le logement dans un état parfait et a été très agréable à accueillir."
+            },
+            {
+                "hostName": "Virginie",
+                "hostAvatar": "https://i.pravatar.cc/150?img=32",
+                "date": "octobre 2025",
+                "text": "Alain est un hôte attentionné et sérieux. Communication facile, logement rendu propre. Un séjour sans accroc."
+            }
+        ]
+    },
+    {
+        "guestId": "guest_008",
+        "reservationIds": [
+            "res_airbnb_008"
+        ],
+        "guestAvatar": "https://i.pravatar.cc/150?img=10",
+        "guestName": "Anaëlle Fontaine",
+        "firstName": "Anaëlle",
+        "location": "Nantes, France",
+        "languages": [
+            "Français",
+            "Anglais"
+        ],
+        "bio": "J'aime voyager avec mes amis et découvrir de nouveaux endroits. Je suis très respectueuse des logements.",
+        "trips": 7,
+        "reviewsCount": 0,
+        "yearsOnAirbnb": 2,
+        "identityVerified": true,
+        "isHost": false,
+        "hostComments": []
+    },
+    {
+        "guestId": "guest_009",
+        "reservationIds": [
+            "res_airbnb_009"
+        ],
+        "guestAvatar": "https://i.pravatar.cc/150?img=11",
+        "guestName": "Rossy",
+        "firstName": "Rossy",
+        "location": "Montpellier, France",
+        "languages": [
+            "Français",
+            "Espagnol"
+        ],
+        "bio": "Toujours partant pour une nouvelle aventure. Je voyage souvent en famille et adore les découvertes.",
+        "trips": 11,
+        "reviewsCount": 0,
+        "yearsOnAirbnb": 3,
+        "identityVerified": false,
+        "isHost": false,
+        "hostComments": []
+    },
+    {
+        "guestId": "guest_010",
+        "reservationIds": [
+            "res_airbnb_010"
+        ],
+        "guestAvatar": "https://i.pravatar.cc/150?img=12",
+        "guestName": "Clotaire",
+        "firstName": "Clotaire",
+        "location": "Dijon, France",
+        "languages": [
+            "Français"
+        ],
+        "bio": "Passionné d'histoire et de patrimoine, je voyage pour m'enrichir culturellement. Je laisse toujours les lieux comme je les ai trouvés.",
+        "trips": 16,
+        "reviewsCount": 3,
+        "yearsOnAirbnb": 6,
+        "identityVerified": true,
+        "isHost": false,
+        "hostComments": [
+            {
+                "hostName": "Laurent",
+                "hostAvatar": "https://i.pravatar.cc/150?img=33",
+                "date": "janvier 2026",
+                "text": "Clotaire a été un voyageur discret et soigneux. Il a respecté toutes les consignes et laissé le logement impeccable."
+            },
+            {
+                "hostName": "Anne",
+                "hostAvatar": "https://i.pravatar.cc/150?img=34",
+                "date": "octobre 2025",
+                "text": "Très bon séjour avec Clotaire. Ponctuel, propre et agréable. Je le recommande sans hésitation."
+            }
+        ]
+    }
+]

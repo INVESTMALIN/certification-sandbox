@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect, useCallback } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import AirbnbHeader from '../../components/airbnb/AirbnbHeader'
 import AirbnbFooter from '../../components/airbnb/AirbnbFooter'
@@ -81,6 +82,8 @@ function groupByMonth(days) {
 // ── Main component ────────────────────────────────────────────────────────────
 
 function AirbnbCalendar() {
+    const navigate = useNavigate()
+
     // Start the calendar at the Monday of the current week
     const getMonday = () => {
         const d = new Date()
@@ -95,6 +98,11 @@ function AirbnbCalendar() {
     const [selectedProperty, setSelectedProperty] = useState(null)
     const [searchQuery, setSearchQuery] = useState('')
     const [isDrawerOpen, setIsDrawerOpen] = useState(true)
+    const [selectedReservation, setSelectedReservation] = useState(null)
+    const [isRuleModalOpen, setIsRuleModalOpen] = useState(false)
+    const [ruleName, setRuleName] = useState('')
+    const [ruleColor, setRuleColor] = useState(0)
+    const [openSection, setOpenSection] = useState(null)
     const [isMonthPickerOpen, setIsMonthPickerOpen] = useState(false)
     const [slideDir, setSlideDir] = useState(null) // 'left' | 'right' | null
     const monthPickerRef = useRef(null)
@@ -187,8 +195,8 @@ function AirbnbCalendar() {
                                             key={`${opt.year}-${opt.month}`}
                                             onClick={() => goToMonth(opt.year, opt.month)}
                                             className={`w-full text-left px-4 py-2 text-sm transition-colors ${isCurrent
-                                                    ? 'bg-gray-900 text-white font-semibold'
-                                                    : 'text-gray-800 hover:bg-gray-50'
+                                                ? 'bg-gray-900 text-white font-semibold'
+                                                : 'text-gray-800 hover:bg-gray-50'
                                                 }`}
                                         >
                                             {opt.label}
@@ -223,7 +231,7 @@ function AirbnbCalendar() {
                 </div>
 
                 {/* ── Three-panel layout ── */}
-                <div className="flex flex-1 overflow-hidden">
+                <div className="flex flex-1 overflow-hidden relative">
 
                     {/* ── LEFT: property list ── */}
                     <div className="w-64 flex-shrink-0 border-r border-gray-200 flex flex-col overflow-hidden bg-white">
@@ -259,9 +267,7 @@ function AirbnbCalendar() {
                             {filteredProperties.map((property) => (
                                 <div
                                     key={property.propertyId}
-                                    onClick={() => setSelectedProperty(
-                                        selectedProperty === property.propertyId ? null : property.propertyId
-                                    )}
+                                    onClick={() => navigate('/airbnb/calendar/' + property.propertyId)}
                                     className={`flex items-center gap-3 px-4 py-3 cursor-pointer border-b border-gray-100 hover:bg-gray-50 transition-colors ${selectedProperty === property.propertyId ? 'bg-gray-100' : ''}`}
                                 >
                                     <div className="relative flex-shrink-0">
@@ -404,7 +410,8 @@ function AirbnbCalendar() {
 
                                                         return (
                                                             <div
-                                                                className="absolute top-1/2 -translate-y-1/2 left-0 h-9 rounded-lg flex items-center px-3 z-10 overflow-hidden"
+                                                                onClick={(e) => { e.stopPropagation(); setSelectedReservation(res); setIsDrawerOpen(true) }}
+                                                                className="absolute top-1/2 -translate-y-1/2 left-0 h-9 rounded-lg flex items-center px-3 z-10 overflow-hidden cursor-pointer hover:brightness-110 transition-all"
                                                                 style={{
                                                                     width: `${widthPct}%`,
                                                                     backgroundColor: '#1a8a7a',
@@ -431,11 +438,18 @@ function AirbnbCalendar() {
                         </div>
                     </div>
 
-                    {/* ── RIGHT: pricing drawer ── */}
+                    {/* ── RIGHT: pricing drawer (overlay) ── */}
                     <div
-                        className={`flex-shrink-0 border-l border-gray-200 bg-white flex flex-col overflow-y-auto transition-all duration-300 ease-in-out ${isDrawerOpen ? 'w-72 opacity-100' : 'w-0 opacity-0 border-l-0'
-                            }`}
-                        style={{ scrollbarWidth: 'none' }}
+                        className="absolute right-0 bottom-0 z-20 bg-white flex flex-col overflow-y-auto"
+                        style={{
+                            transition: 'width 500ms cubic-bezier(0.4,0,0.2,1), opacity 500ms cubic-bezier(0.4,0,0.2,1), box-shadow 500ms cubic-bezier(0.4,0,0.2,1)',
+                            top: '88px',
+                            width: isDrawerOpen ? '18rem' : '0',
+                            opacity: isDrawerOpen ? 1 : 0,
+                            boxShadow: isDrawerOpen ? '-6px 0 8px -4px rgba(0,0,0,0.18)' : 'none',
+                            scrollbarWidth: 'none',
+                            pointerEvents: isDrawerOpen ? 'auto' : 'none',
+                        }}
                     >
                         {/* Collapse arrow */}
                         <div className="px-4 pt-4 pb-2 flex-shrink-0">
@@ -476,7 +490,10 @@ function AirbnbCalendar() {
 
                         {/* CTA button */}
                         <div className="p-4 border-t border-gray-100 flex-shrink-0">
-                            <button className="w-full bg-gray-900 text-white font-semibold py-4 rounded-xl hover:bg-gray-800 transition-colors text-sm whitespace-nowrap">
+                            <button
+                                onClick={() => setIsRuleModalOpen(true)}
+                                className="w-full bg-gray-900 text-white font-semibold py-4 rounded-xl hover:bg-gray-800 transition-colors text-sm whitespace-nowrap"
+                            >
                                 Créer un nouvel ensemble de règles
                             </button>
                         </div>
@@ -486,17 +503,265 @@ function AirbnbCalendar() {
                     {!isDrawerOpen && (
                         <button
                             onClick={() => setIsDrawerOpen(true)}
-                            className="flex-shrink-0 self-start mt-4 mr-2 p-1.5 hover:bg-gray-100 rounded-full border border-gray-200 transition-colors"
+                            className="absolute z-20 p-1.5 hover:bg-gray-100 rounded-full border border-gray-200 bg-white transition-colors shadow-md"
+                            style={{ top: '80px', right: '8px' }}
                             title="Ouvrir le panneau"
                         >
                             <ChevronLeft className="w-5 h-5 text-gray-700" />
                         </button>
                     )}
 
+                    {/* ── RESERVATION SUMMARY overlay (instant show/hide) ── */}
+                    {selectedReservation && (
+                        <div
+                            className="absolute right-0 bottom-0 z-30 bg-white flex flex-col"
+                            style={{
+                                top: '88px',
+                                width: '18rem',
+                                boxShadow: '-6px 0 8px -4px rgba(0,0,0,0.18)',
+                                overflow: 'hidden',
+                            }}
+                        >
+                            {selectedReservation && (() => {
+                                const res = selectedReservation
+                                const checkInDate = new Date(res.checkIn)
+                                const checkOutDate = new Date(res.checkOut)
+                                const fmtDate = (d) => d.toLocaleDateString('fr-FR', { weekday: 'short', day: 'numeric', month: 'short' })
+                                const initials = res.guestName.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase()
+                                const isStayInProgress = res.checkInOffset < 0 && res.checkOutOffset > 0
+
+                                return (
+                                    <div className="flex flex-col h-full" style={{ minWidth: '18rem' }}>
+                                        {/* Header */}
+                                        <div className="px-5 pt-5 pb-4 border-b border-gray-100">
+                                            <button
+                                                onClick={() => setSelectedReservation(null)}
+                                                className="w-8 h-8 flex items-center justify-center rounded-full border border-gray-300 hover:bg-gray-100 transition-colors mb-4"
+                                            >
+                                                <span className="text-gray-700 text-lg leading-none">&times;</span>
+                                            </button>
+                                            <h2 className="text-2xl font-bold text-gray-900 mb-1">Réservation</h2>
+                                            <p className="text-sm text-gray-600">
+                                                {isStayInProgress ? 'Séjour en cours' : 'Confirmée'}
+                                                {res.guestCount ? ` · ${res.guestCount}` : ''}
+                                                {res.nights ? ` · ${res.nights} nuit${res.nights > 1 ? 's' : ''}` : ''}
+                                            </p>
+                                        </div>
+
+                                        {/* Guest */}
+                                        <div className="px-5 py-4 border-b border-gray-100">
+                                            <div className="flex items-center justify-between">
+                                                <div>
+                                                    <p className="font-semibold text-gray-900 text-sm mb-1">{res.guestName}</p>
+                                                    <div className="flex gap-3 text-sm text-gray-700">
+                                                        <button onClick={() => navigate('/airbnb/voyageur/' + res.id)} className="underline hover:text-gray-900">Afficher le profil</button>
+                                                        <span className="text-gray-300">·</span>
+                                                        <button className="underline hover:text-gray-900">Envoyer un message</button>
+                                                    </div>
+                                                </div>
+                                                {res.guestAvatar ? (
+                                                    <img src={res.guestAvatar} alt={res.guestName} className="w-10 h-10 rounded-full object-cover flex-shrink-0" />
+                                                ) : (
+                                                    <div className="w-10 h-10 rounded-full bg-gray-900 flex items-center justify-center flex-shrink-0">
+                                                        <span className="text-white text-sm font-semibold">{initials}</span>
+                                                    </div>
+                                                )}
+                                            </div>
+                                        </div>
+
+                                        {/* Dates */}
+                                        <div className="px-5 py-4 flex flex-col gap-4 border-b border-gray-100">
+                                            <div className="flex justify-between items-center">
+                                                <span className="text-sm text-gray-600">Arrivée</span>
+                                                <span className="text-sm text-gray-900">{fmtDate(checkInDate)}</span>
+                                            </div>
+                                            <div className="flex justify-between items-center">
+                                                <span className="text-sm text-gray-600">Départ</span>
+                                                <span className="text-sm text-gray-900">{fmtDate(checkOutDate)}</span>
+                                            </div>
+                                        </div>
+
+                                        <div className="flex-1" />
+
+                                        {/* CTA */}
+                                        <div className="p-4">
+                                            <button
+                                                onClick={() => navigate('/airbnb/recap/' + res.id)}
+                                                className="w-full bg-[#1a8a7a] text-white font-semibold py-4 rounded-xl hover:bg-[#157a6a] transition-colors text-sm"
+                                            >
+                                                Voir le récapitulatif complet
+                                            </button>
+                                        </div>
+                                    </div>
+                                )
+                            })()}
+                        </div>
+                    )}
+
                 </div>
             </main>
 
             <AirbnbFooter />
+
+            {/* ── RULE SET MODAL ── */}
+            {isRuleModalOpen && (() => {
+                const COLORS = [
+                    { bg: '#f87171', border: '#ef4444' }, // red
+                    { bg: '#fca5a5', border: '#fca5a5' }, // light red
+                    { bg: '#fdba74', border: '#f97316' }, // orange
+                    { bg: '#fcd34d', border: '#f59e0b' }, // yellow
+                    { bg: '#86efac', border: '#22c55e' }, // green
+                    { bg: '#7dd3fc', border: '#38bdf8' }, // sky
+                    { bg: '#c4b5fd', border: '#a78bfa' }, // violet
+                    { bg: '#f9a8d4', border: '#ec4899' }, // pink
+                ]
+                const TARIF_SECTIONS = [
+                    'Prix par nuit',
+                    'Réductions en fonction de la durée du séjour',
+                    'Réductions pour réservation de dernière minute',
+                    'Réductions pour réservation anticipée',
+                ]
+                const DISPO_SECTIONS = [
+                    'Durée du séjour',
+                    "Jours d'arrivée et de départ",
+                ]
+                return (
+                    <div className="fixed inset-0 z-50 flex items-center justify-center" style={{ backgroundColor: 'rgba(0,0,0,0.45)' }}>
+                        <div className="bg-white rounded-2xl shadow-2xl flex flex-col relative overflow-y-auto" style={{ width: 900, maxWidth: '96vw', maxHeight: '92vh' }}>
+
+                            {/* Close button */}
+                            <button
+                                onClick={() => { setIsRuleModalOpen(false); setRuleName(''); setRuleColor(0); setOpenSection(null) }}
+                                className="absolute top-4 left-4 text-gray-500 hover:text-gray-900 text-xl leading-none"
+                            >
+                                ✕
+                            </button>
+
+                            <div className="flex gap-8 p-8 pt-12">
+
+                                {/* ── LEFT: Form ── */}
+                                <div className="flex-1 min-w-0">
+                                    <h2 className="text-2xl font-bold text-gray-900 mb-1">Créer un nouvel ensemble de règles</h2>
+                                    <p className="text-sm text-gray-500 mb-6">Définissez des règles de tarification et de disponibilité à appliquer aux différentes dates et annonces.</p>
+
+                                    {/* Name + Color row */}
+                                    <div className="flex gap-8 items-start mb-8">
+                                        {/* Name */}
+                                        <div className="flex-1">
+                                            <label className="text-sm font-medium text-gray-900 block mb-1">
+                                                Nom de l'ensemble de règles – <span className="font-normal text-gray-500">champ obligatoire</span>
+                                            </label>
+                                            <input
+                                                type="text"
+                                                value={ruleName}
+                                                onChange={e => setRuleName(e.target.value)}
+                                                placeholder="Exemple : haute saison"
+                                                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-400"
+                                            />
+                                        </div>
+                                        {/* Color picker */}
+                                        <div>
+                                            <label className="text-sm font-medium text-gray-900 block mb-1">Couleur (à utiliser sur le calendrier)</label>
+                                            <div className="flex gap-2">
+                                                {COLORS.map((c, i) => (
+                                                    <button
+                                                        key={i}
+                                                        onClick={() => setRuleColor(i)}
+                                                        className="w-7 h-7 rounded-full border-2 transition-all"
+                                                        style={{
+                                                            backgroundColor: c.bg,
+                                                            borderColor: ruleColor === i ? c.border : 'transparent',
+                                                            boxShadow: ruleColor === i ? `0 0 0 2px ${c.border}` : 'none',
+                                                        }}
+                                                    />
+                                                ))}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* Tarif section */}
+                                    <h3 className="text-xl font-bold text-gray-900 mb-2">Tarif</h3>
+                                    <div className="border-t border-gray-200">
+                                        {TARIF_SECTIONS.map((label, i) => (
+                                            <div key={i} className="border-b border-gray-200">
+                                                <button
+                                                    onClick={() => setOpenSection(openSection === `t${i}` ? null : `t${i}`)}
+                                                    className="w-full flex items-center justify-between py-4 text-sm text-gray-800 text-left hover:bg-gray-50 transition-colors"
+                                                >
+                                                    <span>{label}</span>
+                                                    <svg className={`w-5 h-5 text-gray-500 transition-transform ${openSection === `t${i}` ? 'rotate-180' : ''}`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}><path d="M19 9l-7 7-7-7" /></svg>
+                                                </button>
+                                                {openSection === `t${i}` && (
+                                                    <div className="pb-4 px-1 text-sm text-gray-500">Configurez les paramètres pour "{label}".</div>
+                                                )}
+                                            </div>
+                                        ))}
+                                    </div>
+                                    <p className="text-xs text-gray-500 mt-3 mb-8">
+                                        Les règles de prix n'affectent pas les prix des annonces lorsque la tarification intelligente est activée.{' '}
+                                        <span className="underline cursor-pointer">En savoir plus</span>
+                                    </p>
+
+                                    {/* Disponibilité section */}
+                                    <h3 className="text-xl font-bold text-gray-900 mb-2">Disponibilité</h3>
+                                    <div className="border-t border-gray-200">
+                                        {DISPO_SECTIONS.map((label, i) => (
+                                            <div key={i} className="border-b border-gray-200">
+                                                <button
+                                                    onClick={() => setOpenSection(openSection === `d${i}` ? null : `d${i}`)}
+                                                    className="w-full flex items-center justify-between py-4 text-sm text-gray-800 text-left hover:bg-gray-50 transition-colors"
+                                                >
+                                                    <span>{label}</span>
+                                                    <svg className={`w-5 h-5 text-gray-500 transition-transform ${openSection === `d${i}` ? 'rotate-180' : ''}`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}><path d="M19 9l-7 7-7-7" /></svg>
+                                                </button>
+                                                {openSection === `d${i}` && (
+                                                    <div className="pb-4 px-1 text-sm text-gray-500">Configurez les paramètres pour "{label}".</div>
+                                                )}
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+
+                                {/* ── RIGHT: Guide card ── */}
+                                <div className="w-64 flex-shrink-0">
+                                    <div className="border border-gray-200 rounded-xl p-5">
+                                        <h4 className="text-base font-bold text-gray-900 mb-4">Voici comment créer des règles</h4>
+                                        <div className="flex flex-col gap-5">
+                                            {[
+                                                "Donnez un nom à votre ensemble de règles et choisissez une couleur pour le symboliser dans votre calendrier.",
+                                                "Définissez des réductions de prix, des conditions de disponibilité et des promotions.",
+                                                "Choisissez les dates et les annonces auxquelles vous souhaitez appliquer l'ensemble de règles dans votre calendrier.",
+                                            ].map((text, i) => (
+                                                <div key={i} className="flex gap-3">
+                                                    <div className="w-7 h-7 rounded-full bg-[#1a8a7a] flex items-center justify-center flex-shrink-0 text-white text-xs font-bold">{i + 1}</div>
+                                                    <p className="text-xs text-gray-700 leading-relaxed">{text}</p>
+                                                </div>
+                                            ))}
+                                        </div>
+                                        <button className="text-sm text-[#1a8a7a] underline mt-4 block">En savoir plus sur le règlement</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Footer */}
+                            <div className="flex items-center justify-between border-t border-gray-200 px-8 py-4">
+                                <button
+                                    onClick={() => { setIsRuleModalOpen(false); setRuleName(''); setRuleColor(0); setOpenSection(null) }}
+                                    className="text-sm underline text-gray-700 hover:text-gray-900"
+                                >
+                                    Annuler
+                                </button>
+                                <button
+                                    disabled={!ruleName.trim()}
+                                    className={`px-8 py-3 rounded-xl text-sm font-semibold transition-colors ${ruleName.trim() ? 'bg-gray-900 text-white hover:bg-gray-700' : 'bg-gray-200 text-gray-400 cursor-not-allowed'}`}
+                                >
+                                    Enregistrer
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                )
+            })()}
         </div>
     )
 }
