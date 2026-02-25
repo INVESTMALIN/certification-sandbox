@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { ChevronLeft, ChevronRight, Pencil } from 'lucide-react'
+import { ChevronLeft, ChevronRight, Pencil, Link } from 'lucide-react'
 import AirbnbHeader from '../../components/airbnb/AirbnbHeader'
 import properties from '../../data/airbnb/properties.json'
 import reservations from '../../data/airbnb/reservations.json'
@@ -121,8 +121,47 @@ export default function AirbnbCalendarMono() {
     const [selectedReport, setSelectedReport] = useState(null)
     const [priceText, setPriceText] = useState('')
     const [noteText, setNoteText] = useState('')
+    const [showPriceSettings, setShowPriceSettings] = useState(false)
+    const [showDispoSettings, setShowDispoSettings] = useState(false)
+    const [showParNuit, setShowParNuit] = useState(false)
+    const [showWeekend, setShowWeekend] = useState(false)
+    const [tarifIntelligente, setTarifIntelligente] = useState(false)
+    const [showSemaine, setShowSemaine] = useState(false)
+    const [reductionSemaine, setReductionSemaine] = useState(31)
+    const [showMois, setShowMois] = useState(false)
+    const [reductionMois, setReductionMois] = useState(67)
+    const [showPlusReductions, setShowPlusReductions] = useState(false)
+    const [showAnticipee, setShowAnticipee] = useState(false)
+    const [showDerniereMinute, setShowDerniereMinute] = useState(false)
+    const [showDureeSejour, setShowDureeSejour] = useState(false)
+    const [dureeSejour, setDureeSejour] = useState('')
+    const [showPromoVoyageurs, setShowPromoVoyageurs] = useState(false)
+    const [showPromoPassees, setShowPromoPassees] = useState(false)
+    const [showFrais, setShowFrais] = useState(false)
+    const [showFraisMenage, setShowFraisMenage] = useState(false)
+    const [showFraisMenageCourt, setShowFraisMenageCourt] = useState(false)
+    const [showFraisAnimaux, setShowFraisAnimaux] = useState(false)
+    const [showFraisVoyageurs, setShowFraisVoyageurs] = useState(false)
+    const [showFraisGestion, setShowFraisGestion] = useState(false)
+    const [showFraisDivers, setShowFraisDivers] = useState(false)
+    const [showFraisLinge, setShowFraisLinge] = useState(false)
+    const [showFraisService, setShowFraisService] = useState(false)
+    const [showDispoMin, setShowDispoMin] = useState(false)
+    const [showDispoMax, setShowDispoMax] = useState(false)
+    const [showPlusParamsDispo, setShowPlusParamsDispo] = useState(false)
+    const [arriveeJours, setArriveeJours] = useState(['Dimanche'])
+    const [departJours, setDepartJours] = useState([])
+    const [sejoursLongs, setSejoursLongs] = useState(true)
+    const [openDispoDropdown, setOpenDispoDropdown] = useState(null)
+    const [dropdownStyle, setDropdownStyle] = useState({ top: 0, left: 0, width: 280 })
+    const [dispoDelai, setDispoDelai] = useState('Le jour même')
+    const [dispoHeure, setDispoHeure] = useState('00:00')
+    const [dispoPrep, setDispoPrep] = useState('Aucun')
+    const [dispoPlage, setDispoPlage] = useState('12 mois en avance')
+    const [autoriserJourMeme, setAutoriserJourMeme] = useState(true)
     const monthRefs = useRef({})
     const pickerRef = useRef(null)
+    const dispoDropdownRefs = useRef([null, null, null, null])
 
     // Close on outside click or scroll
     useEffect(() => {
@@ -165,6 +204,15 @@ export default function AirbnbCalendarMono() {
 
     const property = properties.find(p => p.propertyId === propertyId)
     const allMonths = buildMonths(12)
+
+    const handleDispoDropdown = (index) => {
+        const newIndex = openDispoDropdown === index ? null : index
+        if (newIndex !== null && dispoDropdownRefs.current[newIndex]) {
+            const rect = dispoDropdownRefs.current[newIndex].getBoundingClientRect()
+            setDropdownStyle({ top: rect.bottom + 4, left: rect.left, width: rect.width })
+        }
+        setOpenDispoDropdown(newIndex)
+    }
 
     if (!property) {
         return (
@@ -401,13 +449,13 @@ export default function AirbnbCalendarMono() {
                 </div>
 
                 {/* ── RIGHT: settings panel or day detail ── */}
-                <div className="flex-shrink-0 border-l border-gray-200 overflow-hidden relative" style={{ width: 280 }}>
+                <div className="flex-shrink-0 border-l border-gray-200 overflow-hidden relative" style={{ width: 360 }}>
 
                     {/* Settings panel (default) */}
                     <div className="absolute inset-0 bg-white overflow-y-auto transition-opacity duration-300"
                         style={{ opacity: selectedDay || selectedRes ? 0 : 1, pointerEvents: selectedDay || selectedRes ? 'none' : 'auto', scrollbarWidth: 'none' }}>
                         <div className="px-5">
-                            <button className="w-full flex items-center justify-between py-8 text-left group">
+                            <button onClick={() => setShowPriceSettings(true)} className="w-full flex items-center justify-between py-8 text-left group">
                                 <div>
                                     <p className="text-sm font-semibold text-gray-900">Paramètres de prix</p>
                                     <p className="text-xs text-gray-500 mt-0.5">{property.pricePerNight} € par nuit</p>
@@ -417,7 +465,7 @@ export default function AirbnbCalendarMono() {
                                 </div>
                             </button>
                             <div className="border-t border-gray-200 mx-2" />
-                            <button className="w-full flex items-center justify-between py-8 text-left group">
+                            <button onClick={() => setShowDispoSettings(true)} className="w-full flex items-center justify-between py-8 text-left group">
                                 <div>
                                     <p className="text-sm font-semibold text-gray-900">Paramètres de disponibilité</p>
                                     <p className="text-xs text-gray-500 mt-1 leading-relaxed">
@@ -429,6 +477,999 @@ export default function AirbnbCalendarMono() {
                                     <ChevronRight className="w-4 h-4 text-gray-400" />
                                 </div>
                             </button>
+                        </div>
+                    </div>
+
+                    {/* ── Prix settings panel ── */}
+                    <div
+                        className="absolute inset-0 bg-white overflow-y-auto transition-opacity duration-300"
+                        style={{ opacity: showPriceSettings ? 1 : 0, pointerEvents: showPriceSettings ? 'auto' : 'none', scrollbarWidth: 'thin' }}
+                    >
+                        {/* Back button */}
+                        <div className="px-4 pt-5 pb-2">
+                            <button
+                                onClick={() => setShowPriceSettings(false)}
+                                className="w-9 h-9 flex items-center justify-center rounded-full border border-gray-200 hover:bg-gray-100 transition-colors"
+                            >
+                                <ChevronLeft className="w-4 h-4 text-gray-700" />
+                            </button>
+                        </div>
+
+                        <div className="px-5 pb-10">
+                            <h2 className="text-2xl font-bold text-gray-900 mb-1">Paramètres de prix</h2>
+                            <p className="text-xs text-gray-500 mb-6 leading-relaxed">Ces paramètres s'appliquent à toutes les nuits, à moins que vous ne personnalisiez certaines dates.</p>
+
+                            {/* Prix de base */}
+                            <div className="flex items-center justify-between mb-3">
+                                <h3 className="text-base font-bold text-gray-900">Prix de base</h3>
+                                <button className="text-sm text-gray-900 underline">EUR</button>
+                            </div>
+
+                            {/* Par nuit */}
+                            <div onClick={() => setShowParNuit(true)} className="border border-gray-200 rounded-2xl p-4 mb-2 cursor-pointer hover:border-gray-400 transition-colors">
+                                <p className="text-xs text-gray-500 mb-1">Par nuit</p>
+                                <p className="text-2xl font-bold text-gray-900">{property.pricePerNight} €</p>
+                            </div>
+
+                            {/* Prix spécial week-end */}
+                            <div onClick={() => setShowWeekend(true)} className="border border-gray-200 rounded-2xl px-4 py-4 mb-2 flex items-center justify-between cursor-pointer hover:border-gray-400 transition-colors">
+                                <span className="text-sm text-gray-900">Prix spécial week-end</span>
+                                <button className="text-sm font-semibold text-gray-900 underline">Ajouter</button>
+                            </div>
+
+                            {/* Tarification intelligente */}
+                            <div className="border border-gray-200 rounded-2xl px-4 py-4 mb-6 flex items-center justify-between">
+                                <span className="text-sm text-gray-900">Tarification intelligente</span>
+                                <button onClick={() => setTarifIntelligente(v => !v)} className="flex-shrink-0">
+                                    <div className={`w-12 h-6 rounded-full relative transition-colors duration-200 ${tarifIntelligente ? 'bg-gray-900' : 'bg-gray-300'}`}>
+                                        <div className={`absolute top-0.5 w-5 h-5 bg-white rounded-full shadow transition-all duration-200 ${tarifIntelligente ? 'left-6' : 'left-0.5'}`} />
+                                    </div>
+                                </button>
+                            </div>
+
+                            {/* Réductions */}
+                            <h3 className="text-base font-bold text-gray-900 mb-1">Réductions</h3>
+                            <p className="text-xs text-gray-500 mb-3">Ajustez vos tarifs pour attirer plus de voyageurs.</p>
+
+                            {/* À la semaine */}
+                            <div onClick={() => setShowSemaine(true)} className="border border-gray-200 rounded-2xl p-4 mb-2 cursor-pointer hover:border-gray-400 transition-colors">
+                                <p className="text-sm font-semibold text-gray-900">À la semaine</p>
+                                <p className="text-xs text-gray-500 mb-2">Pour 7 nuits ou plus</p>
+                                <div className="flex items-center justify-between">
+                                    <span className="text-2xl font-bold text-gray-900">{reductionSemaine > 0 ? `${reductionSemaine}%` : '0%'}</span>
+                                    <span className="text-xs text-gray-500">Moyenne par semaine : {Math.round(property.pricePerNight * 7 * (1 - reductionSemaine / 100)).toLocaleString('fr-FR')} €</span>
+                                </div>
+                            </div>
+
+                            {/* Au mois */}
+                            <div onClick={() => setShowMois(true)} className="border border-gray-200 rounded-2xl p-4 mb-2 cursor-pointer hover:border-gray-400 transition-colors">
+                                <p className="text-sm font-semibold text-gray-900">Au mois</p>
+                                <p className="text-xs text-gray-500 mb-2">Pour 28 nuits ou plus</p>
+                                <div className="flex items-center justify-between">
+                                    <span className="text-2xl font-bold text-gray-900">{reductionMois > 0 ? `${reductionMois}%` : '0%'}</span>
+                                    <span className="text-xs text-gray-500">Moyenne par mois : {Math.round(property.pricePerNight * 30 * (1 - reductionMois / 100)).toLocaleString('fr-FR')} €</span>
+                                </div>
+                            </div>
+
+                            {/* Plus de réductions */}
+                            <div onClick={() => setShowPlusReductions(true)} className="border border-gray-200 rounded-2xl px-4 py-4 mb-6 flex items-center justify-between gap-3 cursor-pointer hover:border-gray-400 transition-colors">
+                                <div className="min-w-0">
+                                    <p className="text-sm font-semibold text-gray-900 mb-1">Plus de réductions</p>
+                                    <p className="text-xs text-gray-500 leading-relaxed">Réduction en cas de réservation anticipée, réduction en cas de réservation de dernière minute, réduction liée à la durée du séjour</p>
+                                </div>
+                                <ChevronRight className="w-4 h-4 text-gray-400 flex-shrink-0" />
+                            </div>
+
+                            {/* Promotions */}
+                            <h3 className="text-base font-bold text-gray-900 mb-1">Promotions</h3>
+                            <p className="text-xs text-gray-500 mb-3 leading-relaxed">Proposez des réductions pour les séjours courte durée afin de décrocher de nouvelles réservations.</p>
+
+                            {/* Promotion voyageurs mieux notés */}
+                            <div onClick={() => setShowPromoVoyageurs(true)} className="border border-gray-200 rounded-2xl p-4 mb-2 cursor-pointer hover:border-gray-400 transition-colors">
+                                <div className="flex items-start justify-between gap-2 mb-1">
+                                    <p className="text-sm font-semibold text-gray-900">Promotion pour les voyageurs les mieux notés</p>
+                                    <span className="text-xs font-semibold bg-gray-100 text-gray-700 px-2 py-0.5 rounded-full flex-shrink-0">Nouveau</span>
+                                </div>
+                                <p className="text-xs text-gray-500 mb-2">Attirez les voyageurs ayant une évaluation de 4,8 ou plus</p>
+                                <button className="text-sm font-bold text-gray-900 underline">Commencer</button>
+                            </div>
+
+                            {/* Promotions passées */}
+                            <div onClick={() => setShowPromoPassees(true)} className="border border-gray-200 rounded-2xl px-4 py-4 mb-6 flex items-center justify-between cursor-pointer hover:border-gray-400 transition-colors">
+                                <span className="text-sm text-gray-900">Afficher les promotions passées (2)</span>
+                                <ChevronRight className="w-4 h-4 text-gray-400 flex-shrink-0" />
+                            </div>
+
+                            {/* Autres frais */}
+                            <h3 className="text-base font-bold text-gray-900 mb-3">Autres frais</h3>
+
+                            {/* Frais */}
+                            <div onClick={() => setShowFrais(true)} className="border border-gray-200 rounded-2xl px-4 py-4 flex items-center justify-between gap-3 cursor-pointer hover:border-gray-400 transition-colors">
+                                <div className="min-w-0">
+                                    <p className="text-sm font-semibold text-gray-900 mb-0.5">Frais</p>
+                                    <p className="text-xs text-gray-500">Ménage, animaux de compagnie, voyageurs supplémentaires</p>
+                                </div>
+                                <ChevronRight className="w-4 h-4 text-gray-400 flex-shrink-0" />
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* ── Frais panel ── */}
+                    <div
+                        className="absolute inset-0 bg-white overflow-y-auto transition-opacity duration-300"
+                        style={{ opacity: showFrais ? 1 : 0, pointerEvents: showFrais ? 'auto' : 'none', scrollbarWidth: 'thin' }}
+                    >
+                        <div className="px-4 pt-5 pb-2">
+                            <button
+                                onClick={() => setShowFrais(false)}
+                                className="w-9 h-9 flex items-center justify-center rounded-full border border-gray-200 hover:bg-gray-100 transition-colors"
+                            >
+                                <ChevronLeft className="w-4 h-4 text-gray-700" />
+                            </button>
+                        </div>
+                        <div className="px-5 pb-10">
+
+                            {/* Frais de ménage */}
+                            <h3 className="text-base font-bold text-gray-900 mb-3">Frais de ménage</h3>
+                            <div onClick={() => setShowFraisMenage(true)} className="border border-gray-200 rounded-2xl p-4 mb-2 cursor-pointer hover:border-gray-400 transition-colors">
+                                <p className="text-xs text-gray-500 mb-1">Par séjour</p>
+                                <p className="text-2xl font-bold text-gray-900">53 €</p>
+                            </div>
+                            <div onClick={() => setShowFraisMenageCourt(true)} className="border border-gray-200 rounded-2xl p-4 mb-6 cursor-pointer hover:border-gray-400 transition-colors">
+                                <div className="flex items-center justify-between mb-1">
+                                    <p className="text-sm text-gray-900">Montant pour les séjours courte durée</p>
+                                    <button className="text-sm font-bold text-gray-900 underline flex-shrink-0 ml-2">Ajouter</button>
+                                </div>
+                                <p className="text-xs text-gray-500 leading-relaxed">Attirez les voyageurs qui réservent pour 1 ou 2 nuits en diminuant les frais de ménage.</p>
+                            </div>
+
+                            {/* Frais pour les animaux */}
+                            <h3 className="text-base font-bold text-gray-900 mb-3">Frais pour les animaux</h3>
+                            <div onClick={() => setShowFraisAnimaux(true)} className="border border-gray-200 rounded-2xl p-4 mb-2 cursor-pointer hover:border-gray-400 transition-colors">
+                                <p className="text-xs text-gray-500 mb-1">Par séjour</p>
+                                <p className="text-2xl font-bold text-gray-900">0 €</p>
+                            </div>
+                            <p className="text-xs text-gray-500 mb-6 leading-relaxed px-1">
+                                Les animaux d'assistance séjournent gratuitement.{' '}
+                                <button className="underline text-gray-900">En savoir plus</button>
+                            </p>
+
+                            {/* Frais pour les voyageurs supplémentaires */}
+                            <h3 className="text-base font-bold text-gray-900 mb-3">Frais pour les voyageurs supplémentaires</h3>
+                            <div onClick={() => setShowFraisVoyageurs(true)} className="border border-gray-200 rounded-2xl p-4 mb-6 cursor-pointer hover:border-gray-400 transition-colors">
+                                <p className="text-xs text-gray-500 mb-1">Au-delà de 1 voyageur, par nuit</p>
+                                <p className="text-2xl font-bold text-gray-900">0 €</p>
+                            </div>
+
+                            {/* Frais supplémentaires */}
+                            <h3 className="text-base font-bold text-gray-900 mb-3">Frais supplémentaires</h3>
+                            {[
+                                { label: 'Frais de gestion par séjour', fn: () => setShowFraisGestion(true) },
+                                { label: 'Frais divers par séjour', fn: () => setShowFraisDivers(true) },
+                                { label: 'Frais de linge de maison par séjour', fn: () => setShowFraisLinge(true) },
+                                { label: "Frais de service de l'établissement par séjour", fn: () => setShowFraisService(true) },
+                            ].map(({ label, fn }, i) => (
+                                <div key={i} onClick={fn} className="border border-gray-200 rounded-2xl p-4 mb-2 cursor-pointer hover:border-gray-400 transition-colors">
+                                    <p className="text-xs text-gray-500 mb-1">{label}</p>
+                                    <p className="text-2xl font-bold text-gray-900">0 €</p>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* ── Frais de ménage sub-panel ── */}
+                    <div
+                        className="absolute inset-0 bg-white overflow-y-auto transition-opacity duration-300"
+                        style={{ opacity: showFraisMenage ? 1 : 0, pointerEvents: showFraisMenage ? 'auto' : 'none', scrollbarWidth: 'thin' }}
+                    >
+                        <div className="px-5 pt-8 pb-10 flex flex-col items-center">
+                            <h2 className="text-base font-bold text-gray-900 text-center mb-1">Frais de ménage</h2>
+                            <p className="text-sm text-[#FF385C] mb-12">Par séjour</p>
+                            <div className="flex items-baseline gap-1 mb-12">
+                                <span className="text-6xl font-bold text-gray-900">53</span>
+                                <span className="text-4xl font-bold text-gray-300 mx-1">|</span>
+                                <span className="text-4xl font-bold text-gray-900">€</span>
+                            </div>
+                            <p className="text-xs text-gray-500 text-center mb-8 leading-relaxed px-2">
+                                Des frais de ménage moins élevés pourraient vous permettre d'obtenir davantage de réservations.{' '}
+                                <button className="underline text-gray-900">En savoir plus</button>
+                            </p>
+                            <button disabled className="w-full bg-gray-100 text-gray-400 text-sm font-semibold py-4 rounded-2xl mb-3 cursor-not-allowed">Enregistrer</button>
+                            <button onClick={() => setShowFraisMenage(false)} className="w-full border border-gray-300 text-sm font-semibold text-gray-900 py-4 rounded-2xl hover:bg-gray-50 transition-colors">Annuler</button>
+                        </div>
+                    </div>
+
+                    {/* ── Frais de ménage courte durée sub-panel ── */}
+                    <div
+                        className="absolute inset-0 bg-white overflow-y-auto transition-opacity duration-300"
+                        style={{ opacity: showFraisMenageCourt ? 1 : 0, pointerEvents: showFraisMenageCourt ? 'auto' : 'none', scrollbarWidth: 'thin' }}
+                    >
+                        <div className="px-5 pt-8 pb-10 flex flex-col items-center">
+                            <h2 className="text-base font-bold text-gray-900 text-center mb-1 leading-snug">Frais de ménage pour les séjours courte durée</h2>
+                            <p className="text-sm text-[#FF385C] mb-12">Montant pour 1 ou 2 nuits</p>
+                            <div className="flex items-baseline gap-1 mb-16">
+                                <span className="text-4xl font-bold text-gray-900">€</span>
+                            </div>
+                            <button disabled className="w-full bg-gray-100 text-gray-400 text-sm font-semibold py-4 rounded-2xl mb-3 cursor-not-allowed">Enregistrer</button>
+                            <button onClick={() => setShowFraisMenageCourt(false)} className="w-full border border-gray-300 text-sm font-semibold text-gray-900 py-4 rounded-2xl hover:bg-gray-50 transition-colors">Annuler</button>
+                        </div>
+                    </div>
+
+                    {/* ── Frais pour les animaux sub-panel ── */}
+                    <div
+                        className="absolute inset-0 bg-white overflow-y-auto transition-opacity duration-300"
+                        style={{ opacity: showFraisAnimaux ? 1 : 0, pointerEvents: showFraisAnimaux ? 'auto' : 'none', scrollbarWidth: 'thin' }}
+                    >
+                        <div className="px-5 pt-8 pb-10 flex flex-col items-center">
+                            <h2 className="text-base font-bold text-gray-900 text-center mb-10">Frais pour les animaux</h2>
+                            <div className="flex items-baseline gap-1 mb-4">
+                                <span className="text-6xl font-bold text-gray-900">0 €</span>
+                            </div>
+                            <button className="flex items-center gap-2 border border-gray-300 rounded-full px-4 py-2 text-sm text-gray-700 mb-10">
+                                Par séjour <ChevronRight className="w-3.5 h-3.5 rotate-90 text-gray-500" />
+                            </button>
+                            <p className="text-xs text-[#FF385C] text-center mb-8 leading-relaxed px-2">
+                                Les animaux d'assistance séjournent gratuitement.{' '}
+                                <button className="underline">En savoir plus</button>
+                            </p>
+                            <button disabled className="w-full bg-gray-100 text-gray-400 text-sm font-semibold py-4 rounded-2xl mb-3 cursor-not-allowed">Enregistrer</button>
+                            <button onClick={() => setShowFraisAnimaux(false)} className="w-full border border-gray-300 text-sm font-semibold text-gray-900 py-4 rounded-2xl hover:bg-gray-50 transition-colors">Annuler</button>
+                        </div>
+                    </div>
+
+                    {/* ── Frais voyageurs supplémentaires sub-panel ── */}
+                    <div
+                        className="absolute inset-0 bg-white overflow-y-auto transition-opacity duration-300"
+                        style={{ opacity: showFraisVoyageurs ? 1 : 0, pointerEvents: showFraisVoyageurs ? 'auto' : 'none', scrollbarWidth: 'thin' }}
+                    >
+                        <div className="px-5 pt-8 pb-10 flex flex-col items-center">
+                            <h2 className="text-base font-bold text-gray-900 text-center mb-1">Frais pour les voyageurs supplémentaires</h2>
+                            <p className="text-sm text-[#FF385C] mb-10">Par nuit</p>
+                            <div className="flex items-baseline gap-1 mb-10">
+                                <span className="text-6xl font-bold text-gray-900">0</span>
+                                <span className="text-4xl font-bold text-gray-300 mx-1">|</span>
+                                <span className="text-4xl font-bold text-gray-900">€</span>
+                            </div>
+                            <div className="w-full border border-gray-200 rounded-2xl px-4 py-4 flex items-center justify-between mb-8">
+                                <p className="text-sm text-gray-700 leading-snug">Pour chaque voyageur supplémentaire au-delà de</p>
+                                <div className="flex items-center gap-2 flex-shrink-0 ml-3">
+                                    <button className="w-7 h-7 rounded-full border border-gray-300 flex items-center justify-center text-gray-600 text-lg leading-none hover:bg-gray-100">−</button>
+                                    <span className="text-sm font-semibold text-gray-900 w-4 text-center">1</span>
+                                    <button className="w-7 h-7 rounded-full border border-gray-300 flex items-center justify-center text-gray-600 text-lg leading-none hover:bg-gray-100">+</button>
+                                </div>
+                            </div>
+                            <button disabled className="w-full bg-gray-100 text-gray-400 text-sm font-semibold py-4 rounded-2xl mb-3 cursor-not-allowed">Enregistrer</button>
+                            <button onClick={() => setShowFraisVoyageurs(false)} className="w-full border border-gray-300 text-sm font-semibold text-gray-900 py-4 rounded-2xl hover:bg-gray-50 transition-colors">Annuler</button>
+                        </div>
+                    </div>
+
+                    {/* ── Frais de gestion sub-panel ── */}
+                    <div
+                        className="absolute inset-0 bg-white overflow-y-auto transition-opacity duration-300"
+                        style={{ opacity: showFraisGestion ? 1 : 0, pointerEvents: showFraisGestion ? 'auto' : 'none', scrollbarWidth: 'thin' }}
+                    >
+                        <div className="px-5 pt-8 pb-10 flex flex-col items-center">
+                            <h2 className="text-base font-bold text-gray-900 text-center mb-2">Frais de gestion</h2>
+                            <p className="text-xs text-gray-500 text-center mb-10 leading-relaxed px-1">Les frais de gestion sont ajoutés au tarif par nuit au moment de la réservation, mais apparaîtront distinctement dans votre relevé de versements.</p>
+                            <div className="flex items-baseline gap-1 mb-4">
+                                <span className="text-6xl font-bold text-gray-900">0</span>
+                                <span className="text-4xl font-bold text-gray-300 mx-1">|</span>
+                                <span className="text-4xl font-bold text-gray-900">€</span>
+                            </div>
+                            <button className="flex items-center gap-2 border border-gray-300 rounded-full px-4 py-2 text-sm text-gray-700 mb-10">
+                                Par séjour <ChevronRight className="w-3.5 h-3.5 rotate-90 text-gray-500" />
+                            </button>
+                            <button disabled className="w-full bg-gray-100 text-gray-400 text-sm font-semibold py-4 rounded-2xl mb-3 cursor-not-allowed">Enregistrer</button>
+                            <button onClick={() => setShowFraisGestion(false)} className="w-full border border-gray-300 text-sm font-semibold text-gray-900 py-4 rounded-2xl hover:bg-gray-50 transition-colors">Annuler</button>
+                        </div>
+                    </div>
+
+                    {/* ── Frais divers sub-panel ── */}
+                    <div
+                        className="absolute inset-0 bg-white overflow-y-auto transition-opacity duration-300"
+                        style={{ opacity: showFraisDivers ? 1 : 0, pointerEvents: showFraisDivers ? 'auto' : 'none', scrollbarWidth: 'thin' }}
+                    >
+                        <div className="px-5 pt-8 pb-10 flex flex-col items-center">
+                            <h2 className="text-base font-bold text-gray-900 text-center mb-2">Frais divers</h2>
+                            <p className="text-xs text-gray-500 text-center mb-10 leading-relaxed px-1">Les frais divers sont ajoutés au tarif par nuit au moment de la réservation, mais apparaîtront distinctement dans votre relevé de versements.</p>
+                            <div className="flex items-baseline gap-1 mb-4">
+                                <span className="text-6xl font-bold text-gray-900">0 €</span>
+                            </div>
+                            <button className="flex items-center gap-2 border border-gray-300 rounded-full px-4 py-2 text-sm text-gray-700 mb-10">
+                                Par séjour <ChevronRight className="w-3.5 h-3.5 rotate-90 text-gray-500" />
+                            </button>
+                            <button disabled className="w-full bg-gray-100 text-gray-400 text-sm font-semibold py-4 rounded-2xl mb-3 cursor-not-allowed">Enregistrer</button>
+                            <button onClick={() => setShowFraisDivers(false)} className="w-full border border-gray-300 text-sm font-semibold text-gray-900 py-4 rounded-2xl hover:bg-gray-50 transition-colors">Annuler</button>
+                        </div>
+                    </div>
+
+                    {/* ── Frais de linge de maison sub-panel ── */}
+                    <div
+                        className="absolute inset-0 bg-white overflow-y-auto transition-opacity duration-300"
+                        style={{ opacity: showFraisLinge ? 1 : 0, pointerEvents: showFraisLinge ? 'auto' : 'none', scrollbarWidth: 'thin' }}
+                    >
+                        <div className="px-5 pt-8 pb-10 flex flex-col items-center">
+                            <h2 className="text-base font-bold text-gray-900 text-center mb-2">Frais de linge de maison</h2>
+                            <p className="text-xs text-gray-500 text-center mb-10 leading-relaxed px-1">Les frais de linge de maison sont ajoutés aux frais de ménage. Tous les frais standard sont inclus dans le prix des nuits que les voyageurs paient au moment de la réservation. Vous pourrez consulter le décompte complet des frais dans votre rapport de paiement.</p>
+                            <div className="flex items-baseline gap-1 mb-4">
+                                <span className="text-6xl font-bold text-gray-900">0 €</span>
+                            </div>
+                            <button className="flex items-center gap-2 border border-gray-300 rounded-full px-4 py-2 text-sm text-gray-700 mb-10">
+                                Par séjour <ChevronRight className="w-3.5 h-3.5 rotate-90 text-gray-500" />
+                            </button>
+                            <button disabled className="w-full bg-gray-100 text-gray-400 text-sm font-semibold py-4 rounded-2xl mb-3 cursor-not-allowed">Enregistrer</button>
+                            <button onClick={() => setShowFraisLinge(false)} className="w-full border border-gray-300 text-sm font-semibold text-gray-900 py-4 rounded-2xl hover:bg-gray-50 transition-colors">Annuler</button>
+                        </div>
+                    </div>
+
+                    {/* ── Frais de service de l'établissement sub-panel ── */}
+                    <div
+                        className="absolute inset-0 bg-white overflow-y-auto transition-opacity duration-300"
+                        style={{ opacity: showFraisService ? 1 : 0, pointerEvents: showFraisService ? 'auto' : 'none', scrollbarWidth: 'thin' }}
+                    >
+                        <div className="px-5 pt-8 pb-10 flex flex-col items-center">
+                            <h2 className="text-base font-bold text-gray-900 text-center mb-2">Frais de service de l'établissement</h2>
+                            <p className="text-xs text-gray-500 text-center mb-10 leading-relaxed px-1">Les frais de séjour sont ajoutés au tarif par nuit au moment de la réservation, mais apparaîtront distinctement dans votre relevé de versements.</p>
+                            <div className="flex items-baseline gap-1 mb-4">
+                                <span className="text-6xl font-bold text-gray-900">0 €</span>
+                            </div>
+                            <button className="flex items-center gap-2 border border-gray-300 rounded-full px-4 py-2 text-sm text-gray-700 mb-10">
+                                Par séjour <ChevronRight className="w-3.5 h-3.5 rotate-90 text-gray-500" />
+                            </button>
+                            <button disabled className="w-full bg-gray-100 text-gray-400 text-sm font-semibold py-4 rounded-2xl mb-3 cursor-not-allowed">Enregistrer</button>
+                            <button onClick={() => setShowFraisService(false)} className="w-full border border-gray-300 text-sm font-semibold text-gray-900 py-4 rounded-2xl hover:bg-gray-50 transition-colors">Annuler</button>
+                        </div>
+                    </div>
+
+                    {/* ── Par nuit sub-panel ── */}
+                    <div
+                        className="absolute inset-0 bg-white overflow-y-auto transition-opacity duration-300"
+                        style={{ opacity: showParNuit ? 1 : 0, pointerEvents: showParNuit ? 'auto' : 'none', scrollbarWidth: 'thin' }}
+                    >
+                        {/* Header */}
+                        <div className="flex items-center justify-between px-4 pt-5 pb-4">
+                            <button
+                                onClick={() => setShowParNuit(false)}
+                                className="w-9 h-9 flex items-center justify-center rounded-full border border-gray-200 hover:bg-gray-100 transition-colors"
+                            >
+                                <ChevronLeft className="w-4 h-4 text-gray-700" />
+                            </button>
+                            <span className="text-sm font-semibold text-gray-900">Par nuit</span>
+                            <button className="w-9 h-9 flex items-center justify-center rounded-full border border-gray-200 hover:bg-gray-100 transition-colors">
+                                <span className="text-gray-500 text-base leading-none">?</span>
+                            </button>
+                        </div>
+
+                        <div className="px-5 flex flex-col items-center pt-8 pb-10">
+                            {/* Price display */}
+                            <div className="flex items-baseline gap-1 mb-2">
+                                <span className="text-6xl font-bold text-gray-900">{property.pricePerNight}</span>
+                                <span className="text-4xl font-bold text-gray-300 mx-1">|</span>
+                                <span className="text-4xl font-bold text-gray-900">€</span>
+                            </div>
+
+                            {/* Vous gagnez */}
+                            <button className="flex items-center gap-1 text-sm text-gray-600 mb-12">
+                                Vous gagnez {Math.round(property.pricePerNight * 0.815)} €
+                                <ChevronRight className="w-4 h-4 rotate-90" />
+                            </button>
+
+                            {/* Prix conseillé */}
+                            <div className="w-full border border-gray-200 rounded-2xl px-4 py-4 text-center mb-4">
+                                <span className="text-sm text-gray-900">Prix conseillé : {Math.round(property.pricePerNight * 0.8)} €</span>
+                            </div>
+
+                            <button className="text-sm text-gray-900 underline">Afficher les annonces similaires</button>
+                        </div>
+                    </div>
+
+                    {/* ── Prix spécial week-end sub-panel ── */}
+                    <div
+                        className="absolute inset-0 bg-white overflow-y-auto transition-opacity duration-300"
+                        style={{ opacity: showWeekend ? 1 : 0, pointerEvents: showWeekend ? 'auto' : 'none', scrollbarWidth: 'thin' }}
+                    >
+                        <div className="px-5 pt-8 pb-10 flex flex-col">
+                            {/* Title */}
+                            <div className="text-center mb-8">
+                                <h2 className="text-base font-semibold text-gray-900 mb-1">Prix spécial week-end</h2>
+                                <p className="text-sm text-[#FF385C]">Nuits du vendredi et du samedi</p>
+                            </div>
+
+                            {/* Prix 0€ + pencil */}
+                            <div className="flex items-baseline justify-center gap-2 mb-2">
+                                <span className="text-6xl font-bold text-gray-900">0 €</span>
+                                <button className="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center hover:bg-gray-100 transition-colors">
+                                    <Pencil className="w-3.5 h-3.5 text-gray-600" />
+                                </button>
+                            </div>
+
+                            {/* Vous gagnez */}
+                            <button className="flex items-center justify-center gap-1 text-sm text-gray-600 mb-16">
+                                Vous gagnez 0 €
+                                <ChevronRight className="w-4 h-4 rotate-90" />
+                            </button>
+
+                            {/* En savoir plus */}
+                            <button className="text-sm text-gray-600 underline text-center mb-6">En savoir plus sur la tarification</button>
+
+                            {/* Enregistrer (disabled) */}
+                            <button disabled className="w-full bg-gray-100 text-gray-400 text-sm font-semibold py-4 rounded-2xl mb-3 cursor-not-allowed">
+                                Enregistrer
+                            </button>
+
+                            {/* Annuler */}
+                            <button onClick={() => setShowWeekend(false)} className="w-full border border-gray-300 text-sm font-semibold text-gray-900 py-4 rounded-2xl hover:bg-gray-50 transition-colors">
+                                Annuler
+                            </button>
+                        </div>
+                    </div>
+
+                    {/* ── À la semaine sub-panel ── */}
+                    <div
+                        className="absolute inset-0 bg-white overflow-y-auto transition-opacity duration-300"
+                        style={{ opacity: showSemaine ? 1 : 0, pointerEvents: showSemaine ? 'auto' : 'none', scrollbarWidth: 'thin' }}
+                    >
+                        <div className="px-5 pt-8 pb-10 flex flex-col">
+                            <div className="text-center mb-6">
+                                <h2 className="text-base font-semibold text-gray-900 mb-1">Réduction à la semaine</h2>
+                                <p className="text-sm text-[#FF385C]">Moyenne pour un séjour de 7 nuits</p>
+                            </div>
+                            {(() => {
+                                const prix = Math.round(property.pricePerNight * 7 * (1 - reductionSemaine / 100))
+                                return (
+                                    <>
+                                        <div className="flex items-baseline justify-center mb-2">
+                                            <span className="text-6xl font-bold text-gray-900">{prix.toLocaleString('fr-FR')} €</span>
+                                        </div>
+                                        <button className="flex items-center justify-center gap-1 text-sm text-gray-600 mb-8">
+                                            Vous gagnez {Math.round(prix * 0.815).toLocaleString('fr-FR')} €
+                                            <ChevronRight className="w-4 h-4 rotate-90" />
+                                        </button>
+                                    </>
+                                )
+                            })()}
+                            <div className="mb-6">
+                                <div className="flex items-start justify-between gap-3 mb-4">
+                                    <div>
+                                        <p className="text-sm font-bold text-gray-900 mb-1">Définissez une réduction</p>
+                                        <p className="text-xs text-gray-500 leading-relaxed">Conseil : pour décrocher des séjours à la semaine, essayez de proposer une réduction de 31 %</p>
+                                        <button className="text-xs text-gray-900 underline font-semibold mt-1">En savoir plus</button>
+                                    </div>
+                                    <div className="flex-shrink-0 w-16 h-14 border-2 border-gray-200 rounded-2xl flex items-center justify-center">
+                                        <span className="text-base font-bold text-gray-900">{reductionSemaine}%</span>
+                                    </div>
+                                </div>
+                                <input
+                                    type="range" min="0" max="99" value={reductionSemaine}
+                                    onChange={e => setReductionSemaine(Number(e.target.value))}
+                                    className="w-full h-1 rounded-full appearance-none cursor-pointer accent-gray-900"
+                                    style={{ background: `linear-gradient(to right, #222 ${reductionSemaine}%, #e5e7eb ${reductionSemaine}%)` }}
+                                />
+                                <div className="flex justify-between text-xs text-gray-400 mt-1">
+                                    <span>0%</span><span>99%</span>
+                                </div>
+                            </div>
+                            <button className="w-full bg-gray-900 text-white text-sm font-semibold py-4 rounded-2xl mb-3 hover:bg-gray-700 transition-colors">
+                                Enregistrer
+                            </button>
+                            <button onClick={() => setShowSemaine(false)} className="w-full border border-gray-300 text-sm font-semibold text-gray-900 py-4 rounded-2xl hover:bg-gray-50 transition-colors">
+                                Annuler
+                            </button>
+                        </div>
+                    </div>
+
+                    {/* ── Au mois sub-panel ── */}
+                    <div
+                        className="absolute inset-0 bg-white overflow-y-auto transition-opacity duration-300"
+                        style={{ opacity: showMois ? 1 : 0, pointerEvents: showMois ? 'auto' : 'none', scrollbarWidth: 'thin' }}
+                    >
+                        <div className="px-5 pt-8 pb-10 flex flex-col">
+                            <div className="text-center mb-6">
+                                <h2 className="text-base font-semibold text-gray-900 mb-1">Réduction au mois</h2>
+                                <p className="text-sm text-[#FF385C]">Moyenne pour un séjour de 30 nuits</p>
+                            </div>
+                            {(() => {
+                                const prix = Math.round(property.pricePerNight * 30 * (1 - reductionMois / 100))
+                                return (
+                                    <>
+                                        <div className="flex items-baseline justify-center mb-2">
+                                            <span className="text-6xl font-bold text-gray-900">{prix.toLocaleString('fr-FR')} €</span>
+                                        </div>
+                                        <button className="flex items-center justify-center gap-1 text-sm text-gray-600 mb-8">
+                                            Vous gagnez {Math.round(prix * 0.815).toLocaleString('fr-FR')} €
+                                            <ChevronRight className="w-4 h-4 rotate-90" />
+                                        </button>
+                                    </>
+                                )
+                            })()}
+                            <div className="mb-6">
+                                <div className="flex items-start justify-between gap-3 mb-4">
+                                    <div>
+                                        <p className="text-sm font-bold text-gray-900 mb-1">Définissez une réduction</p>
+                                        <p className="text-xs text-gray-500 leading-relaxed">Conseil : pour décrocher des séjours au mois, essayez de proposer une réduction de 67 %</p>
+                                        <button className="text-xs text-gray-900 underline font-semibold mt-1">En savoir plus</button>
+                                    </div>
+                                    <div className="flex-shrink-0 w-16 h-14 border-2 border-gray-200 rounded-2xl flex items-center justify-center">
+                                        <span className="text-base font-bold text-gray-900">{reductionMois}%</span>
+                                    </div>
+                                </div>
+                                <input
+                                    type="range" min="0" max="99" value={reductionMois}
+                                    onChange={e => setReductionMois(Number(e.target.value))}
+                                    className="w-full h-1 rounded-full appearance-none cursor-pointer accent-gray-900"
+                                    style={{ background: `linear-gradient(to right, #222 ${reductionMois}%, #e5e7eb ${reductionMois}%)` }}
+                                />
+                                <div className="flex justify-between text-xs text-gray-400 mt-1">
+                                    <span>0%</span><span>99%</span>
+                                </div>
+                            </div>
+                            <button className="w-full bg-gray-900 text-white text-sm font-semibold py-4 rounded-2xl mb-3 hover:bg-gray-700 transition-colors">
+                                Enregistrer
+                            </button>
+                            <button onClick={() => setShowMois(false)} className="w-full border border-gray-300 text-sm font-semibold text-gray-900 py-4 rounded-2xl hover:bg-gray-50 transition-colors">
+                                Annuler
+                            </button>
+                        </div>
+                    </div>
+
+                    {/* ── Plus de réductions panel ── */}
+                    <div
+                        className="absolute inset-0 bg-white overflow-y-auto transition-opacity duration-300"
+                        style={{ opacity: showPlusReductions ? 1 : 0, pointerEvents: showPlusReductions ? 'auto' : 'none', scrollbarWidth: 'thin' }}
+                    >
+                        <div className="px-4 pt-5 pb-2">
+                            <button
+                                onClick={() => setShowPlusReductions(false)}
+                                className="w-9 h-9 flex items-center justify-center rounded-full border border-gray-200 hover:bg-gray-100 transition-colors"
+                            >
+                                <ChevronLeft className="w-4 h-4 text-gray-700" />
+                            </button>
+                        </div>
+                        <div className="px-5 pb-10">
+                            {/* Réservation anticipée */}
+                            <div className="mb-6">
+                                <h3 className="text-base font-bold text-gray-900 mb-1">Réductions en cas de réservation anticipée</h3>
+                                <p className="text-xs text-gray-500 mb-3 leading-relaxed">Obtenez plus de réservations en proposant des réductions aux voyageurs qui réservent longtemps à l'avance.</p>
+                                <button onClick={() => setShowAnticipee(true)} className="w-full border border-gray-200 rounded-2xl py-4 text-sm font-semibold text-gray-900 hover:border-gray-400 transition-colors">
+                                    Ajouter une réduction
+                                </button>
+                            </div>
+                            {/* Dernière minute */}
+                            <div className="mb-6">
+                                <h3 className="text-base font-bold text-gray-900 mb-1">Réductions de dernière minute</h3>
+                                <p className="text-xs text-gray-500 mb-3 leading-relaxed">Remplissez votre calendrier en proposant des réductions pour les voyageurs qui réservent au dernier moment.</p>
+                                <button onClick={() => setShowDerniereMinute(true)} className="w-full border-2 border-gray-900 rounded-2xl py-4 text-sm font-semibold text-gray-900 hover:bg-gray-50 transition-colors">
+                                    Ajouter une réduction
+                                </button>
+                            </div>
+                            {/* Durée du séjour */}
+                            <div className="mb-6">
+                                <h3 className="text-base font-bold text-gray-900 mb-1">Réductions liées à la durée du séjour</h3>
+                                <p className="text-xs text-gray-500 mb-3 leading-relaxed">Proposez des réductions en fonction de la durée des séjours. Si vous proposez plusieurs réductions, celle portant sur la durée la plus longue s'applique.</p>
+                                <button onClick={() => setShowDureeSejour(true)} className="w-full border border-gray-200 rounded-2xl py-4 text-sm font-semibold text-gray-900 hover:border-gray-400 transition-colors">
+                                    Ajouter une réduction
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* ── Réduction anticipée sub-panel ── */}
+                    <div
+                        className="absolute inset-0 bg-white overflow-y-auto transition-opacity duration-300"
+                        style={{ opacity: showAnticipee ? 1 : 0, pointerEvents: showAnticipee ? 'auto' : 'none', scrollbarWidth: 'thin' }}
+                    >
+                        <div className="px-5 pt-6 pb-10">
+                            <div className="flex items-start gap-3 mb-1">
+                                <button onClick={() => setShowAnticipee(false)} className="w-8 h-8 flex items-center justify-center rounded-full border border-gray-200 hover:bg-gray-100 transition-colors flex-shrink-0 mt-0.5">
+                                    <ChevronLeft className="w-4 h-4 text-gray-700" />
+                                </button>
+                                <h2 className="text-sm font-bold text-gray-900 leading-snug">Réduction en cas de réservation anticipée</h2>
+                            </div>
+                            <p className="text-xs text-[#FF385C] mb-6 pl-11 leading-relaxed">Pour les réservations effectuées entre 1 et 24 mois avant la date d'arrivée.</p>
+                            <div className="border border-gray-200 rounded-2xl overflow-hidden mb-8">
+                                <div className="px-4 py-4 border-b border-gray-200">
+                                    <p className="text-xs text-gray-500 mb-1">Mois avant l'arrivée</p>
+                                    <p className="text-xl font-semibold text-gray-300">0</p>
+                                </div>
+                                <div className="px-4 py-4">
+                                    <p className="text-xs text-gray-500 mb-1">Réduction</p>
+                                    <p className="text-xl font-semibold text-gray-300">0 %</p>
+                                </div>
+                            </div>
+                            <button disabled className="w-full bg-gray-100 text-gray-400 text-sm font-semibold py-4 rounded-2xl mb-3 cursor-not-allowed">Enregistrer</button>
+                            <button onClick={() => setShowAnticipee(false)} className="w-full border border-gray-300 text-sm font-semibold text-gray-900 py-4 rounded-2xl hover:bg-gray-50 transition-colors">Annuler</button>
+                        </div>
+                    </div>
+
+                    {/* ── Réduction dernière minute sub-panel ── */}
+                    <div
+                        className="absolute inset-0 bg-white overflow-y-auto transition-opacity duration-300"
+                        style={{ opacity: showDerniereMinute ? 1 : 0, pointerEvents: showDerniereMinute ? 'auto' : 'none', scrollbarWidth: 'thin' }}
+                    >
+                        <div className="px-5 pt-6 pb-10">
+                            <div className="flex items-start gap-3 mb-1">
+                                <button onClick={() => setShowDerniereMinute(false)} className="w-8 h-8 flex items-center justify-center rounded-full border border-gray-200 hover:bg-gray-100 transition-colors flex-shrink-0 mt-0.5">
+                                    <ChevronLeft className="w-4 h-4 text-gray-700" />
+                                </button>
+                                <h2 className="text-sm font-bold text-gray-900 leading-snug">Réduction de dernière minute</h2>
+                            </div>
+                            <p className="text-xs text-[#FF385C] mb-6 pl-11 leading-relaxed">Pour les réservations effectuées entre 1 et 28 jours avant la date d'arrivée.</p>
+                            <div className="border border-gray-200 rounded-2xl overflow-hidden mb-8">
+                                <div className="px-4 py-4 border-b border-gray-200">
+                                    <p className="text-xs text-gray-500 mb-1">Jours avant l'arrivée</p>
+                                    <p className="text-xl font-semibold text-gray-300">0</p>
+                                </div>
+                                <div className="px-4 py-4">
+                                    <p className="text-xs text-gray-500 mb-1">Réduction</p>
+                                    <p className="text-xl font-semibold text-gray-300">0 %</p>
+                                </div>
+                            </div>
+                            <button disabled className="w-full bg-gray-100 text-gray-400 text-sm font-semibold py-4 rounded-2xl mb-3 cursor-not-allowed">Enregistrer</button>
+                            <button onClick={() => setShowDerniereMinute(false)} className="w-full border border-gray-300 text-sm font-semibold text-gray-900 py-4 rounded-2xl hover:bg-gray-50 transition-colors">Annuler</button>
+                        </div>
+                    </div>
+
+                    {/* ── Réduction durée séjour sub-panel ── */}
+                    <div
+                        className="absolute inset-0 bg-white overflow-y-auto transition-opacity duration-300"
+                        style={{ opacity: showDureeSejour ? 1 : 0, pointerEvents: showDureeSejour ? 'auto' : 'none', scrollbarWidth: 'thin' }}
+                    >
+                        <div className="px-5 pt-8 pb-10">
+                            <h2 className="text-sm font-bold text-gray-900 text-center mb-6 leading-snug">Réduction liée à la durée du séjour</h2>
+                            <div className="border border-gray-200 rounded-2xl overflow-hidden mb-8">
+                                <div className="px-4 py-4 border-b border-gray-200">
+                                    <div className="flex items-center justify-between">
+                                        <div>
+                                            <p className="text-xs text-gray-500 mb-1">Durée de séjour</p>
+                                            <p className={`text-sm ${dureeSejour ? 'text-gray-900 font-semibold' : 'text-gray-400'}`}>
+                                                {dureeSejour || 'Sélectionner une durée'}
+                                            </p>
+                                        </div>
+                                        <div className="relative">
+                                            <select
+                                                value={dureeSejour}
+                                                onChange={e => setDureeSejour(e.target.value)}
+                                                className="absolute inset-0 opacity-0 cursor-pointer w-full"
+                                            >
+                                                <option value="">Sélectionner une durée</option>
+                                                {['2 nuits', '3 nuits', '4 nuits', '5 nuits', '6 nuits',
+                                                    '2 semaines', '3 semaines', '4 semaines', '5 semaines',
+                                                    '6 semaines', '7 semaines', '8 semaines', '9 semaines',
+                                                    '10 semaines', '11 semaines', '12 semaines'].map(opt => (
+                                                        <option key={opt} value={opt}>{opt}</option>
+                                                    ))}
+                                            </select>
+                                            <ChevronRight className="w-4 h-4 text-gray-400 rotate-90 pointer-events-none" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="px-4 py-4">
+                                    <p className="text-xs text-gray-500 mb-1">Réduction</p>
+                                    <p className="text-xl font-semibold text-gray-300">%</p>
+                                </div>
+                            </div>
+                            <button disabled className="w-full bg-gray-100 text-gray-400 text-sm font-semibold py-4 rounded-2xl mb-3 cursor-not-allowed">Enregistrer</button>
+                            <button onClick={() => setShowDureeSejour(false)} className="w-full border border-gray-300 text-sm font-semibold text-gray-900 py-4 rounded-2xl hover:bg-gray-50 transition-colors">Annuler</button>
+                        </div>
+                    </div>
+
+                    {/* ── Promotion voyageurs les mieux notés panel ── */}
+                    <div
+                        className="absolute inset-0 bg-white overflow-y-auto transition-opacity duration-300"
+                        style={{ opacity: showPromoVoyageurs ? 1 : 0, pointerEvents: showPromoVoyageurs ? 'auto' : 'none', scrollbarWidth: 'thin' }}
+                    >
+                        <div className="px-4 pt-5 pb-2">
+                            <button
+                                onClick={() => setShowPromoVoyageurs(false)}
+                                className="w-9 h-9 flex items-center justify-center rounded-full border border-gray-200 hover:bg-gray-100 transition-colors"
+                            >
+                                <ChevronLeft className="w-4 h-4 text-gray-700" />
+                            </button>
+                        </div>
+                        <div className="px-5 pb-10">
+                            <h2 className="text-xl font-bold text-gray-900 mb-6 leading-snug">Promotion pour les voyageurs les mieux notés</h2>
+
+                            {/* Titre accrocheur */}
+                            <p className="text-base font-semibold text-gray-900 text-center mb-6 leading-snug">
+                                Offrez une réduction de 10 % aux voyageurs les mieux notés
+                            </p>
+
+                            {/* Vos avantages */}
+                            <div className="bg-gray-50 rounded-2xl p-4 mb-4">
+                                <p className="text-sm font-bold text-gray-900 mb-3">Vos avantages</p>
+                                <div className="flex items-start gap-2 mb-2">
+                                    <span className="text-[#1a8a7a] font-bold text-base leading-none mt-0.5">✓</span>
+                                    <p className="text-sm text-gray-700">Plus de visibilité dans les résultats de recherche</p>
+                                </div>
+                                <div className="flex items-start gap-2">
+                                    <span className="text-[#1a8a7a] font-bold text-base leading-none mt-0.5">✓</span>
+                                    <p className="text-sm text-gray-700">Un badge spécial sur votre annonce</p>
+                                </div>
+                            </div>
+
+                            {/* Fonctionnement */}
+                            <div className="bg-gray-50 rounded-2xl p-4 mb-8">
+                                <p className="text-sm font-bold text-gray-900 mb-3">Fonctionnement</p>
+                                <div className="flex items-start gap-2 mb-2">
+                                    <span className="text-[#1a8a7a] font-bold text-base leading-none mt-0.5">✓</span>
+                                    <p className="text-sm text-gray-700">Uniquement disponible pour les voyageurs avec une note de 4,8 ou plus</p>
+                                </div>
+                                <div className="flex items-start gap-2 mb-2">
+                                    <span className="text-[#1a8a7a] font-bold text-base leading-none mt-0.5">✓</span>
+                                    <p className="text-sm text-gray-700">Valable pour les dates disponibles dans votre calendrier</p>
+                                </div>
+                                <div className="flex items-start gap-2">
+                                    <span className="text-[#1a8a7a] font-bold text-base leading-none mt-0.5">✓</span>
+                                    <p className="text-sm text-gray-700">Cumulable avec vos autres réductions et promotions</p>
+                                </div>
+                            </div>
+
+                            {/* Appliquer la promotion */}
+                            <button className="w-full bg-gray-900 text-white text-sm font-semibold py-4 rounded-2xl mb-4 hover:bg-gray-700 transition-colors">
+                                Appliquer la promotion
+                            </button>
+
+                            {/* En savoir plus */}
+                            <div className="text-center">
+                                <button className="text-sm text-gray-900 underline">En savoir plus</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* ── Promotions passées panel ── */}
+                    <div
+                        className="absolute inset-0 bg-white overflow-y-auto transition-opacity duration-300"
+                        style={{ opacity: showPromoPassees ? 1 : 0, pointerEvents: showPromoPassees ? 'auto' : 'none', scrollbarWidth: 'thin' }}
+                    >
+                        <div className="px-4 pt-5 pb-2 flex items-center gap-3">
+                            <button
+                                onClick={() => setShowPromoPassees(false)}
+                                className="w-9 h-9 flex items-center justify-center rounded-full border border-gray-200 hover:bg-gray-100 transition-colors flex-shrink-0"
+                            >
+                                <ChevronLeft className="w-4 h-4 text-gray-700" />
+                            </button>
+                            <h2 className="text-base font-bold text-gray-900">Promotions passées</h2>
+                        </div>
+                        <div className="px-5 pt-4 pb-10">
+                            {/* Carte 1 */}
+                            <div className="border border-gray-200 rounded-2xl p-4 mb-3">
+                                <p className="text-sm text-gray-900 mb-3 leading-snug">
+                                    Remplissez votre calendrier avec cette promotion : 10 % de réduction
+                                </p>
+                                <p className="text-xs text-gray-500 mb-2">0 vue · 0 réservation</p>
+                                <div className="flex items-center gap-1.5">
+                                    <span className="w-2 h-2 rounded-full bg-red-500 flex-shrink-0" />
+                                    <span className="text-xs text-gray-600 font-medium">Inactive</span>
+                                </div>
+                            </div>
+                            {/* Carte 2 */}
+                            <div className="border border-gray-200 rounded-2xl p-4">
+                                <p className="text-sm text-gray-900 mb-3 leading-snug">
+                                    Remplissez votre calendrier avec cette promotion : 15 % de réduction
+                                </p>
+                                <p className="text-xs text-gray-500 mb-2">0 vue · 0 réservation</p>
+                                <div className="flex items-center gap-1.5">
+                                    <span className="w-2 h-2 rounded-full bg-red-500 flex-shrink-0" />
+                                    <span className="text-xs text-gray-600 font-medium">Inactive</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* ── Dispo settings panel ── */}
+                    <div
+                        className="absolute inset-0 bg-white transition-opacity duration-300"
+                        style={{ opacity: showDispoSettings ? 1 : 0, pointerEvents: showDispoSettings ? 'auto' : 'none', overflowY: 'auto', scrollbarWidth: 'thin' }}
+                    >
+                        <div className="px-4 pt-5 pb-2">
+                            <button
+                                onClick={() => { setShowDispoSettings(false); setOpenDispoDropdown(null) }}
+                                className="w-9 h-9 flex items-center justify-center rounded-full border border-gray-200 hover:bg-gray-100 transition-colors"
+                            >
+                                <ChevronLeft className="w-4 h-4 text-gray-700" />
+                            </button>
+                        </div>
+
+                        <div className="px-5 pb-10">
+                            <h2 className="text-2xl font-bold text-gray-900 mb-1">Paramètres de disponibilité</h2>
+                            <p className="text-xs text-gray-500 mb-6 leading-relaxed">Ces paramètres s'appliquent à toutes les nuits, à moins que vous ne personnalisiez certaines dates.</p>
+
+                            {/* Durée du séjour */}
+                            <h3 className="text-base font-bold text-gray-900 mb-3">Durée du séjour</h3>
+
+                            <div onClick={() => setShowDispoMin(true)} className="border border-gray-200 rounded-2xl p-4 mb-2 cursor-pointer hover:border-gray-400 transition-colors">
+                                <p className="text-xs text-gray-500 mb-1">Nombre minimal de nuits</p>
+                                <p className="text-2xl font-bold text-gray-900">1</p>
+                            </div>
+                            <div onClick={() => setShowDispoMax(true)} className="border border-gray-200 rounded-2xl p-4 mb-6 cursor-pointer hover:border-gray-400 transition-colors">
+                                <p className="text-xs text-gray-500 mb-1">Nombre maximal de nuits</p>
+                                <p className="text-2xl font-bold text-gray-900">365</p>
+                            </div>
+
+                            {/* Disponibilités */}
+                            <h3 className="text-base font-bold text-gray-900 mb-3">Disponibilités</h3>
+
+                            {/* Dropdown 1 — Délai de réservation avant l'arrivée */}
+                            <div ref={el => dispoDropdownRefs.current[0] = el} className={`relative border rounded-2xl mb-2 ${openDispoDropdown === 0 ? 'border-2 border-gray-900' : 'border-gray-200'}`}>
+                                <button onClick={() => handleDispoDropdown(0)} className="w-full px-4 py-4 flex items-start justify-between text-left">
+                                    <div className="min-w-0 pr-2">
+                                        <p className="text-sm font-semibold text-gray-900">Délai de réservation avant l'arrivée</p>
+                                        {openDispoDropdown === 0
+                                            ? <p className="text-xs text-gray-500 mt-1 leading-relaxed">Combien de temps avant l'arrivée avez-vous besoin de recevoir la réservation d'un voyageur ?</p>
+                                            : <p className="text-sm text-gray-500 mt-0.5">{dispoDelai}</p>
+                                        }
+                                    </div>
+                                    <ChevronRight className={`w-4 h-4 text-gray-400 flex-shrink-0 mt-0.5 transition-transform ${openDispoDropdown === 0 ? 'rotate-[270deg]' : 'rotate-90'}`} />
+                                </button>
+                            </div>
+
+                            {/* Dropdown 2 — Délai : le jour même (heure) */}
+                            <div ref={el => dispoDropdownRefs.current[1] = el} className={`relative border rounded-2xl mb-2 ${openDispoDropdown === 1 ? 'border-2 border-gray-900' : 'border-gray-200'}`}>
+                                <button onClick={() => handleDispoDropdown(1)} className="w-full px-4 py-4 flex items-start justify-between text-left">
+                                    <div className="min-w-0 pr-2">
+                                        <p className="text-sm font-semibold text-gray-900">Délai de réservation avant l'arrivée : le jour même</p>
+                                        {openDispoDropdown === 1
+                                            ? <p className="text-xs text-gray-500 mt-1 leading-relaxed">Les voyageurs peuvent réserver le jour même de leur arrivée dans le logement jusqu'à cette heure.</p>
+                                            : <p className="text-sm text-gray-500 mt-0.5">{dispoHeure}</p>
+                                        }
+                                    </div>
+                                    <ChevronRight className={`w-4 h-4 text-gray-400 flex-shrink-0 mt-0.5 transition-transform ${openDispoDropdown === 1 ? 'rotate-[270deg]' : 'rotate-90'}`} />
+                                </button>
+                            </div>
+
+                            {/* Dropdown 3 — Temps de préparation */}
+                            <div ref={el => dispoDropdownRefs.current[2] = el} className={`relative border rounded-2xl mb-2 ${openDispoDropdown === 2 ? 'border-2 border-gray-900' : 'border-gray-200'}`}>
+                                <button onClick={() => handleDispoDropdown(2)} className="w-full px-4 py-4 flex items-start justify-between text-left">
+                                    <div className="min-w-0 pr-2">
+                                        <p className="text-sm font-semibold text-gray-900">Temps de préparation</p>
+                                        {openDispoDropdown === 2
+                                            ? <p className="text-xs text-gray-500 mt-1 leading-relaxed">Combien de nuits avant et après chaque réservation devez-vous bloquer ?</p>
+                                            : <p className="text-sm text-gray-500 mt-0.5">{dispoPrep}</p>
+                                        }
+                                    </div>
+                                    <ChevronRight className={`w-4 h-4 text-gray-400 flex-shrink-0 mt-0.5 transition-transform ${openDispoDropdown === 2 ? 'rotate-[270deg]' : 'rotate-90'}`} />
+                                </button>
+                            </div>
+
+                            {/* Dropdown 4 — Plage de disponibilité */}
+                            <div ref={el => dispoDropdownRefs.current[3] = el} className={`relative border rounded-2xl mb-2 ${openDispoDropdown === 3 ? 'border-2 border-gray-900' : 'border-gray-200'}`}>
+                                <button onClick={() => handleDispoDropdown(3)} className="w-full px-4 py-4 flex items-start justify-between text-left">
+                                    <div className="min-w-0 pr-2">
+                                        <p className="text-sm font-semibold text-gray-900">Plage de disponibilité</p>
+                                        {openDispoDropdown === 3
+                                            ? <p className="text-xs text-gray-500 mt-1 leading-relaxed">Combien de temps à l'avance les voyageurs peuvent-ils réserver ?</p>
+                                            : <p className="text-sm text-gray-500 mt-0.5">{dispoPlage}</p>
+                                        }
+                                    </div>
+                                    <ChevronRight className={`w-4 h-4 text-gray-400 flex-shrink-0 mt-0.5 transition-transform ${openDispoDropdown === 3 ? 'rotate-[270deg]' : 'rotate-90'}`} />
+                                </button>
+                            </div>
+
+                            {/* Plus de paramètres — navigation link */}
+                            <div onClick={() => setShowPlusParamsDispo(true)} className="border border-gray-200 rounded-2xl px-4 py-4 mb-6 flex items-center justify-between gap-3 cursor-pointer hover:border-gray-400 transition-colors">
+                                <div>
+                                    <p className="text-sm text-gray-900">Plus de paramètres de disponibilité</p>
+                                    <p className="text-sm text-gray-500 mt-0.5">Dates d'arrivée et de départ non autorisées</p>
+                                </div>
+                                <ChevronRight className="w-4 h-4 text-gray-400 flex-shrink-0" />
+                            </div>
+
+                            {/* Associer des calendriers */}
+                            <h3 className="text-base font-bold text-gray-900 mb-1">Associer des calendriers</h3>
+                            <p className="text-xs text-gray-500 mb-3 leading-relaxed">Synchronisez tous vos calendriers d'hôte pour bénéficier de mises à jour automatiques.</p>
+
+                            <div className="border border-gray-200 rounded-2xl px-4 py-4 mb-2 flex items-center justify-between gap-3">
+                                <div className="flex items-center gap-3">
+                                    <Link className="w-4 h-4 text-gray-600 flex-shrink-0" />
+                                    <span className="text-sm text-gray-900">Me connecter à un autre site web</span>
+                                </div>
+                                <ChevronRight className="w-4 h-4 text-gray-400 flex-shrink-0" />
+                            </div>
+
+                            <div className="border border-gray-200 rounded-2xl px-4 py-4 flex items-center justify-between gap-3">
+                                <div className="flex items-center gap-3">
+                                    <svg className="w-4 h-4 flex-shrink-0 text-[#FF385C]" viewBox="0 0 32 32" fill="currentColor">
+                                        <path d="M16 1C10.5 1 2 12.4 2 19.2c0 4.1 2.8 7.8 7 7.8 2.4 0 4.5-1.2 6-3.1a7.2 7.2 0 0 0 6 3.1c4.2 0 7-3.7 7-7.8C28 12.4 21.5 1 16 1zm-7 24c-3.3 0-5-2.8-5-5.8C4 13.6 11.5 3 16 3c1.5 0 2.8.7 3.9 1.8C15.9 8.7 9 16.2 9 25zm7 0c-2.1 0-4-1.4-5.2-3.5C13 17 18.5 10.6 21.8 7A13 13 0 0 1 26 19.2c0 3-1.7 5.8-5 5.8z" />
+                                    </svg>
+                                    <span className="text-sm text-gray-900">Connecter plusieurs annonces Airbnb</span>
+                                </div>
+                                <ChevronRight className="w-4 h-4 text-gray-400 flex-shrink-0" />
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* ── Plus de paramètres de disponibilité sub-panel ── */}
+                    <div
+                        className="absolute inset-0 bg-white overflow-y-auto transition-opacity duration-300"
+                        style={{ opacity: showPlusParamsDispo ? 1 : 0, pointerEvents: showPlusParamsDispo ? 'auto' : 'none', scrollbarWidth: 'thin' }}
+                    >
+                        <div className="px-4 pt-5 pb-2">
+                            <button
+                                onClick={() => setShowPlusParamsDispo(false)}
+                                className="w-9 h-9 flex items-center justify-center rounded-full border border-gray-200 hover:bg-gray-100 transition-colors"
+                            >
+                                <ChevronLeft className="w-4 h-4 text-gray-700" />
+                            </button>
+                        </div>
+                        <div className="px-5 pb-10">
+                            {/* Arrivée non autorisée */}
+                            <h3 className="text-base font-bold text-gray-900 mb-2">Arrivée non autorisée</h3>
+                            <p className="text-xs text-gray-500 mb-4 leading-relaxed">Les voyageurs ne pourront pas réserver votre logement si leur séjour commence à ces dates.</p>
+                            <div className="flex flex-wrap gap-2 mb-8">
+                                {['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'].map(jour => (
+                                    <button
+                                        key={jour}
+                                        onClick={() => setArriveeJours(prev => prev.includes(jour) ? prev.filter(j => j !== jour) : [...prev, jour])}
+                                        className={`px-4 py-2 rounded-full text-sm transition-colors ${arriveeJours.includes(jour)
+                                            ? 'border-2 border-gray-900 font-semibold text-gray-900'
+                                            : 'border border-gray-300 text-gray-700 hover:border-gray-400'
+                                            }`}
+                                    >
+                                        {jour}
+                                    </button>
+                                ))}
+                            </div>
+
+                            {/* Départ non autorisé */}
+                            <h3 className="text-base font-bold text-gray-900 mb-2">Départ non autorisé</h3>
+                            <p className="text-xs text-gray-500 mb-4 leading-relaxed">Les voyageurs ne pourront pas réserver votre logement si leur séjour prend fin à ces dates.</p>
+                            <div className="flex flex-wrap gap-2 mb-8">
+                                {['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'].map(jour => (
+                                    <button
+                                        key={jour}
+                                        onClick={() => setDepartJours(prev => prev.includes(jour) ? prev.filter(j => j !== jour) : [...prev, jour])}
+                                        className={`px-4 py-2 rounded-full text-sm transition-colors ${departJours.includes(jour)
+                                            ? 'border-2 border-gray-900 font-semibold text-gray-900'
+                                            : 'border border-gray-300 text-gray-700 hover:border-gray-400'
+                                            }`}
+                                    >
+                                        {jour}
+                                    </button>
+                                ))}
+                            </div>
+
+                            <button disabled className="w-full bg-gray-100 text-gray-400 text-sm font-semibold py-4 rounded-2xl cursor-not-allowed">Enregistrer</button>
+                        </div>
+                    </div>
+
+                    {/* ── Nombre minimal de nuits sub-panel ── */}
+                    <div
+                        className="absolute inset-0 bg-white overflow-y-auto transition-opacity duration-300"
+                        style={{ opacity: showDispoMin ? 1 : 0, pointerEvents: showDispoMin ? 'auto' : 'none', scrollbarWidth: 'thin' }}
+                    >
+                        <div className="px-5 pt-8 pb-10 flex flex-col items-center">
+                            <h2 className="text-base font-bold text-gray-900 text-center mb-16">Nombre minimal de nuits</h2>
+                            <span className="text-7xl font-bold text-gray-900 mb-16">1</span>
+                            <div className="w-full border border-gray-200 rounded-2xl px-4 py-4 flex items-center justify-between mb-8">
+                                <span className="text-sm text-gray-900">Personnaliser par jour d'arrivée</span>
+                                <ChevronRight className="w-4 h-4 text-gray-400 flex-shrink-0" />
+                            </div>
+                            <button disabled className="w-full bg-gray-100 text-gray-400 text-sm font-semibold py-4 rounded-2xl mb-3 cursor-not-allowed">Enregistrer</button>
+                            <button onClick={() => setShowDispoMin(false)} className="w-full border border-gray-300 text-sm font-semibold text-gray-900 py-4 rounded-2xl hover:bg-gray-50 transition-colors">Annuler</button>
+                        </div>
+                    </div>
+
+                    {/* ── Nombre maximal de nuits sub-panel ── */}
+                    <div
+                        className="absolute inset-0 bg-white overflow-y-auto transition-opacity duration-300"
+                        style={{ opacity: showDispoMax ? 1 : 0, pointerEvents: showDispoMax ? 'auto' : 'none', scrollbarWidth: 'thin' }}
+                    >
+                        <div className="px-5 pt-8 pb-10 flex flex-col items-center">
+                            <h2 className="text-base font-bold text-gray-900 text-center mb-16">Nombre maximal de nuits</h2>
+                            <span className="text-7xl font-bold text-gray-900 mb-16">60</span>
+                            <div className="w-full border border-gray-200 rounded-2xl px-4 py-4 flex items-start justify-between gap-3 mb-8">
+                                <div className="min-w-0">
+                                    <p className="text-sm text-gray-900 mb-1 leading-snug">Autorisez les demandes pour des séjours plus longs</p>
+                                    <p className="text-xs text-[#FF385C] leading-relaxed">Vous pourrez vérifier les demandes de réservation dont la durée dépasse la durée maximale de séjour que vous avez fixée.</p>
+                                </div>
+                                <button onClick={() => setSejoursLongs(v => !v)} className="flex-shrink-0 mt-0.5">
+                                    <div className={`w-12 h-6 rounded-full relative transition-colors duration-200 ${sejoursLongs ? 'bg-gray-900' : 'bg-gray-300'}`}>
+                                        <div className={`absolute top-0.5 w-5 h-5 bg-white rounded-full shadow transition-all duration-200 ${sejoursLongs ? 'left-6' : 'left-0.5'}`} />
+                                    </div>
+                                </button>
+                            </div>
+                            <button disabled className="w-full bg-gray-100 text-gray-400 text-sm font-semibold py-4 rounded-2xl mb-3 cursor-not-allowed">Enregistrer</button>
+                            <button onClick={() => setShowDispoMax(false)} className="w-full border border-gray-300 text-sm font-semibold text-gray-900 py-4 rounded-2xl hover:bg-gray-50 transition-colors">Annuler</button>
                         </div>
                     </div>
 
@@ -636,7 +1677,12 @@ export default function AirbnbCalendarMono() {
 
                                     <div className="border-t border-gray-200 my-4" />
 
-                                    <button className="w-full border border-gray-300 rounded-xl py-3 text-sm font-semibold text-gray-900 hover:bg-gray-50 transition-colors">
+                                    <button className="w-full border border-gray-300 rounded-xl py-3 text-sm font-semibold text-gray-900 hover:bg-gray-50 transition-colors mb-2">
+                                        Envoyer ou demander de l'argent
+                                    </button>
+                                    <button
+                                        onClick={() => navigate('/airbnb/messages')}
+                                        className="w-full border border-gray-300 rounded-xl py-3 text-sm font-semibold text-gray-900 hover:bg-gray-50 transition-colors">
                                         Envoyer un message
                                     </button>
                                     <button disabled className="w-full border border-gray-200 rounded-xl py-3 text-sm font-semibold text-gray-400 cursor-not-allowed mt-2">
@@ -730,6 +1776,89 @@ export default function AirbnbCalendarMono() {
                         })()}
                     </div>
                 </div>
+                {/* ── Fixed dropdown overlays for Disponibilités ── */}
+                {openDispoDropdown !== null && (
+                    <>
+                        <div className="fixed inset-0 z-[199]" onClick={() => setOpenDispoDropdown(null)} />
+                        <div
+                            className="fixed z-[200] bg-white border border-gray-200 rounded-2xl shadow-xl overflow-hidden"
+                            style={{ top: dropdownStyle.top, left: dropdownStyle.left, width: dropdownStyle.width }}
+                        >
+                            {openDispoDropdown === 0 && (
+                                <>
+                                    <div style={{ maxHeight: 220, overflowY: 'auto' }}>
+                                        {['Le jour même', '1 jour', '2 jours', '3 jours', '7 jours'].map(opt => (
+                                            <button key={opt} onClick={() => { setDispoDelai(opt); setOpenDispoDropdown(null) }} className="w-full px-4 py-4 flex items-center justify-between border-b border-gray-100 last:border-0 hover:bg-gray-50 transition-colors">
+                                                <span className="text-sm text-gray-900">{opt}</span>
+                                                {opt === dispoDelai && <span className="text-gray-900 text-sm">✓</span>}
+                                            </button>
+                                        ))}
+                                    </div>
+                                    <div className="px-4 py-4 border-t border-gray-100 flex items-start justify-between gap-3">
+                                        <div>
+                                            <p className="text-sm text-gray-900 leading-snug">Autoriser les demandes de réservation pour le jour même</p>
+                                            <p className="text-xs text-gray-500 mt-1">Vous vérifierez et approuverez chaque demande.</p>
+                                        </div>
+                                        <button onClick={() => setAutoriserJourMeme(v => !v)} className="flex-shrink-0 mt-0.5">
+                                            <div className={`w-12 h-6 rounded-full relative transition-colors duration-200 ${autoriserJourMeme ? 'bg-gray-900' : 'bg-gray-300'}`}>
+                                                <div className={`absolute top-0.5 w-5 h-5 bg-white rounded-full shadow transition-all duration-200 ${autoriserJourMeme ? 'left-6' : 'left-0.5'}`} />
+                                            </div>
+                                        </button>
+                                    </div>
+                                    <div className="px-4 pb-4">
+                                        <button disabled className="w-full bg-gray-100 text-gray-400 text-sm font-semibold py-3 rounded-2xl cursor-not-allowed">Enregistrer</button>
+                                    </div>
+                                </>
+                            )}
+                            {openDispoDropdown === 1 && (
+                                <>
+                                    <div style={{ maxHeight: 220, overflowY: 'auto' }}>
+                                        {Array.from({ length: 24 }, (_, i) => `${String(i).padStart(2, '0')}:00`).map(h => (
+                                            <button key={h} onClick={() => { setDispoHeure(h); setOpenDispoDropdown(null) }} className="w-full px-4 py-4 flex items-center justify-between border-b border-gray-100 last:border-0 hover:bg-gray-50 transition-colors">
+                                                <span className="text-sm text-gray-900">{h}</span>
+                                                {h === dispoHeure && <span className="text-gray-900 text-sm">✓</span>}
+                                            </button>
+                                        ))}
+                                    </div>
+                                    <div className="px-4 pb-4 pt-2">
+                                        <button disabled className="w-full bg-gray-100 text-gray-400 text-sm font-semibold py-3 rounded-2xl cursor-not-allowed">Enregistrer</button>
+                                    </div>
+                                </>
+                            )}
+                            {openDispoDropdown === 2 && (
+                                <>
+                                    <div style={{ maxHeight: 220, overflowY: 'auto' }}>
+                                        {['Aucun', '1 nuit avant et après chaque réservation', '2 nuits avant et après chaque réservation'].map(opt => (
+                                            <button key={opt} onClick={() => { setDispoPrep(opt); setOpenDispoDropdown(null) }} className="w-full px-4 py-4 flex items-center justify-between border-b border-gray-100 last:border-0 hover:bg-gray-50 transition-colors">
+                                                <span className="text-sm text-gray-900 text-left">{opt}</span>
+                                                {opt === dispoPrep && <span className="text-gray-900 text-sm flex-shrink-0 ml-2">✓</span>}
+                                            </button>
+                                        ))}
+                                    </div>
+                                    <div className="px-4 pb-4 pt-2">
+                                        <button disabled className="w-full bg-gray-100 text-gray-400 text-sm font-semibold py-3 rounded-2xl cursor-not-allowed">Enregistrer</button>
+                                    </div>
+                                </>
+                            )}
+                            {openDispoDropdown === 3 && (
+                                <>
+                                    <div style={{ maxHeight: 220, overflowY: 'auto' }}>
+                                        {['24 mois', '12 mois', '9 mois', '6 mois', '3 mois', 'Dates indisponibles par défaut'].map(opt => (
+                                            <button key={opt} onClick={() => { setDispoPlage(opt); setOpenDispoDropdown(null) }} className="w-full px-4 py-4 flex items-center justify-between border-b border-gray-100 last:border-0 hover:bg-gray-50 transition-colors">
+                                                <span className="text-sm text-gray-900">{opt}</span>
+                                                {opt === dispoPlage && <span className="text-gray-900 text-sm">✓</span>}
+                                            </button>
+                                        ))}
+                                    </div>
+                                    <div className="px-4 pb-4 pt-2">
+                                        <button disabled className="w-full bg-gray-100 text-gray-400 text-sm font-semibold py-3 rounded-2xl cursor-not-allowed">Enregistrer</button>
+                                    </div>
+                                </>
+                            )}
+                        </div>
+                    </>
+                )}
+
                 {showReportModal && (
                     <div className="fixed inset-0 bg-black bg-opacity-40 z-50 flex items-center justify-center">
                         <div className="bg-white rounded-2xl p-6 mx-4" style={{ width: 480 }}>

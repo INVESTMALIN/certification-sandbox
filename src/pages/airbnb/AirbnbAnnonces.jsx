@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { Search, LayoutGrid, Plus, ChevronRight, X, List } from 'lucide-react'
 import AirbnbHeader from '../../components/airbnb/AirbnbHeader'
 import properties from '../../data/airbnb/properties.json'
@@ -35,6 +36,7 @@ function StatusDot({ color }) {
 }
 
 function AirbnbAnnonces() {
+    const navigate = useNavigate()
     const [hoveredRow, setHoveredRow] = useState(null)
     const [searchOpen, setSearchOpen] = useState(false)
     const [searchQuery, setSearchQuery] = useState('')
@@ -156,6 +158,7 @@ function AirbnbAnnonces() {
                                 <div
                                     key={property.propertyId}
                                     className={`grid grid-cols-[2fr_1fr_1.5fr_1fr_1.5fr_auto] gap-4 items-center px-4 py-4 border-b border-gray-100 cursor-pointer transition-colors ${isHovered ? 'bg-gray-50' : 'bg-white'}`}
+                                    onClick={() => navigate(`/airbnb/annonce/${property.propertyId}`)}
                                     onMouseEnter={() => setHoveredRow(property.propertyId)}
                                     onMouseLeave={() => setHoveredRow(null)}
                                     style={isFirst ? { backgroundColor: isHovered ? '#f9fafb' : '#f9fafb' } : {}}
@@ -200,6 +203,7 @@ function AirbnbAnnonces() {
                                 <div
                                     key={property.propertyId}
                                     className="cursor-pointer group"
+                                    onClick={() => navigate(`/airbnb/annonce/${property.propertyId}`)}
                                 >
                                     {/* Photo principale */}
                                     <div className="relative rounded-xl overflow-hidden aspect-[4/3] bg-gray-100">

@@ -218,7 +218,7 @@ function ReservationPanel({ reservation, onClose, onAssistanceClick }) {
     const r = reservation
 
     return (
-        <div className="w-72 flex-shrink-0 border-l border-gray-200 bg-white overflow-y-auto h-full">
+        <div className="w-[380px] flex-shrink-0 border-l border-gray-200 bg-white overflow-y-auto h-full">
             {/* Header */}
             <div className="flex items-center justify-between p-4 border-b border-gray-100">
                 <h2 className="text-sm font-semibold text-gray-900">Réservation</h2>

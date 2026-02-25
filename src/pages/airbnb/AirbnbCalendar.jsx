@@ -5,7 +5,9 @@ import AirbnbHeader from '../../components/airbnb/AirbnbHeader'
 import AirbnbFooter from '../../components/airbnb/AirbnbFooter'
 import properties from '../../data/airbnb/properties.json'
 import reservations from '../../data/airbnb/reservations.json'
-import { hydrateReservation } from '../../data/airbnb/dateUtils.js'
+import { hydrateReservation, isBlockedDay } from '../../data/airbnb/dateUtils.js'
+import blockedDates from '../../data/airbnb/blockedDates.json'
+
 
 const hydratedReservations = reservations.map(hydrateReservation)
 
@@ -103,6 +105,15 @@ function AirbnbCalendar() {
     const [ruleName, setRuleName] = useState('')
     const [ruleColor, setRuleColor] = useState(0)
     const [openSection, setOpenSection] = useState(null)
+    const [ruleGuide, setRuleGuide] = useState('default')
+    const [prixPct, setPrixPct] = useState('')
+    const [prixDirection, setPrixDirection] = useState('augmenter')
+    const [reductionDuree, setReductionDuree] = useState('')
+    const [dureeMin, setDureeMin] = useState('')
+    const [dureeMax, setDureeMax] = useState('')
+    const [dureePersonnalise, setDureePersonnalise] = useState(false)
+    const [arriveeJours, setArriveeJours] = useState([])
+    const [departJours, setDepartJours] = useState([])
     const [isMonthPickerOpen, setIsMonthPickerOpen] = useState(false)
     const [slideDir, setSlideDir] = useState(null) // 'left' | 'right' | null
     const monthPickerRef = useRef(null)
@@ -369,7 +380,7 @@ function AirbnbCalendar() {
 
                             {/* Property rows */}
                             {filteredProperties.map((property) => (
-                                <div key={property.propertyId} className="flex border-b border-gray-100 h-16 relative">
+                                <div key={property.propertyId} className="flex border-b border-gray-200 h-16 relative">
                                     {/* Left spacer */}
                                     <div className="w-8 flex-shrink-0 ml-2" />
 
@@ -379,25 +390,31 @@ function AirbnbCalendar() {
                                             const res = getReservationForDay(property.propertyId, day)
                                             const firstVisible = isFirstVisibleDay(property.propertyId, day, days)
                                             const today = isToday(day)
+                                            const blocked = !res && isBlockedDay(property.propertyId, day, blockedDates)
 
                                             return (
                                                 <div
                                                     key={i}
-                                                    className={`flex-1 border-r border-gray-100 relative flex items-center justify-center
+                                                    className={`flex-1 border-r border-gray-200 relative flex items-center justify-center
                                                         ${today ? 'border-l-2 border-l-[#222222]' : ''}
                                                     `}
                                                     style={{
-                                                        background: res
-                                                            ? 'transparent'
-                                                            : `repeating-linear-gradient(
-                                                                135deg,
-                                                                transparent,
-                                                                transparent 6px,
-                                                                #e5e7eb 6px,
-                                                                #e5e7eb 7px
-                                                              )`
+                                                        background: res ? '#f7f7f7' : blocked ? '#f7f7f7' : '#f7f7f7'
                                                     }}
                                                 >
+                                                    {blocked && (
+                                                        <svg
+                                                            className="absolute inset-0 w-full h-full pointer-events-none"
+                                                            preserveAspectRatio="none"
+                                                        >
+                                                            <line
+                                                                x1="100%" y1="0"
+                                                                x2="0" y2="100%"
+                                                                stroke="#c8cdd4"
+                                                                strokeWidth="1.5"
+                                                            />
+                                                        </svg>
+                                                    )}
                                                     {/* Reservation bar: render only on checkIn day to avoid duplicates */}
                                                     {res && firstVisible && (() => {
                                                         // How many days does this reservation span within our visible window?
@@ -631,7 +648,7 @@ function AirbnbCalendar() {
 
                             {/* Close button */}
                             <button
-                                onClick={() => { setIsRuleModalOpen(false); setRuleName(''); setRuleColor(0); setOpenSection(null) }}
+                                onClick={() => { setIsRuleModalOpen(false); setRuleName(''); setRuleColor(0); setOpenSection(null); setRuleGuide('default'); setPrixPct(''); setPrixDirection('augmenter'); setReductionDuree(''); setDureeMin(''); setDureeMax(''); setDureePersonnalise(false); setArriveeJours([]); setDepartJours([]) }}
                                 className="absolute top-4 left-4 text-gray-500 hover:text-gray-900 text-xl leading-none"
                             >
                                 ✕
@@ -639,10 +656,10 @@ function AirbnbCalendar() {
 
                             <div className="flex gap-8 p-8 pt-12">
 
-                                {/* ── LEFT: Form ── */}
+                                {/* ── RIGHT: Form ── */}
                                 <div className="flex-1 min-w-0">
-                                    <h2 className="text-2xl font-bold text-gray-900 mb-1">Créer un nouvel ensemble de règles</h2>
-                                    <p className="text-sm text-gray-500 mb-6">Définissez des règles de tarification et de disponibilité à appliquer aux différentes dates et annonces.</p>
+                                    <h2 onClick={() => setRuleGuide('default')} className="text-2xl font-bold text-gray-900 mb-1 cursor-pointer">Créer un nouvel ensemble de règles</h2>
+                                    <p onClick={() => setRuleGuide('default')} className="text-sm text-gray-500 mb-6 cursor-pointer">Définissez des règles de tarification et de disponibilité à appliquer aux différentes dates et annonces.</p>
 
                                     {/* Name + Color row */}
                                     <div className="flex gap-8 items-start mb-8">
@@ -655,6 +672,7 @@ function AirbnbCalendar() {
                                                 type="text"
                                                 value={ruleName}
                                                 onChange={e => setRuleName(e.target.value)}
+                                                onFocus={() => setRuleGuide('name-color')}
                                                 placeholder="Exemple : haute saison"
                                                 className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-400"
                                             />
@@ -666,7 +684,7 @@ function AirbnbCalendar() {
                                                 {COLORS.map((c, i) => (
                                                     <button
                                                         key={i}
-                                                        onClick={() => setRuleColor(i)}
+                                                        onClick={() => { setRuleColor(i); setRuleGuide('name-color') }}
                                                         className="w-7 h-7 rounded-full border-2 transition-all"
                                                         style={{
                                                             backgroundColor: c.bg,
@@ -685,14 +703,96 @@ function AirbnbCalendar() {
                                         {TARIF_SECTIONS.map((label, i) => (
                                             <div key={i} className="border-b border-gray-200">
                                                 <button
-                                                    onClick={() => setOpenSection(openSection === `t${i}` ? null : `t${i}`)}
+                                                    onClick={() => {
+                                                        const next = openSection === `t${i}` ? null : `t${i}`
+                                                        setOpenSection(next)
+                                                        if (i === 0) setRuleGuide(next === 't0' ? 'prix-par-nuit' : 'default')
+                                                        if (i === 1) setRuleGuide(next === 't1' ? 'reductions-duree' : 'default')
+                                                        if (i === 2) setRuleGuide(next === 't2' ? 'reductions-derniere-minute' : 'default')
+                                                        if (i === 3) setRuleGuide(next === 't3' ? 'reductions-anticipee' : 'default')
+                                                    }}
                                                     className="w-full flex items-center justify-between py-4 text-sm text-gray-800 text-left hover:bg-gray-50 transition-colors"
                                                 >
                                                     <span>{label}</span>
                                                     <svg className={`w-5 h-5 text-gray-500 transition-transform ${openSection === `t${i}` ? 'rotate-180' : ''}`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}><path d="M19 9l-7 7-7-7" /></svg>
                                                 </button>
                                                 {openSection === `t${i}` && (
-                                                    <div className="pb-4 px-1 text-sm text-gray-500">Configurez les paramètres pour "{label}".</div>
+                                                    <>
+                                                        {i === 0 ? (
+                                                            <div className="pb-6 px-1">
+                                                                <p className="text-sm text-gray-500 mb-4 leading-relaxed">
+                                                                    Ajustez votre prix pour les réservations effectuées au cours d'une période donnée. Cet ajustement prévaudra sur les autres règles de tarification.
+                                                                </p>
+                                                                <div className="flex items-center gap-6">
+                                                                    <div className="flex items-center border border-gray-300 rounded-lg overflow-hidden">
+                                                                        <span className="px-3 py-2 text-sm text-gray-500 border-r border-gray-200">%</span>
+                                                                        <input
+                                                                            type="number"
+                                                                            value={prixPct}
+                                                                            onChange={e => setPrixPct(e.target.value)}
+                                                                            className="w-24 px-3 py-2 text-sm text-gray-700 outline-none"
+                                                                            placeholder=""
+                                                                        />
+                                                                    </div>
+                                                                    <label className="flex items-center gap-2 text-sm text-gray-700 cursor-pointer">
+                                                                        <input type="radio" name="prixDirection" checked={prixDirection === 'reduire'} onChange={() => setPrixDirection('reduire')} className="accent-[#1a8a7a] w-4 h-4" />
+                                                                        Réduire
+                                                                    </label>
+                                                                    <label className="flex items-center gap-2 text-sm text-gray-700 cursor-pointer">
+                                                                        <input type="radio" name="prixDirection" checked={prixDirection === 'augmenter'} onChange={() => setPrixDirection('augmenter')} className="accent-[#1a8a7a] w-4 h-4" />
+                                                                        Augmenter
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                        ) : i === 1 ? (
+                                                            <div className="pb-6 px-1">
+                                                                <p className="text-sm text-gray-500 mb-4 leading-relaxed">
+                                                                    Appliquez des réductions sur la base de séjours hebdomadaires ou mensuels, ou selon des paramètres personnalisés.
+                                                                </p>
+                                                                <p className="text-sm font-semibold text-gray-900 mb-3">Ajouter une réduction pour d'autres durées de séjour</p>
+                                                                <div className="relative w-64">
+                                                                    <select
+                                                                        value={reductionDuree}
+                                                                        onChange={e => setReductionDuree(e.target.value)}
+                                                                        className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm text-gray-700 appearance-none bg-white pr-8 outline-none focus:ring-2 focus:ring-gray-400 cursor-pointer"
+                                                                    >
+                                                                        <option value="">Sélectionnez la durée de séjour</option>
+                                                                        <option value="2n">2 nuits</option>
+                                                                        <option value="3n">3 nuits</option>
+                                                                        <option value="4n">4 nuits</option>
+                                                                        <option value="5n">5 nuits</option>
+                                                                        <option value="6n">6 nuits</option>
+                                                                        <option value="1s">À la semaine (1 semaine)</option>
+                                                                        <option value="2s">2 semaines</option>
+                                                                        <option value="3s">3 semaines</option>
+                                                                        <option value="4s">Au mois (4 semaines)</option>
+                                                                        <option value="5s">5 semaines</option>
+                                                                        <option value="6s">6 semaines</option>
+                                                                        <option value="8s">8 semaines</option>
+                                                                        <option value="10s">10 semaines</option>
+                                                                        <option value="12s">12 semaines</option>
+                                                                    </select>
+                                                                    <ChevronRight className="absolute right-2 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 rotate-90 pointer-events-none" />
+                                                                </div>
+                                                            </div>
+                                                        ) : i === 2 ? (
+                                                            <div className="pb-6 px-1">
+                                                                <p className="text-sm text-gray-500 mb-4 leading-relaxed">
+                                                                    Proposez une réduction du prix par nuit pour les réservations effectuées au dernier moment.
+                                                                </p>
+                                                                <button className="text-sm text-gray-900 underline">Ajoutez-en un autre</button>
+                                                            </div>
+                                                        ) : i === 3 ? (
+                                                            <div className="pb-6 px-1">
+                                                                <p className="text-sm text-gray-500 mb-4 leading-relaxed">
+                                                                    Proposez une réduction pour les réservations effectuées longtemps à l'avance.
+                                                                </p>
+                                                                <button className="text-sm text-gray-900 underline">Ajoutez-en un autre</button>
+                                                            </div>
+                                                        ) : (
+                                                            <div className="pb-4 px-1 text-sm text-gray-500">Configurez les paramètres pour "{label}".</div>
+                                                        )}
+                                                    </>
                                                 )}
                                             </div>
                                         ))}
@@ -708,14 +808,109 @@ function AirbnbCalendar() {
                                         {DISPO_SECTIONS.map((label, i) => (
                                             <div key={i} className="border-b border-gray-200">
                                                 <button
-                                                    onClick={() => setOpenSection(openSection === `d${i}` ? null : `d${i}`)}
+                                                    onClick={() => {
+                                                        const next = openSection === `d${i}` ? null : `d${i}`
+                                                        setOpenSection(next)
+                                                        if (i === 0) setRuleGuide(next === 'd0' ? 'duree-sejour' : 'default')
+                                                        if (i === 1) setRuleGuide(next === 'd1' ? 'jours-arrivee-depart' : 'default')
+                                                    }}
                                                     className="w-full flex items-center justify-between py-4 text-sm text-gray-800 text-left hover:bg-gray-50 transition-colors"
                                                 >
                                                     <span>{label}</span>
                                                     <svg className={`w-5 h-5 text-gray-500 transition-transform ${openSection === `d${i}` ? 'rotate-180' : ''}`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}><path d="M19 9l-7 7-7-7" /></svg>
                                                 </button>
                                                 {openSection === `d${i}` && (
-                                                    <div className="pb-4 px-1 text-sm text-gray-500">Configurez les paramètres pour "{label}".</div>
+                                                    <>
+                                                        {i === 0 ? (
+                                                            <div className="pb-6 px-1">
+                                                                <p className="text-sm text-gray-500 mb-5 leading-relaxed">
+                                                                    Définissez la durée de séjour minimum et maximum, et personnalisez-la par jour si nécessaire.
+                                                                </p>
+                                                                <div className="flex gap-4 mb-4">
+                                                                    <div className="flex-1">
+                                                                        <p className="text-sm font-semibold text-gray-900 mb-2">Durée minimum du séjour</p>
+                                                                        <input
+                                                                            type="number"
+                                                                            value={dureeMin}
+                                                                            onChange={e => setDureeMin(e.target.value)}
+                                                                            placeholder="nuits"
+                                                                            className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm text-gray-700 outline-none focus:ring-2 focus:ring-gray-400"
+                                                                        />
+                                                                    </div>
+                                                                    <div className="flex-1">
+                                                                        <p className="text-sm font-semibold text-gray-900 mb-2">Durée maximum du séjour</p>
+                                                                        <input
+                                                                            type="number"
+                                                                            value={dureeMax}
+                                                                            onChange={e => setDureeMax(e.target.value)}
+                                                                            placeholder="nuits"
+                                                                            className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm text-gray-700 outline-none focus:ring-2 focus:ring-gray-400"
+                                                                        />
+                                                                    </div>
+                                                                </div>
+                                                                <label className="flex items-center gap-2 text-sm text-gray-700 cursor-pointer">
+                                                                    <input
+                                                                        type="checkbox"
+                                                                        checked={dureePersonnalise}
+                                                                        onChange={e => setDureePersonnalise(e.target.checked)}
+                                                                        className="w-4 h-4 accent-[#1a8a7a]"
+                                                                    />
+                                                                    Personnaliser un séjour minimal par jour d'arrivée
+                                                                </label>
+                                                            </div>
+                                                        ) : i === 1 ? (
+                                                            <div className="pb-6 px-1">
+                                                                {(() => {
+                                                                    const JOURS = ['Lundis', 'Mardis', 'Mercredis', 'Jeudis', 'Vendredis', 'Samedis', 'Dimanches']
+                                                                    const toggleJour = (setter, current, jour) =>
+                                                                        setter(current.includes(jour) ? current.filter(j => j !== jour) : [...current, jour])
+                                                                    return (
+                                                                        <>
+                                                                            <p className="text-sm text-gray-500 mb-5 leading-relaxed">
+                                                                                Sélectionnez les jours où vous n'êtes pas disponible pour l'arrivée et le départ des voyageurs
+                                                                            </p>
+                                                                            <div className="flex gap-8">
+                                                                                <div className="flex-1">
+                                                                                    <p className="text-sm font-semibold text-gray-900 mb-3">Pas d'arrivées le</p>
+                                                                                    <div className="flex flex-col gap-3">
+                                                                                        {JOURS.map(jour => (
+                                                                                            <label key={jour} className="flex items-center gap-3 text-sm text-gray-700 cursor-pointer">
+                                                                                                <input
+                                                                                                    type="checkbox"
+                                                                                                    checked={arriveeJours.includes(jour)}
+                                                                                                    onChange={() => toggleJour(setArriveeJours, arriveeJours, jour)}
+                                                                                                    className="w-4 h-4 accent-[#1a8a7a]"
+                                                                                                />
+                                                                                                {jour}
+                                                                                            </label>
+                                                                                        ))}
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div className="flex-1">
+                                                                                    <p className="text-sm font-semibold text-gray-900 mb-3">Pas de départs le</p>
+                                                                                    <div className="flex flex-col gap-3">
+                                                                                        {JOURS.map(jour => (
+                                                                                            <label key={jour} className="flex items-center gap-3 text-sm text-gray-700 cursor-pointer">
+                                                                                                <input
+                                                                                                    type="checkbox"
+                                                                                                    checked={departJours.includes(jour)}
+                                                                                                    onChange={() => toggleJour(setDepartJours, departJours, jour)}
+                                                                                                    className="w-4 h-4 accent-[#1a8a7a]"
+                                                                                                />
+                                                                                                {jour}
+                                                                                            </label>
+                                                                                        ))}
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </>
+                                                                    )
+                                                                })()}
+                                                            </div>
+                                                        ) : (
+                                                            <div className="pb-4 px-1 text-sm text-gray-500">Configurez les paramètres pour "{label}".</div>
+                                                        )}
+                                                    </>
                                                 )}
                                             </div>
                                         ))}
@@ -724,29 +919,86 @@ function AirbnbCalendar() {
 
                                 {/* ── RIGHT: Guide card ── */}
                                 <div className="w-64 flex-shrink-0">
-                                    <div className="border border-gray-200 rounded-xl p-5">
-                                        <h4 className="text-base font-bold text-gray-900 mb-4">Voici comment créer des règles</h4>
-                                        <div className="flex flex-col gap-5">
-                                            {[
-                                                "Donnez un nom à votre ensemble de règles et choisissez une couleur pour le symboliser dans votre calendrier.",
-                                                "Définissez des réductions de prix, des conditions de disponibilité et des promotions.",
-                                                "Choisissez les dates et les annonces auxquelles vous souhaitez appliquer l'ensemble de règles dans votre calendrier.",
-                                            ].map((text, i) => (
-                                                <div key={i} className="flex gap-3">
-                                                    <div className="w-7 h-7 rounded-full bg-[#1a8a7a] flex items-center justify-center flex-shrink-0 text-white text-xs font-bold">{i + 1}</div>
-                                                    <p className="text-xs text-gray-700 leading-relaxed">{text}</p>
-                                                </div>
-                                            ))}
+                                    {ruleGuide === 'default' ? (
+                                        <div className="border border-gray-200 rounded-xl p-5">
+                                            <h4 className="text-base font-bold text-gray-900 mb-4">Voici comment créer des règles</h4>
+                                            <div className="flex flex-col gap-5">
+                                                {[
+                                                    "Donnez un nom à votre ensemble de règles et choisissez une couleur pour le symboliser dans votre calendrier.",
+                                                    "Définissez des réductions de prix, des conditions de disponibilité et des promotions.",
+                                                    "Choisissez les dates et les annonces auxquelles vous souhaitez appliquer l'ensemble de règles dans votre calendrier.",
+                                                ].map((text, i) => (
+                                                    <div key={i} className="flex gap-3">
+                                                        <div className="w-7 h-7 rounded-full bg-[#1a8a7a] flex items-center justify-center flex-shrink-0 text-white text-xs font-bold">{i + 1}</div>
+                                                        <p className="text-xs text-gray-700 leading-relaxed">{text}</p>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                            <button className="text-sm text-[#1a8a7a] underline mt-4 block">En savoir plus sur le règlement</button>
                                         </div>
-                                        <button className="text-sm text-[#1a8a7a] underline mt-4 block">En savoir plus sur le règlement</button>
-                                    </div>
+                                    ) : ruleGuide === 'name-color' ? (
+                                        <div className="pt-20">
+                                            <div className="border border-gray-200 rounded-xl p-5">
+                                                <h4 className="text-base font-bold text-gray-900 mb-3">Nom et couleur</h4>
+                                                <p className="text-xs text-gray-700 leading-relaxed">Donnez un nom à votre ensemble de règles (par exemple, Haute saison, Semaine de ski, Vacances) et choisissez une couleur pour le représenter sur votre calendrier.</p>
+                                            </div>
+                                        </div>
+                                    ) : ruleGuide === 'prix-par-nuit' ? (
+                                        <div className="pt-60">
+                                            <div className="border border-gray-200 rounded-xl p-5">
+                                                <h4 className="text-base font-bold text-gray-900 mb-3">Prix par nuit</h4>
+                                                <p className="text-xs text-gray-700 leading-relaxed">Ajustez votre prix par nuit en ajoutant une hausse ou une baisse en pourcentage. Lorsque vous appliquez votre ensemble de règles à certaines dates, il modifiera chaque prix par nuit.</p>
+                                            </div>
+                                        </div>
+                                    ) : ruleGuide === 'reductions-duree' ? (
+                                        <div className="pt-72">
+                                            <div className="border border-gray-200 rounded-xl p-5">
+                                                <h4 className="text-base font-bold text-gray-900 mb-3">À propos des prix établis en fonction de la durée du séjour</h4>
+                                                <p className="text-xs text-gray-700 leading-relaxed mb-3">Chaque réduction liée à la durée du séjour s'applique à la durée que vous choisissez ou au-delà. Par exemple, les réductions à la semaine valent pour 7 jours ou plus. Les réductions au mois valent pour 28 jours ou plus.</p>
+                                                <p className="text-xs text-gray-700 leading-relaxed">Remarque : toutes vos réductions existantes seront remplacées.</p>
+                                            </div>
+                                        </div>
+                                    ) : ruleGuide === 'reductions-derniere-minute' ? (
+                                        <div className="pt-80">
+                                            <div className="border border-gray-200 rounded-xl p-5">
+                                                <h4 className="text-base font-bold text-gray-900 mb-3">Réductions pour réservation de dernière minute</h4>
+                                                <p className="text-xs text-gray-700 leading-relaxed mb-3">Vous pouvez ajouter plusieurs réductions de dernière minute à condition que chacune s'applique dans les 28 jours avant l'arrivée. Par exemple, vous pouvez accorder une réduction plus importante lorsque la date d'arrivée approche. Cette réduction ne sera pas montrée aux voyageurs.</p>
+                                                <p className="text-xs text-[#c45000] leading-relaxed">Remarque : toute remise existante pour réservation de dernière minute sera remplacée.</p>
+                                            </div>
+                                        </div>
+                                    ) : ruleGuide === 'reductions-anticipee' ? (
+                                        <div className="pt-96">
+                                            <div className="border border-gray-200 rounded-xl p-5">
+                                                <h4 className="text-base font-bold text-gray-900 mb-3">Réductions pour réservation anticipée</h4>
+                                                <p className="text-xs text-gray-700 leading-relaxed mb-3">Vous pouvez ajouter plusieurs réductions à votre convenance 1 à 36 mois avant la date d'arrivée. Vous pouvez par exemple accorder une réduction plus importante aux voyageurs qui réservent très longtemps à l'avance. Cette réduction ne sera pas montrée aux voyageurs.</p>
+                                                <p className="text-xs text-[#c45000] leading-relaxed">Remarque : toutes vos réductions existantes pour réservation anticipée seront remplacées.</p>
+                                            </div>
+                                        </div>
+                                    ) : ruleGuide === 'duree-sejour' ? (
+                                        <div className="pt-[540px]">
+                                            <div className="border border-gray-200 rounded-xl p-5">
+                                                <h4 className="text-base font-bold text-gray-900 mb-3">Durée du séjour</h4>
+                                                <p className="text-xs text-gray-700 leading-relaxed mb-3">Ajoutez toutes vos exigences relatives au nombre de jours minimal ou maximal qu'un voyageur peut réserver.</p>
+                                                <p className="text-xs text-gray-700 leading-relaxed mb-3">Vous pouvez personnaliser vos exigences en précisant le jour d'arrivée des voyageurs.</p>
+                                                <p className="text-xs text-[#c45000] leading-relaxed">Remarque : toutes vos conditions de durée de séjour existantes seront remplacées.</p>
+                                            </div>
+                                        </div>
+                                    ) : ruleGuide === 'jours-arrivee-depart' ? (
+                                        <div className="pt-[600px]">
+                                            <div className="border border-gray-200 rounded-xl p-5">
+                                                <h4 className="text-base font-bold text-gray-900 mb-3">Jours d'arrivée et de départ</h4>
+                                                <p className="text-xs text-gray-700 leading-relaxed mb-3">Indiquez les jours de la semaine où les voyageurs ne peuvent pas arriver ni repartir.</p>
+                                                <p className="text-xs text-gray-700 leading-relaxed">Lorsque vous appliquez votre ensemble de règles, vos exigences actuelles relatives au jour d'arrivée et au jour de départ seront remplacées.</p>
+                                            </div>
+                                        </div>
+                                    ) : null}
                                 </div>
                             </div>
 
                             {/* Footer */}
                             <div className="flex items-center justify-between border-t border-gray-200 px-8 py-4">
                                 <button
-                                    onClick={() => { setIsRuleModalOpen(false); setRuleName(''); setRuleColor(0); setOpenSection(null) }}
+                                    onClick={() => { setIsRuleModalOpen(false); setRuleName(''); setRuleColor(0); setOpenSection(null); setRuleGuide('default'); setPrixPct(''); setPrixDirection('augmenter'); setReductionDuree(''); setDureeMin(''); setDureeMax(''); setDureePersonnalise(false); setArriveeJours([]); setDepartJours([]) }}
                                     className="text-sm underline text-gray-700 hover:text-gray-900"
                                 >
                                     Annuler

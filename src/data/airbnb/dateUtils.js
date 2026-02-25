@@ -97,3 +97,21 @@ export function hydrateDemande(dem) {
         checkOut,
     }
 }
+
+/**
+ * Vérifie si une date est bloquée pour une propriété donnée.
+ * @param {string} propertyId
+ * @param {Date} date
+ * @param {Array} blockedDates - tableau importé depuis blockedDates.json
+ * @returns {boolean}
+ */
+export function isBlockedDay(propertyId, date, blockedDates) {
+    return blockedDates.some((block) => {
+        if (block.propertyId !== propertyId) return false
+        const start = new Date(block.start)
+        const end = new Date(block.end)
+        start.setHours(0, 0, 0, 0)
+        end.setHours(0, 0, 0, 0)
+        return date >= start && date <= end
+    })
+}

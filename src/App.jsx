@@ -63,6 +63,7 @@ import CommentaireStep7 from './pages/airbnb/CommentaireStep7'
 import AirbnbCalendar from './pages/airbnb/AirbnbCalendar'
 import AirbnbCalendarMono from './pages/airbnb/AirbnbCalendarMono'
 import AirbnbAnnonces from './pages/airbnb/AirbnbAnnonces'
+import AirbnbAnnonceDetail from './pages/airbnb/AirbnbAnnonceDetail'
 import AirbnbMessages from './pages/airbnb/AirbnbMessages'
 import AirbnbCentreAide from './pages/airbnb/AirbnbCentreAide'
 import AirbnbVoyageurProfile from './pages/airbnb/AirbnbVoyageurProfile'
@@ -496,6 +497,15 @@ function App() {
         element={
           <ProtectedRoute>
             <AirbnbAnnonces />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/airbnb/annonce/:propertyId"
+        element={
+          <ProtectedRoute>
+            <AirbnbAnnonceDetail />
           </ProtectedRoute>
         }
       />
