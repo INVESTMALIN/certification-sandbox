@@ -68,6 +68,17 @@ import AirbnbMessages from './pages/airbnb/AirbnbMessages'
 import AirbnbCentreAide from './pages/airbnb/AirbnbCentreAide'
 import AirbnbVoyageurProfile from './pages/airbnb/AirbnbVoyageurProfile'
 import AirbnbReservationRecap from './pages/airbnb/AirbnbReservationRecap'
+import QualitePage from './pages/airbnb/performance/QualitePage'
+import OccupationPage from './pages/airbnb/performance/OccupationPage'
+import Progression from './pages/airbnb/performance/Progression'
+import ConversionPage from './pages/airbnb/performance/ConversionPage'
+import AirbnbAircover from './pages/airbnb/AirbnbAircover'
+import AirbnbFacture from './pages/airbnb/AirbnbFacture'
+import ModifierReservation from './pages/airbnb/ModifierReservation'
+import PaiementStep1 from './pages/airbnb/paiement/PaiementStep1'
+import PaiementEnvoyerStep2 from './pages/airbnb/paiement/PaiementEnvoyerStep2'
+import PaiementDemanderStep2 from './pages/airbnb/paiement/PaiementDemanderStep2'
+import AircoverDemande from './pages/airbnb/AircoverDemande'
 
 function App() {
   return (
@@ -631,6 +642,105 @@ function App() {
         element={
           <ProtectedRoute>
             <AirbnbReservationRecap />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/airbnb/performance/progression"
+        element={
+          <ProtectedRoute>
+            <Progression />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/airbnb/performance/qualite/:slug"
+        element={
+          <ProtectedRoute>
+            <QualitePage />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/airbnb/performance/occupation/:slug"
+        element={
+          <ProtectedRoute>
+            <OccupationPage />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/airbnb/performance/conversion/:slug"
+        element={
+          <ProtectedRoute>
+            <ConversionPage />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/airbnb/aircover"
+        element={
+          <ProtectedRoute>
+            <AirbnbAircover />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/airbnb/facture/:reservationId"
+        element={
+          <ProtectedRoute>
+            <AirbnbFacture />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/airbnb/reservation/:id/modifier"
+        element={
+          <ProtectedRoute>
+            <ModifierReservation />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/airbnb/paiement/:reservationId/step1"
+        element={
+          <ProtectedRoute>
+            <PaiementStep1 />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/airbnb/paiement/:reservationId/envoyer/step2"
+        element={
+          <ProtectedRoute>
+            <PaiementEnvoyerStep2 />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/airbnb/paiement/:reservationId/demander/step2"
+        element={
+          <ProtectedRoute>
+            <PaiementDemanderStep2 />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/airbnb/aircover/demande/:reservationId"
+        element={
+          <ProtectedRoute>
+            <AircoverDemande />
           </ProtectedRoute>
         }
       />

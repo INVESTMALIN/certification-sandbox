@@ -92,7 +92,7 @@ function AirbnbHeader() {
                             onClick={() => navigate('/airbnb/home')}
                             className="text-sm font-semibold text-gray-900 hover:text-gray-900 hidden md:block"
                         >
-                            Passer en mode voyageur
+                            Mode voyageur
                         </button>
 
                         {/* Avatar */}
@@ -106,6 +106,13 @@ function AirbnbHeader() {
                             className="w-10 h-10 border border-gray-300 rounded-full hover:shadow-md transition-shadow flex items-center justify-center"
                         >
                             <Menu className="w-5 h-5 text-gray-700" />
+                        </button>
+
+                        <button
+                            onClick={handleBackToPlatforms}
+                            className="text-sm text-gray-700 hover:text-gray-900 hover:bg-gray-100 px-3 py-2 rounded-full transition-colors hidden md:block"
+                        >
+                            Retour aux plateformes
                         </button>
 
                     </div>
@@ -124,11 +131,11 @@ function AirbnbHeader() {
             {/* Menu latéral coulissant */}
             <div
                 ref={menuRef}
-                className={`fixed top-0 right-0 h-full w-[480px] bg-white shadow-2xl z-50 transform transition-transform duration-300 rounded-l-3xl ${isMenuOpen ? 'translate-x-0' : 'translate-x-full'
+                className={`fixed top-0 right-0 h-full w-[480px] bg-white shadow-2xl z-50 transform transition-transform duration-300 rounded-l-3xl flex flex-col ${isMenuOpen ? 'translate-x-0' : 'translate-x-full'
                     }`}
             >
                 {/* Header du menu */}
-                <div className="flex items-center justify-between p-6 border-b border-gray-200">
+                <div className="flex items-center justify-between p-6 border-b border-gray-200 flex-shrink-0">
                     <button className="p-2 hover:bg-gray-100 rounded-full transition-colors">
                         <Bell className="w-5 h-5 text-gray-700" />
                     </button>
@@ -140,87 +147,89 @@ function AirbnbHeader() {
                     </button>
                 </div>
 
-                {/* Titre */}
-                <div className="px-6 py-8">
-                    <h2 className="text-4xl font-semibold text-gray-900">Menu</h2>
-                </div>
+                {/* Contenu scrollable */}
+                <div className="flex-1 overflow-y-auto">
 
-                {/* Items du menu */}
-                <nav className="px-6 space-y-1">
-                    {/* Item principal avec fond beige */}
-                    <Link
-                        to="#"
-                        className="block p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors"
-                    >
-                        <div className="flex items-start gap-3">
-                            <Home className="w-6 h-6 text-gray-700 flex-shrink-0 mt-0.5" />
-                            <div>
-                                <p className="font-semibold text-gray-900 mb-1">Créez une annonce</p>
-                                <p className="text-sm text-gray-600">
-                                    Proposez un logement, une expérience ou un service.
-                                </p>
+                    {/* Titre */}
+                    <div className="px-6 py-8">
+                        <h2 className="text-4xl font-semibold text-gray-900">Menu</h2>
+                    </div>
+
+                    {/* Items du menu */}
+                    <nav className="px-6 space-y-1">
+                        {/* Item principal avec fond beige — grisé */}
+                        <div className="block p-4 bg-gray-50 rounded-xl opacity-40 cursor-default">
+                            <div className="flex items-start gap-3">
+                                <Home className="w-6 h-6 text-gray-700 flex-shrink-0 mt-0.5" />
+                                <div>
+                                    <p className="font-semibold text-gray-900 mb-1">Créez une annonce</p>
+                                    <p className="text-sm text-gray-600">
+                                        Proposez un logement, une expérience ou un service.
+                                    </p>
+                                </div>
                             </div>
                         </div>
-                    </Link>
 
-                    {/* Items simples */}
-                    <Link to="#" className="flex items-center gap-3 p-4 hover:bg-gray-50 rounded-xl transition-colors">
-                        <Wallet className="w-5 h-5 text-gray-700" />
-                        <span className="text-gray-900">Revenus</span>
-                    </Link>
+                        {/* Revenus — grisé */}
+                        <div className="flex items-center gap-3 p-4 rounded-xl opacity-40 cursor-default">
+                            <Wallet className="w-5 h-5 text-gray-700" />
+                            <span className="text-gray-900">Revenus</span>
+                        </div>
 
-                    <Link to="#" className="flex items-center gap-3 p-4 hover:bg-gray-50 rounded-xl transition-colors">
-                        <BarChart3 className="w-5 h-5 text-gray-700" />
-                        <span className="text-gray-900">Points clés</span>
-                    </Link>
+                        {/* Points clés — cliquable */}
+                        <Link to="/airbnb/performance/qualite/globale" onClick={() => setIsMenuOpen(false)} className="flex items-center gap-3 p-4 hover:bg-gray-50 rounded-xl transition-colors">
+                            <BarChart3 className="w-5 h-5 text-gray-700" />
+                            <span className="text-gray-900">Points clés</span>
+                        </Link>
 
-                    <div className="h-px bg-gray-200 my-4"></div>
+                        <div className="h-px bg-gray-200 my-4"></div>
 
-                    <Link to="#" className="flex items-center gap-3 p-4 hover:bg-gray-50 rounded-xl transition-colors">
-                        <Settings className="w-5 h-5 text-gray-700" />
-                        <span className="text-gray-900">Paramètres du compte</span>
-                    </Link>
+                        <div className="flex items-center gap-3 p-4 rounded-xl opacity-40 cursor-default">
+                            <Settings className="w-5 h-5 text-gray-700" />
+                            <span className="text-gray-900">Paramètres du compte</span>
+                        </div>
 
-                    <Link to="#" className="flex items-center gap-3 p-4 hover:bg-gray-50 rounded-xl transition-colors">
-                        <Globe className="w-5 h-5 text-gray-700" />
-                        <span className="text-gray-900">Langues et devise</span>
-                    </Link>
+                        <div className="flex items-center gap-3 p-4 rounded-xl opacity-40 cursor-default">
+                            <Globe className="w-5 h-5 text-gray-700" />
+                            <span className="text-gray-900">Langues et devise</span>
+                        </div>
 
-                    <Link to="#" className="flex items-center gap-3 p-4 hover:bg-gray-50 rounded-xl transition-colors">
-                        <BookOpen className="w-5 h-5 text-gray-700" />
-                        <span className="text-gray-900">Ressources pour les hôtes</span>
-                    </Link>
+                        <div className="flex items-center gap-3 p-4 rounded-xl opacity-40 cursor-default">
+                            <BookOpen className="w-5 h-5 text-gray-700" />
+                            <span className="text-gray-900">Ressources pour les hôtes</span>
+                        </div>
 
-                    <Link to="#" className="flex items-center gap-3 p-4 hover:bg-gray-50 rounded-xl transition-colors">
-                        <HelpCircle className="w-5 h-5 text-gray-700" />
-                        <span className="text-gray-900">Obtenir de l'aide</span>
-                    </Link>
+                        <div className="flex items-center gap-3 p-4 rounded-xl opacity-40 cursor-default">
+                            <HelpCircle className="w-5 h-5 text-gray-700" />
+                            <span className="text-gray-900">Obtenir de l'aide</span>
+                        </div>
 
-                    <Link to="#" className="flex items-center gap-3 p-4 hover:bg-gray-50 rounded-xl transition-colors">
-                        <Users className="w-5 h-5 text-gray-700" />
-                        <span className="text-gray-900">Trouver un co-hôte</span>
-                    </Link>
+                        <div className="flex items-center gap-3 p-4 rounded-xl opacity-40 cursor-default">
+                            <Users className="w-5 h-5 text-gray-700" />
+                            <span className="text-gray-900">Trouver un co-hôte</span>
+                        </div>
 
-                    <Link to="#" className="flex items-center gap-3 p-4 hover:bg-gray-50 rounded-xl transition-colors">
-                        <Plus className="w-5 h-5 text-gray-700" />
-                        <span className="text-gray-900">Créer une annonce</span>
-                    </Link>
+                        <div className="flex items-center gap-3 p-4 rounded-xl opacity-40 cursor-default">
+                            <Plus className="w-5 h-5 text-gray-700" />
+                            <span className="text-gray-900">Créer une annonce</span>
+                        </div>
 
-                    <Link to="#" className="flex items-center gap-3 p-4 hover:bg-gray-50 rounded-xl transition-colors">
-                        <UserPlus className="w-5 h-5 text-gray-700" />
-                        <span className="text-gray-900">Parrainer un hôte</span>
-                    </Link>
+                        <div className="flex items-center gap-3 p-4 rounded-xl opacity-40 cursor-default">
+                            <UserPlus className="w-5 h-5 text-gray-700" />
+                            <span className="text-gray-900">Parrainer un hôte</span>
+                        </div>
 
-                    <div className="h-px bg-gray-200 my-4"></div>
+                        <div className="h-px bg-gray-200 my-4"></div>
 
-                    <button
-                        onClick={handleLogout}
-                        className="flex items-center gap-3 p-4 hover:bg-gray-50 rounded-xl transition-colors w-full text-left"
-                    >
-                        <LogOut className="w-5 h-5 text-gray-700" />
-                        <span className="text-gray-900">Déconnexion</span>
-                    </button>
-                </nav>
+                        <button
+                            onClick={handleLogout}
+                            className="flex items-center gap-3 p-4 hover:bg-gray-50 rounded-xl transition-colors w-full text-left"
+                        >
+                            <LogOut className="w-5 h-5 text-gray-700" />
+                            <span className="text-gray-900">Déconnexion</span>
+                        </button>
+                    </nav>
+                </div>{/* fin contenu scrollable */}
             </div>
         </>
     )

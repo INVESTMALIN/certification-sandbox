@@ -15,7 +15,7 @@ const cohotes = [
     },
     {
         id: 'cohost_002',
-        name: 'Arnaud Mathieu Tumerelle',
+        name: 'Jean Dupont',
         role: 'Titulaire de l\'annonce',
         access: null,
         avatar: null,

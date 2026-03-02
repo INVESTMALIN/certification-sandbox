@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react'
-import { useParams, useNavigate } from 'react-router-dom'
-import { ChevronLeft, ChevronRight, Pencil, Link } from 'lucide-react'
+import { useParams, useNavigate, Link } from 'react-router-dom'
+import { ChevronLeft, ChevronRight, Pencil, Link as LinkIcon, Flag, HelpCircle } from 'lucide-react'
 import AirbnbHeader from '../../components/airbnb/AirbnbHeader'
 import properties from '../../data/airbnb/properties.json'
 import reservations from '../../data/airbnb/reservations.json'
@@ -1360,7 +1360,7 @@ export default function AirbnbCalendarMono() {
 
                             <div className="border border-gray-200 rounded-2xl px-4 py-4 mb-2 flex items-center justify-between gap-3">
                                 <div className="flex items-center gap-3">
-                                    <Link className="w-4 h-4 text-gray-600 flex-shrink-0" />
+                                    <LinkIcon className="w-4 h-4 text-gray-600 flex-shrink-0" />
                                     <span className="text-sm text-gray-900">Me connecter à un autre site web</span>
                                 </div>
                                 <ChevronRight className="w-4 h-4 text-gray-400 flex-shrink-0" />
@@ -1618,6 +1618,21 @@ export default function AirbnbCalendarMono() {
                             const co = new Date(selectedRes.checkOut)
                             const nights = Math.round((co - ci) / 86400000)
                             const fmt = (d) => `${d.getDate()} ${MONTHS_FR[d.getMonth()]} ${d.getFullYear()}`
+                            const fmtEur = (v) => v.toFixed(2).replace('.', ',') + '\u00a0€'
+
+                            // Paiement voyageur
+                            const nightlyRate = 40
+                            const cleaningFee = 59
+                            const touristTax = parseFloat((nights * 2.59).toFixed(2))
+                            const voyageurTotal = nightlyRate * nights + cleaningFee + touristTax
+
+                            // Versement hôte
+                            const hostRoomRate = 50
+                            const nightlyAdj = nights * 10
+                            const serviceBase = hostRoomRate * nights + cleaningFee - nightlyAdj
+                            const hostServiceFee = parseFloat((serviceBase * 0.186).toFixed(2))
+                            const hostTotal = parseFloat((serviceBase - hostServiceFee).toFixed(2))
+
                             return (
                                 <>
                                     <div className="flex items-start justify-between mb-4">
@@ -1627,7 +1642,6 @@ export default function AirbnbCalendarMono() {
                                         </button>
                                     </div>
 
-                                    <p className="text-xs text-gray-500 mb-0.5">Ancien voyageur</p>
                                     <div className="flex items-center justify-between mb-4">
                                         <h3 className="text-xl font-bold text-gray-900">{selectedRes.guestName}</h3>
                                         <img
@@ -1677,7 +1691,9 @@ export default function AirbnbCalendarMono() {
 
                                     <div className="border-t border-gray-200 my-4" />
 
-                                    <button className="w-full border border-gray-300 rounded-xl py-3 text-sm font-semibold text-gray-900 hover:bg-gray-50 transition-colors mb-2">
+                                    <button
+                                        onClick={() => navigate(`/airbnb/paiement/${selectedRes.id}/step1`)}
+                                        className="w-full border border-gray-300 rounded-xl py-3 text-sm font-semibold text-gray-900 hover:bg-gray-50 transition-colors mb-2">
                                         Envoyer ou demander de l'argent
                                     </button>
                                     <button
@@ -1726,13 +1742,120 @@ export default function AirbnbCalendarMono() {
                                             <p className="text-sm text-gray-500 mt-0.5">{selectedRes.confirmationCode || 'HMDAHF9TS8'}</p>
                                         </div>
                                     </div>
+
+                                    {/* Détails du paiement du voyageur */}
+                                    <div className="border-t border-gray-200 my-4" />
+                                    <h4 className="text-base font-bold text-gray-900 mb-4">Détails du paiement du voyageur</h4>
+                                    <div className="flex flex-col gap-2.5 mb-2">
+                                        <div className="flex justify-between text-sm text-gray-700">
+                                            <span>{fmtEur(nightlyRate)} x {nights} nuit{nights > 1 ? 's' : ''}</span>
+                                            <span>{fmtEur(nightlyRate * nights)}</span>
+                                        </div>
+                                        <div className="flex justify-between text-sm text-gray-700">
+                                            <span>Frais de ménage</span>
+                                            <span>{fmtEur(cleaningFee)}</span>
+                                        </div>
+                                        <div className="flex justify-between text-sm text-gray-700">
+                                            <span>Frais de service voyageur</span>
+                                            <span>0,00&nbsp;€</span>
+                                        </div>
+                                        <div className="flex justify-between text-sm text-gray-700">
+                                            <span>Taxes de séjour</span>
+                                            <span>{fmtEur(touristTax)}</span>
+                                        </div>
+                                        <div className="border-t border-gray-200 pt-3 flex justify-between text-sm font-bold text-gray-900">
+                                            <span>Total (EUR)</span>
+                                            <span>{fmtEur(voyageurTotal)}</span>
+                                        </div>
+                                    </div>
+
+                                    {/* Versement de l'hôte */}
+                                    <div className="border-t border-gray-200 my-4" />
+                                    <h4 className="text-base font-bold text-gray-900 mb-4">Versement de l'hôte</h4>
+                                    <div className="flex flex-col gap-2.5 mb-2">
+                                        <div>
+                                            <div className="flex justify-between text-sm text-gray-700">
+                                                <span>Frais de chambre pour {nights} nuit{nights > 1 ? 's' : ''}</span>
+                                                <span>{fmtEur(hostRoomRate * nights)}</span>
+                                            </div>
+                                            <button className="text-xs text-gray-900 underline mt-0.5">Afficher les décomptes</button>
+                                        </div>
+                                        <div className="flex justify-between text-sm text-gray-700">
+                                            <span>Frais de ménage</span>
+                                            <span>{fmtEur(cleaningFee)}</span>
+                                        </div>
+                                        <div>
+                                            <div className="flex justify-between text-sm text-gray-700">
+                                                <span>Ajustement du tarif par nuit</span>
+                                                <span>−{fmtEur(nightlyAdj)}</span>
+                                            </div>
+                                            <button className="text-xs text-gray-900 underline mt-0.5">Afficher les décomptes</button>
+                                        </div>
+                                        <div className="flex justify-between text-sm text-gray-700">
+                                            <span>Frais de service hôte (15.5 % + TVA)</span>
+                                            <span>−{fmtEur(hostServiceFee)}</span>
+                                        </div>
+                                        <div className="border-t border-gray-200 pt-3 flex justify-between text-sm font-bold text-gray-900">
+                                            <span>Total (EUR)</span>
+                                            <span>{fmtEur(hostTotal)}</span>
+                                        </div>
+                                    </div>
+
+                                    {/* Facture & historique */}
+                                    <div className="border-t border-gray-200 my-4" />
+                                    <div className="flex flex-col divide-y divide-gray-100">
+                                        <Link to={`/airbnb/facture/${selectedRes.id}`} className="flex items-center justify-between py-4 hover:bg-gray-50 transition-colors text-left w-full">
+                                            <span className="text-sm text-gray-900">Facture avec TVA *****</span>
+                                            <ChevronRight className="w-4 h-4 text-gray-400" />
+                                        </Link>
+                                        <button className="flex items-center justify-between py-4 hover:bg-gray-50 transition-colors text-left w-full">
+                                            <div className="flex items-center gap-3">
+                                                <svg className="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <rect x="1" y="4" width="22" height="16" rx="2" ry="2" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                                                    <line x1="1" y1="10" x2="23" y2="10" strokeWidth="2" />
+                                                </svg>
+                                                <span className="text-sm text-gray-900">Historique des transactions</span>
+                                            </div>
+                                            <ChevronRight className="w-4 h-4 text-gray-400" />
+                                        </button>
+                                    </div>
+
+                                    {/* Note calendrier */}
+                                    <div className="border-t border-gray-200 my-4" />
+                                    <h4 className="text-sm font-bold text-gray-900 mb-2">Note calendrier</h4>
+                                    <div className="flex items-start gap-2 mb-3">
+                                        <svg className="w-4 h-4 text-gray-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <rect x="3" y="11" width="18" height="11" rx="2" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                                            <path d="M7 11V7a5 5 0 0110 0v4" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                                        </svg>
+                                        <p className="text-xs text-gray-500 leading-relaxed">
+                                            Ajoutez un rappel privé pour ces dates, qui ne sera visible que pour vous
+                                        </p>
+                                    </div>
+                                    <textarea
+                                        placeholder="Écrivez un message"
+                                        className="w-full border border-gray-200 rounded-xl p-3 text-sm text-gray-700 resize-none outline-none placeholder-gray-400 focus:border-gray-300"
+                                        rows={3}
+                                    />
+                                    <button className="w-full mt-2 border border-gray-200 rounded-xl py-3 text-sm font-semibold text-gray-400 cursor-default">
+                                        Enregistrer
+                                    </button>
+
+                                    {/* Aircover pour les hôtes */}
+                                    <div className="border-t border-gray-200 my-4" />
+                                    <img src="/aircover.avif" alt="AirCover" className="h-8 mb-1" />
+                                    <p className="text-sm text-gray-700 leading-relaxed mb-3">
+                                        Une protection complète, à chaque fois que vous accueillez des voyageurs.
+                                    </p>
+                                    <Link to="/airbnb/aircover" className="text-sm text-gray-900 underline font-medium hover:text-[#FF385C] transition-colors">En savoir plus</Link>
+
                                     <div className="border-t border-gray-200 my-4" />
 
                                     <h4 className="text-base font-bold text-gray-900 mb-2">Assistance</h4>
 
                                     <div className="flex flex-col divide-y divide-gray-100">
                                         <button onClick={() => setShowReportModal(true)} className="flex items-center gap-3 py-4 hover:bg-gray-50 transition-colors text-left w-full">
-                                            <span className="text-gray-500">🚩</span>
+                                            <Flag className="w-4 h-4 text-gray-500 flex-shrink-0" />
                                             <span className="text-sm text-gray-900 flex-1">Signaler ce voyageur</span>
                                             <ChevronRight className="w-4 h-4 text-gray-400" />
                                         </button>
@@ -1740,7 +1863,7 @@ export default function AirbnbCalendarMono() {
                                             onClick={() => navigate('/airbnb/centre-aide')}
                                             className="flex items-center gap-3 py-4 hover:bg-gray-50 transition-colors text-left w-full"
                                         >
-                                            <span className="text-gray-500">❓</span>
+                                            <HelpCircle className="w-4 h-4 text-gray-500 flex-shrink-0" />
                                             <span className="text-sm text-gray-900 flex-1">Consulter le Centre d'aide</span>
                                             <ChevronRight className="w-4 h-4 text-gray-400" />
                                         </button>

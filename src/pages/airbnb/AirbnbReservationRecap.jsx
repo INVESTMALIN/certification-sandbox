@@ -1,6 +1,6 @@
-import { useParams, useNavigate } from 'react-router-dom'
+import { useParams, useNavigate, Link } from 'react-router-dom'
 import { useState } from 'react'
-import { ChevronLeft, ShieldCheck, Shield, HelpCircle, ChevronRight, Printer } from 'lucide-react'
+import { ChevronLeft, ShieldCheck, Shield, HelpCircle, ChevronRight, Printer, Pencil, Ban, Briefcase, Home } from 'lucide-react'
 import AirbnbHeader from '../../components/airbnb/AirbnbHeader'
 import reservations from '../../data/airbnb/reservations.json'
 import guests from '../../data/airbnb/guests.json'
@@ -118,19 +118,19 @@ export default function AirbnbReservationRecap() {
                             </div>
                         )}
                         <div className="flex items-center gap-3 text-sm text-gray-700">
-                            <span className="text-lg">🧳</span>
+                            <Briefcase className="w-5 h-5 text-gray-500 flex-shrink-0" />
                             {guest?.trips ? `${guest.trips} voyage${guest.trips > 1 ? 's' : ''}` : 'Aucun voyage pour le moment'}
                         </div>
                         {guest?.yearsOnAirbnb && (
                             <div className="flex items-center gap-3 text-sm text-gray-700">
-                                <span className="text-lg">🏠</span>
+                                <Home className="w-5 h-5 text-gray-500 flex-shrink-0" />
                                 Membre d'Airbnb depuis {new Date().getFullYear() - guest.yearsOnAirbnb}
                             </div>
                         )}
                     </div>
                     <button
                         onClick={() => navigate('/airbnb/voyageur/' + id)}
-                        className="text-sm font-semibold text-[#FF385C] underline hover:opacity-80 transition-opacity"
+                        className="text-sm font-semibold text-[#000000] underline hover:opacity-80 transition-opacity"
                     >
                         Afficher le profil
                     </button>
@@ -202,10 +202,140 @@ export default function AirbnbReservationRecap() {
                     </div>
                 </div>
 
-                {/* ── CARD 5 : Assistance ── */}
+                {/* ── CARD 5 : Paiement voyageur ── */}
+                {(() => {
+                    const fmtEur = (v) => v.toFixed(2).replace('.', ',') + '\u00a0€'
+                    const nights = res.nights
+                    const nightlyRate = 40
+                    const cleaningFee = 59
+                    const touristTax = parseFloat((nights * 2.59).toFixed(2))
+                    const voyageurTotal = parseFloat((nightlyRate * nights + cleaningFee + touristTax).toFixed(2))
+                    const hostRoomRate = 50
+                    const nightlyAdj = nights * 10
+                    const serviceBase = parseFloat((hostRoomRate * nights + cleaningFee - nightlyAdj).toFixed(2))
+                    const hostServiceFee = parseFloat((serviceBase * 0.186).toFixed(2))
+                    const hostTotal = parseFloat((serviceBase - hostServiceFee).toFixed(2))
+                    return (
+                        <>
+                            {/* Détails du paiement du voyageur */}
+                            <div className="bg-white rounded-2xl border border-gray-200 p-6 mb-4">
+                                <h2 className="text-lg font-bold text-gray-900 mb-4">Détails du paiement du voyageur</h2>
+                                <div className="space-y-2 text-sm">
+                                    <div className="flex justify-between">
+                                        <span className="text-gray-700">{fmtEur(nightlyRate)} x {nights} nuit{nights > 1 ? 's' : ''}</span>
+                                        <span className="text-gray-900">{fmtEur(nightlyRate * nights)}</span>
+                                    </div>
+                                    <div className="flex justify-between">
+                                        <span className="text-gray-700">Frais de ménage</span>
+                                        <span className="text-gray-900">{fmtEur(cleaningFee)}</span>
+                                    </div>
+                                    <div className="flex justify-between">
+                                        <span className="text-gray-700">Frais de service voyageur</span>
+                                        <span className="text-gray-900">{fmtEur(0)}</span>
+                                    </div>
+                                    <div className="flex justify-between">
+                                        <span className="text-gray-700">Taxes de séjour</span>
+                                        <span className="text-gray-900">{fmtEur(touristTax)}</span>
+                                    </div>
+                                    <div className="flex justify-between font-semibold pt-2 border-t border-gray-200 mt-2">
+                                        <span className="text-gray-900">Total (EUR)</span>
+                                        <span className="text-gray-900">{fmtEur(voyageurTotal)}</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Versement de l'hôte */}
+                            <div className="bg-white rounded-2xl border border-gray-200 p-6 mb-4">
+                                <h2 className="text-lg font-bold text-gray-900 mb-4">Versement de l'hôte</h2>
+                                <div className="space-y-2 text-sm">
+                                    <div className="flex justify-between">
+                                        <span className="text-gray-700">Frais de chambre pour {nights} nuit{nights > 1 ? 's' : ''}</span>
+                                        <span className="text-gray-900">{fmtEur(hostRoomRate * nights)}</span>
+                                    </div>
+                                    <button className="text-sm text-gray-900 underline font-medium text-left">Afficher les décomptes</button>
+                                    <div className="flex justify-between">
+                                        <span className="text-gray-700">Frais de ménage</span>
+                                        <span className="text-gray-900">{fmtEur(cleaningFee)}</span>
+                                    </div>
+                                    <div className="flex justify-between">
+                                        <span className="text-gray-700">Ajustement du tarif par nuit</span>
+                                        <span className="text-gray-900">-{fmtEur(nightlyAdj)}</span>
+                                    </div>
+                                    <button className="text-sm text-gray-900 underline font-medium text-left">Afficher les décomptes</button>
+                                    <div className="flex justify-between">
+                                        <span className="text-gray-700">Frais de service hôte (15,5&nbsp;% + TVA)</span>
+                                        <span className="text-gray-900">-{fmtEur(hostServiceFee)}</span>
+                                    </div>
+                                    <div className="flex justify-between font-semibold pt-2 border-t border-gray-200 mt-2">
+                                        <span className="text-gray-900">Total (EUR)</span>
+                                        <span className="text-gray-900">{fmtEur(hostTotal)}</span>
+                                    </div>
+                                </div>
+                                <div className="border-t border-gray-100 mt-4 divide-y divide-gray-100">
+                                    <Link to={`/airbnb/facture/${res.id}`} className="flex items-center justify-between py-4 hover:bg-gray-50 transition-colors w-full">
+                                        <span className="text-sm text-gray-900">Facture avec TVA *****</span>
+                                        <ChevronRight className="w-4 h-4 text-gray-400" />
+                                    </Link>
+                                    <button className="flex items-center justify-between py-4 hover:bg-gray-50 transition-colors text-left w-full">
+                                        <div className="flex items-center gap-3">
+                                            <svg className="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <rect x="1" y="4" width="22" height="16" rx="2" ry="2" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                                                <line x1="1" y1="10" x2="23" y2="10" strokeWidth="2" />
+                                            </svg>
+                                            <span className="text-sm text-gray-900">Historique des transactions</span>
+                                        </div>
+                                        <ChevronRight className="w-4 h-4 text-gray-400" />
+                                    </button>
+                                </div>
+                            </div>
+                        </>
+                    )
+                })()}
+
+                {/* ── CARD 6 : Note calendrier ── */}
+                <div className="bg-white rounded-2xl border border-gray-200 p-6 mb-4">
+                    <h2 className="text-lg font-bold text-gray-900 mb-3">Note calendrier</h2>
+                    <div className="flex items-center gap-2 mb-2">
+                        <svg className="w-4 h-4 text-gray-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                            <path d="M7 11V7a5 5 0 0110 0v4" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                        </svg>
+                        <p className="text-xs text-gray-500">Ajoutez un rappel privé pour ces dates, qui ne sera visible que pour vous</p>
+                    </div>
+                    <textarea
+                        className="w-full border border-gray-200 rounded-lg p-3 text-sm text-gray-700 placeholder-gray-400 resize-none focus:outline-none focus:ring-1 focus:ring-gray-300"
+                        rows={3}
+                        placeholder="Écrivez un message"
+                    />
+                    <button className="mt-2 w-full py-2 border border-gray-200 rounded-lg text-sm text-gray-400 cursor-default">
+                        Enregistrer
+                    </button>
+
+                </div>
+
+                {/* ── CARD 7 : Aircover ── */}
+                <div className="bg-white rounded-2xl border border-gray-200 p-6 mb-4">
+                    <img src="/aircover.avif" alt="AirCover" className="h-8 mb-1" />
+                    <p className="text-sm text-gray-700 leading-relaxed mb-3">
+                        Une protection complète, à chaque fois que vous accueillez des voyageurs.
+                    </p>
+                    <Link to="/airbnb/aircover" className="text-sm text-gray-900 underline font-medium hover:text-[#FF385C] transition-colors">En savoir plus</Link>
+                </div>
+
+                {/* ── CARD 8 : Assistance ── */}
                 <div className="bg-white rounded-2xl border border-gray-200 mb-4 overflow-hidden">
                     <h2 className="text-lg font-bold text-gray-900 px-6 pt-6 pb-3">Assistance</h2>
                     <div className="divide-y divide-gray-100">
+                        <button
+                            onClick={() => navigate(`/airbnb/reservation/${res.id}/modifier`)}
+                            className="w-full flex items-center justify-between px-6 py-4 hover:bg-gray-50 transition-colors"
+                        >
+                            <div className="flex items-center gap-3">
+                                <Pencil className="w-5 h-5 text-gray-500 flex-shrink-0" />
+                                <span className="text-sm text-gray-800">Modifier la réservation</span>
+                            </div>
+                            <ChevronRight className="w-4 h-4 text-gray-400" />
+                        </button>
                         <button className="w-full flex items-center justify-between px-6 py-4 hover:bg-gray-50 transition-colors">
                             <div className="flex items-center gap-3">
                                 <Shield className="w-5 h-5 text-gray-500 flex-shrink-0" />
@@ -222,6 +352,21 @@ export default function AirbnbReservationRecap() {
                                 <span className="text-sm text-gray-800">Consulter le Centre d'aide</span>
                             </div>
                             <ChevronRight className="w-4 h-4 text-gray-400" />
+                        </button>
+                        <button className="w-full flex items-center justify-between px-6 py-4 hover:bg-gray-50 transition-colors">
+                            <div className="flex items-center gap-3">
+                                <Ban className="w-5 h-5 text-gray-500 flex-shrink-0" />
+                                <span className="text-sm text-gray-800">Annuler la réservation</span>
+                            </div>
+                            <ChevronRight className="w-4 h-4 text-gray-400" />
+                        </button>
+                    </div>
+                    <div className="px-6 pb-6 pt-2">
+                        <p className="text-sm text-gray-600 leading-relaxed">
+                            Si vous annulez, des frais pourraient vous être facturés et ces dates pourraient être bloquées. Si vous annulez trop souvent, vous pourriez perdre le statut de Superhôte et votre annonce pourrait être suspendue ou supprimée.
+                        </p>
+                        <button className="text-sm font-medium text-gray-900 underline mt-3 hover:text-gray-700">
+                            En savoir plus sur l'annulation
                         </button>
                     </div>
                 </div>

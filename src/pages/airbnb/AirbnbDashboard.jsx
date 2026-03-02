@@ -44,17 +44,17 @@ function AirbnbDashboard() {
     // Appliquer le filtre par propriété si des propriétés sont sélectionnées
     if (selectedProperties.length > 0) {
         currentReservations = currentReservations.filter(res =>
-            selectedProperties.includes(res.propertyName)
+            selectedProperties.includes(res.propertyId)
         )
     }
 
     // Gérer la sélection/désélection des propriétés
-    const toggleProperty = (propertyName) => {
+    const toggleProperty = (propertyId) => {
         setSelectedProperties(prev => {
-            if (prev.includes(propertyName)) {
-                return prev.filter(p => p !== propertyName)
+            if (prev.includes(propertyId)) {
+                return prev.filter(p => p !== propertyId)
             } else {
-                return [...prev, propertyName]
+                return [...prev, propertyId]
             }
         })
     }
@@ -88,47 +88,21 @@ function AirbnbDashboard() {
 
                 {/* Contenu principal (centré, max-w-4xl) */}
 
-                {/* Alertes en haut (fond gris) */}
+                {/* Disclaimer pédagogique */}
                 <div className="bg-[#f7f7f7] py-6">
                     <div className="max-w-3xl mx-auto px-6">
-                        <div className="grid grid-cols-2 gap-4">
-                            {/* Alerte 1 */}
-                            <div className="flex items-start gap-4 p-4 bg-white rounded-xl shadow-lg">
-                                <div className="relative">
-                                    <img
-                                        src="https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=200&h=200&fit=crop"
-                                        alt="Property"
-                                        className="w-16 h-16 rounded-lg object-cover"
-                                    />
-                                    <div className="absolute -top-2 -left-2 w-6 h-6 bg-red-600 rounded-full flex items-center justify-center text-white text-xs font-bold">
-                                        1
-                                    </div>
-                                </div>
-                                <div className="flex-1">
-                                    <p className="text-xs text-gray-600 mb-1">Esprit de Montmartre Studio Parisien</p>
-                                    <h3 className="font-semibold text-gray-900 mb-1">
-                                        Réactivez votre annonce
-                                    </h3>
-                                    <p className="text-sm text-[#FF385C]">
-                                        Action requise pour débloquer...
-                                    </p>
-                                </div>
+                        <div className="bg-white rounded-2xl border-l-4 border-[#FF385C] px-6 py-5 flex items-start gap-5 shadow-sm">
+                            <div className="w-10 h-10 rounded-full bg-[#FFF1F2] flex items-center justify-center flex-shrink-0 mt-0.5">
+                                <svg className="w-5 h-5 text-[#FF385C]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
                             </div>
-
-                            {/* Alerte 2 */}
-                            <div className="flex items-start gap-4 p-4 bg-white rounded-xl shadow-lg">
-                                <div className="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                                    <span className="text-3xl">📊</span>
-                                </div>
-                                <div className="flex-1">
-                                    <p className="text-xs text-gray-600 mb-1">Votre compte</p>
-                                    <h3 className="font-semibold text-gray-900 mb-1">
-                                        Ajoutez vos informations fiscales
-                                    </h3>
-                                    <p className="text-sm text-gray-600">
-                                        Action requise pour recevoir vos...
-                                    </p>
-                                </div>
+                            <div>
+                                <p className="text-sm font-semibold text-gray-900 mb-1">Outil pédagogique</p>
+                                <p className="text-sm text-gray-600 leading-relaxed">
+                                    Cet outil reproduit l'interface Airbnb pour vous permettre de vous exercer en toute tranquillité, sans risque pour vos vraies annonces.
+                                    Airbnb fait régulièrement évoluer son design et ses fonctionnalités, il est donc possible que vous remarquiez de légères différences avec la plateforme réelle.
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -327,12 +301,6 @@ function AirbnbDashboard() {
                         </div>
                     )}
 
-                    {/* Lien "Voir toutes les réservations" */}
-                    <div className="text-center pb-12">
-                        <button className="text-sm font-medium text-gray-900 underline hover:text-gray-700">
-                            Voir toutes les réservations
-                        </button>
-                    </div>
                 </div>
             </main>
 
@@ -376,8 +344,8 @@ function AirbnbDashboard() {
                                         <span className="flex-1 text-sm text-gray-900">{property.name}</span>
                                         <input
                                             type="checkbox"
-                                            checked={selectedProperties.includes(property.name)}
-                                            onChange={() => toggleProperty(property.name)}
+                                            checked={selectedProperties.includes(property.id)}
+                                            onChange={() => toggleProperty(property.id)}
                                             className="w-5 h-5 rounded border-gray-300 text-gray-900 focus:ring-gray-900"
                                         />
                                     </label>

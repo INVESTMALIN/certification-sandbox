@@ -1,12 +1,21 @@
 import PropertyHeader from '../../../components/booking/PropertyHeader'
 import BookingFooter from '../../../components/booking/BookingFooter'
 import { useState, useRef } from 'react'
+import { useParams } from 'react-router-dom'
 import { ChevronLeft, ChevronRight, ChevronDown } from 'lucide-react'
+import reservationsData from '../../../data/booking/reservations.json'
 
 function Calendrier() {
-    // States existants
-    const [dateFrom, setDateFrom] = useState('2026-01-22')
-    const [dateTo, setDateTo] = useState('2026-02-21')
+    const { id: propertyId } = useParams()
+
+    // States existants — dates dynamiques : aujourd'hui → même jour mois suivant
+    const formatDate = (date) => date.toISOString().split('T')[0]
+    const today = new Date()
+    const nextMonth = new Date(today)
+    nextMonth.setMonth(nextMonth.getMonth() + 1)
+
+    const [dateFrom, setDateFrom] = useState(formatDate(today))
+    const [dateTo, setDateTo] = useState(formatDate(nextMonth))
     const [showClientPricing, setShowClientPricing] = useState(false)
     const [showRestrictions, setShowRestrictions] = useState(false)
     const calendarRef = useRef(null)
@@ -101,15 +110,27 @@ function Calendrier() {
         return 65
     }
 
-    const hasAvailability = (date) => {
-        return date.getDate() % 11 !== 0
+    // Vérifie si une date est réservée selon les données réelles reservations.json
+    const isReservedDate = (date) => {
+        const dateStr = formatDate(date)
+        return reservationsData.some(res =>
+            res.propertyId === propertyId &&
+            res.status !== 'Annulée' &&
+            dateStr >= res.checkIn &&
+            dateStr < res.checkOut
+        )
     }
 
-    const hasBlockingCriteria = (date) => {
-        const day = date.getDate()
-        const month = date.getMonth() + 1
-        return month === 2 && (day === 7 || day === 8)
+    // Critères bloquants : déterministe par date complète → cohérent entre toutes les vues
+    const isBlockedDate = (date) => {
+        const seed = date.getFullYear() * 500 + (date.getMonth() + 1) * 31 + date.getDate()
+        return seed % 19 === 0 || seed % 23 === 2
     }
+
+    // Vérifie si une date est antérieure à aujourd'hui
+    const todayStart = new Date()
+    todayStart.setHours(0, 0, 0, 0)
+    const isPast = (date) => date < todayStart
 
     const scrollCalendar = (direction) => {
         if (calendarRef.current) {
@@ -119,6 +140,26 @@ function Calendrier() {
                 behavior: 'smooth'
             })
         }
+    }
+
+    // Regroupe les jours consécutifs de même statut ET même passé/futur pour la vue liste
+    const groupConsecutiveDays = (days) => {
+        const groups = []
+        let currentGroup = null
+        days.forEach((day) => {
+            const blocked = isBlockedDate(day)
+            const reserved = isReservedDate(day)
+            const past = isPast(day)
+            const status = blocked ? 'blocked' : reserved ? 'reserved' : 'available'
+            const groupKey = `${status}-${past}`
+            if (!currentGroup || currentGroup.groupKey !== groupKey) {
+                currentGroup = { status, past, count: 1, groupKey }
+                groups.push(currentGroup)
+            } else {
+                currentGroup.count++
+            }
+        })
+        return groups
     }
 
     return (
@@ -205,51 +246,6 @@ function Calendrier() {
                                     )}
                                 </div>
 
-                                {/* Recommandations (grisé) */}
-                                <button
-                                    disabled
-                                    className="px-4 py-2 border border-gray-300 rounded bg-gray-50 text-sm text-gray-400 cursor-not-allowed flex items-center gap-2"
-                                >
-                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                                    </svg>
-                                    Recommandations
-                                    <span className="bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">1</span>
-                                </button>
-                            </div>
-
-                            {/* Ligne 2 */}
-                            <div className="flex items-center gap-3">
-                                {/* Gérer les paramètres du calendrier */}
-                                <div className="relative">
-                                    <button
-                                        onClick={() => setIsCalendarParamsOpen(!isCalendarParamsOpen)}
-                                        className="min-w-[240px] px-4 py-2 border border-gray-300 rounded bg-white text-sm text-left flex items-center justify-between hover:border-gray-400"
-                                    >
-                                        <span>Gérer les paramètres du calendrier</span>
-                                        <ChevronDown className={`w-4 h-4 text-gray-600 transition-transform ${isCalendarParamsOpen ? 'rotate-180' : ''}`} />
-                                    </button>
-
-                                    {isCalendarParamsOpen && (
-                                        <div className="absolute z-50 mt-1 w-full bg-white border border-gray-300 rounded-lg shadow-lg">
-                                            <div className="py-1">
-                                                <button
-                                                    onClick={() => setIsCalendarParamsOpen(false)}
-                                                    className="w-full px-4 py-2 text-sm text-left hover:bg-gray-50 text-gray-700"
-                                                >
-                                                    Connexion du calendrier
-                                                </button>
-                                                <button
-                                                    onClick={() => setIsCalendarParamsOpen(false)}
-                                                    className="w-full px-4 py-2 text-sm text-left hover:bg-gray-50 text-gray-700"
-                                                >
-                                                    Donner mon avis
-                                                </button>
-                                            </div>
-                                        </div>
-                                    )}
-                                </div>
-
                                 {/* Paramètres des disponibilités */}
                                 <div className="relative">
                                     <button
@@ -280,66 +276,48 @@ function Calendrier() {
                                     )}
                                 </div>
                             </div>
+
                         </div>
                     </div>
                 </div>
 
-                {/* Vue par mois */}
+                {/* Vue par mois — affiche les 3 prochains mois */}
                 {viewMode === 'month' && (
-                    <div className="px-6">
-                        {/* Générer le calendrier du mois sélectionné */}
-                        {(() => {
-                            const [year, month] = selectedMonth.split('-')
-                            const firstDay = new Date(parseInt(year), parseInt(month) - 1, 1)
-                            const lastDay = new Date(parseInt(year), parseInt(month), 0)
-                            const startingDayOfWeek = firstDay.getDay() // 0 = dimanche
+                    <div className="px-6 space-y-10">
+                        {Array.from({ length: 3 }, (_, offset) => {
+                            const ref = new Date()
+                            const targetDate = new Date(ref.getFullYear(), ref.getMonth() + offset, 1)
+                            const year = targetDate.getFullYear()
+                            const month = targetDate.getMonth()
+                            const firstDay = new Date(year, month, 1)
+                            const lastDay = new Date(year, month + 1, 0)
+                            // Décalage lun–dim : (0=dim → 6, 1=lun → 0, …)
+                            const startingDayOfWeek = (firstDay.getDay() + 6) % 7
                             const daysInMonth = lastDay.getDate()
 
-                            // Générer les jours du calendrier (avec padding pour les jours vides)
                             const calendarDays = []
+                            for (let i = 0; i < startingDayOfWeek; i++) calendarDays.push(null)
+                            for (let day = 1; day <= daysInMonth; day++) calendarDays.push(day)
 
-                            // Jours vides avant le 1er du mois
-                            for (let i = 0; i < startingDayOfWeek; i++) {
-                                calendarDays.push(null)
-                            }
-
-                            // Jours du mois
-                            for (let day = 1; day <= daysInMonth; day++) {
-                                calendarDays.push(day)
-                            }
-
-                            // Check si un jour est réservé (hardcodé)
-                            const isReserved = (day) => {
-                                return [5, 6, 12, 13, 19, 20].includes(day)
-                            }
-
-                            // Check si un jour a des critères bloquants (hardcodé)
-                            const hasBlockingCriteria = (day) => {
-                                return [7, 8].includes(day)
-                            }
-
-                            // Prix du jour (hardcodé)
+                            const isReserved = (day) => isReservedDate(new Date(year, month, day))
                             const getPrice = (day) => {
-                                if (isReserved(day) || hasBlockingCriteria(day)) return null
-                                // Weekend plus cher
-                                const date = new Date(parseInt(year), parseInt(month) - 1, day)
-                                const dayOfWeek = date.getDay()
-                                return dayOfWeek === 0 || dayOfWeek === 6 ? 1200 : 1080
+                                if (isReserved(day) || isBlockedDate(new Date(year, month, day))) return null
+                                const d = new Date(year, month, day)
+                                return d.getDay() === 0 || d.getDay() === 6 ? 1200 : 1080
                             }
 
                             const monthName = firstDay.toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' })
                             const capitalizedMonthName = monthName.charAt(0).toUpperCase() + monthName.slice(1)
 
                             return (
-                                <div>
-                                    {/* Titre du mois */}
+                                <div key={offset}>
                                     <h2 className="text-xl font-bold text-[#0071c2] mb-4">{capitalizedMonthName}</h2>
 
-                                    {/* En-têtes des jours de la semaine */}
+                                    {/* En-têtes jours */}
                                     <div className="grid grid-cols-7 gap-0 border-t border-l border-gray-200">
-                                        {['lun.', 'mar.', 'mer.', 'jeu.', 'ven.', 'sam.', 'dim.'].map((day, idx) => (
+                                        {['lun.', 'mar.', 'mer.', 'jeu.', 'ven.', 'sam.', 'dim.'].map((d, idx) => (
                                             <div key={idx} className="border-r border-b border-gray-200 bg-gray-50 p-2 text-center">
-                                                <span className="text-xs font-medium text-gray-700">{day}</span>
+                                                <span className="text-xs font-medium text-gray-700">{d}</span>
                                             </div>
                                         ))}
                                     </div>
@@ -348,37 +326,23 @@ function Calendrier() {
                                     <div className="grid grid-cols-7 gap-0 border-l border-gray-200">
                                         {calendarDays.map((day, index) => {
                                             if (day === null) {
-                                                // Cellule vide
-                                                return (
-                                                    <div
-                                                        key={index}
-                                                        className="border-r border-b border-gray-200 h-24 bg-gray-50"
-                                                    ></div>
-                                                )
+                                                return <div key={index} className="border-r border-b border-gray-200 h-24 bg-gray-50"></div>
                                             }
-
                                             const reserved = isReserved(day)
-                                            const blocked = hasBlockingCriteria(day)
+                                            const blocked = isBlockedDate(new Date(year, month, day))
                                             const price = getPrice(day)
-
                                             return (
                                                 <div
                                                     key={index}
-                                                    className={`border-r border-b border-gray-200 h-24 p-2 ${reserved ? 'bg-gray-100' : blocked ? 'bg-red-50' : 'bg-white hover:bg-gray-50'
-                                                        }`}
+                                                    className={`border-r border-b border-gray-200 h-24 p-2 ${reserved ? 'bg-gray-100' : blocked ? 'bg-red-50' : 'bg-white hover:bg-gray-50'}`}
                                                 >
-                                                    {/* Numéro du jour */}
                                                     <div className="text-sm font-medium text-gray-900 mb-2">{day}</div>
-
-                                                    {/* Contenu du jour */}
                                                     {blocked ? (
                                                         <div className="bg-red-500 text-white text-xs py-1 px-2 rounded font-medium text-center">
                                                             Critères bloqua...
                                                         </div>
                                                     ) : reserved ? (
-                                                        <div className="text-xs text-gray-600 text-center mt-4">
-                                                            Réservé
-                                                        </div>
+                                                        <div className="text-xs text-gray-600 text-center mt-4">Réservé</div>
                                                     ) : price ? (
                                                         <div className="text-sm font-medium text-gray-900 text-center mt-2">
                                                             € {price.toLocaleString('fr-FR')}
@@ -390,29 +354,13 @@ function Calendrier() {
                                     </div>
                                 </div>
                             )
-                        })()}
+                        })}
                     </div>
                 )}
 
                 {/* Vue par liste (code existant) */}
                 {viewMode === 'list' && (
                     <>
-                        {/* Warning Banner */}
-                        <div className="px-6 mb-4">
-                            <div className="bg-yellow-50 border border-yellow-200 rounded p-3 flex items-start gap-2">
-                                <svg className="w-5 h-5 text-yellow-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                </svg>
-                                <p className="text-sm text-gray-700">
-                                    Votre établissement n'est plus réservable au-delà du 31 déc. 2026. Ajoutez des disponibilités jusqu'à juin 2027 pour continuer à recevoir des réservations.
-                                </p>
-                                <button className="text-gray-400 hover:text-gray-600 ml-auto">
-                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                                    </svg>
-                                </button>
-                            </div>
-                        </div>
 
                         {/* Calendar Header */}
                         <div className="px-6 mb-6">
@@ -519,11 +467,11 @@ function Calendrier() {
                                         {days.map((day, index) => (
                                             <div
                                                 key={index}
-                                                className="w-[60px] flex-shrink-0 border-l border-gray-200 p-1"
+                                                className={`w-[60px] flex-shrink-0 border-l border-gray-200 p-1 ${isPast(day) ? 'bg-gray-100' : ''}`}
                                             >
                                                 <div className="text-center">
-                                                    <div className="text-xs text-gray-600">{getDayName(day)}</div>
-                                                    <div className="text-xs font-medium text-gray-900">{day.getDate()}</div>
+                                                    <div className={`text-xs ${isPast(day) ? 'text-gray-400' : 'text-gray-600'}`}>{getDayName(day)}</div>
+                                                    <div className={`text-xs font-medium ${isPast(day) ? 'text-gray-400' : 'text-gray-900'}`}>{day.getDate()}</div>
                                                 </div>
                                             </div>
                                         ))}
@@ -534,26 +482,28 @@ function Calendrier() {
                                         <div className="w-48 flex-shrink-0 border-r border-gray-200 px-3 py-2 bg-gray-50">
                                             <div className="text-xs text-gray-600">Statut de l'hébergement</div>
                                         </div>
-                                        {days.map((day, index) => {
-                                            const available = hasAvailability(day)
-                                            const blocked = hasBlockingCriteria(day)
-                                            return (
-                                                <div
-                                                    key={index}
-                                                    className="w-[60px] flex-shrink-0 border-l border-gray-200 p-1 text-center relative"
-                                                >
-                                                    {blocked ? (
-                                                        <div className="bg-red-500 text-white text-xs py-1 px-1 rounded font-medium">
-                                                            Critères bloqua...
-                                                        </div>
-                                                    ) : available ? (
-                                                        <div className="text-xs text-green-600 font-medium">Réservable</div>
-                                                    ) : (
-                                                        <div className="text-xs text-gray-400">Réservé</div>
-                                                    )}
-                                                </div>
-                                            )
-                                        })}
+                                        {groupConsecutiveDays(days).map((group, index) => (
+                                            <div
+                                                key={index}
+                                                className={`flex-shrink-0 border-l border-gray-200 p-1 flex items-center justify-center ${group.past ? 'bg-gray-100' : ''}`}
+                                                style={{ width: `${group.count * 60}px` }}
+                                            >
+                                                {group.past ? (
+                                                    // Jours passés : toujours grisés, peu importe le statut
+                                                    null
+                                                ) : group.status === 'blocked' ? (
+                                                    <div className="w-full bg-red-500 text-white text-xs py-1 px-1 rounded font-medium truncate text-center">
+                                                        Critères bloquants
+                                                    </div>
+                                                ) : group.status === 'available' ? (
+                                                    <div className="w-full bg-green-100 text-green-700 text-xs py-1 px-2 rounded font-medium text-center">
+                                                        Réservable
+                                                    </div>
+                                                ) : (
+                                                    <div className="text-xs text-gray-400 text-center">Réservé</div>
+                                                )}
+                                            </div>
+                                        ))}
                                     </div>
 
                                     <div className="flex border-t border-gray-100">
@@ -561,14 +511,14 @@ function Calendrier() {
                                             <div className="text-xs text-gray-600">Hébergements à vendre</div>
                                         </div>
                                         {days.map((day, index) => {
-                                            const available = hasAvailability(day)
+                                            const available = !isReservedDate(day) && !isBlockedDate(day)
                                             return (
                                                 <div
                                                     key={index}
-                                                    className="w-[60px] flex-shrink-0 border-l border-gray-200 p-1 text-center"
+                                                    className={`w-[60px] flex-shrink-0 border-l border-gray-200 p-1 text-center ${isPast(day) ? 'bg-gray-100' : ''}`}
                                                 >
-                                                    <div className="text-xs text-gray-600">
-                                                        {available ? '1' : ''}
+                                                    <div className={`text-xs ${isPast(day) ? 'text-gray-300' : 'text-gray-600'}`}>
+                                                        {!isPast(day) && available ? '1' : ''}
                                                     </div>
                                                 </div>
                                             )
@@ -582,7 +532,7 @@ function Calendrier() {
                                         {days.map((day, index) => (
                                             <div
                                                 key={index}
-                                                className="w-[60px] flex-shrink-0 border-l border-gray-200 p-1 text-center"
+                                                className={`w-[60px] flex-shrink-0 border-l border-gray-200 p-1 text-center ${isPast(day) ? 'bg-gray-100' : ''}`}
                                             >
                                                 <div className="text-xs text-gray-600"></div>
                                             </div>
@@ -595,14 +545,14 @@ function Calendrier() {
                                             <div className="text-xs font-medium text-gray-900">Standard Rate</div>
                                         </div>
                                         {days.map((day, index) => {
-                                            const available = hasAvailability(day)
+                                            const available = !isReservedDate(day) && !isBlockedDate(day)
                                             const price = getPricing(day)
                                             return (
                                                 <div
                                                     key={index}
-                                                    className="w-[60px] flex-shrink-0 border-l border-gray-200 p-1 bg-blue-50 text-center"
+                                                    className={`w-[60px] flex-shrink-0 border-l border-gray-200 p-1 text-center ${isPast(day) ? 'bg-gray-100' : 'bg-blue-50'}`}
                                                 >
-                                                    {available && (
+                                                    {!isPast(day) && available && (
                                                         <div className="text-xs text-gray-900 font-medium">
                                                             {price}€
                                                         </div>
@@ -664,12 +614,10 @@ function Calendrier() {
                                     calendarDays.push(day)
                                 }
 
-                                // Check disponibilité (hardcodé pour demo)
-                                const isAvailable = (day) => {
-                                    // Jours verts : la plupart des jours
-                                    // Jours blancs : quelques jours sans prix
-                                    return day % 5 !== 0
-                                }
+                                // Disponibilité basée sur les vraies réservations
+                                const isAvailable = (day) =>
+                                    !isReservedDate(new Date(year, month, day)) &&
+                                    !isBlockedDate(new Date(year, month, day))
 
                                 return (
                                     <div key={monthIndex} className="border border-gray-200 rounded-lg p-3 bg-white">
@@ -698,8 +646,8 @@ function Calendrier() {
                                                     <div
                                                         key={index}
                                                         className={`h-6 flex items-center justify-center text-xs rounded ${available
-                                                                ? 'bg-green-100 text-gray-900 hover:bg-green-200'
-                                                                : 'bg-white text-gray-400'
+                                                            ? 'bg-green-100 text-gray-900 hover:bg-green-200'
+                                                            : 'bg-white text-gray-400'
                                                             }`}
                                                     >
                                                         {day}

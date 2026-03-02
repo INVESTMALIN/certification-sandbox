@@ -1,7 +1,6 @@
-import { useParams, Link } from 'react-router-dom'
-import { ChevronLeft, Phone, MessageSquare, Star, ShieldCheck, Home, Award, X } from 'lucide-react'
+import { useParams, Link, useNavigate } from 'react-router-dom'
+import { ChevronLeft, Phone, MessageSquare, Star, ShieldCheck, Home, Award, X, Pencil, Shield, HelpCircle, Ban } from 'lucide-react'
 import AirbnbHeader from '../../components/airbnb/AirbnbHeader'
-import AirbnbFooter from '../../components/airbnb/AirbnbFooter'
 import reservations from '../../data/airbnb/reservations.json'
 import properties from '../../data/airbnb/properties.json'
 import { useState } from 'react'
@@ -9,6 +8,7 @@ import { hydrateReservation, formatDateShort, formatDateLong } from '../../data/
 
 function ReservationDetail() {
     const { id } = useParams()
+    const navigate = useNavigate()
     const [isFilterOpen, setIsFilterOpen] = useState(false)
     const [selectedProperties, setSelectedProperties] = useState([])
 
@@ -185,7 +185,7 @@ function ReservationDetail() {
                             <p className="text-gray-600">{reservation.guestCount}</p>
                         </div>
 
-                        <hr className="my-8 border-gray-200" />
+                        <div className="my-8 -mx-8 h-3 bg-gray-100" />
 
                         {/* Tout sur le voyageur */}
                         <div className="mb-8">
@@ -194,11 +194,13 @@ function ReservationDetail() {
                             </h2>
 
                             <div className="flex items-center gap-4 mb-6">
-                                <img
-                                    src={reservation.guestAvatar}
-                                    alt={reservation.guestName}
-                                    className="w-16 h-16 rounded-full"
-                                />
+                                <Link to={`/airbnb/voyageur/${reservation.id}`}>
+                                    <img
+                                        src={reservation.guestAvatar}
+                                        alt={reservation.guestName}
+                                        className="w-16 h-16 rounded-full hover:opacity-80 transition-opacity"
+                                    />
+                                </Link>
                                 <div className="flex-1">
                                     <h3 className="font-semibold text-gray-900">{reservation.guestName}</h3>
                                 </div>
@@ -252,15 +254,26 @@ function ReservationDetail() {
                             </button>
 
                             {/* Boutons actions */}
-                            <div className="grid grid-cols-2 gap-4 mt-6">
-                                <button className="px-6 py-3 border border-gray-900 rounded-lg font-medium text-gray-900 hover:bg-gray-50 flex items-center justify-center gap-2">
-                                    <MessageSquare className="w-5 h-5" />
-                                    Envoyer un message
+                            <div className="mt-6 flex flex-col gap-3">
+                                <button
+                                    onClick={() => navigate(`/airbnb/paiement/${reservation.id}/step1`)}
+                                    className="w-full px-6 py-3 border border-gray-900 rounded-lg font-medium text-gray-900 hover:bg-gray-50 transition-colors"
+                                >
+                                    Envoyer ou demander de l'argent
                                 </button>
-                                <button className="px-6 py-3 border border-gray-900 rounded-lg font-medium text-gray-900 hover:bg-gray-50 flex items-center justify-center gap-2">
-                                    <Phone className="w-5 h-5" />
-                                    Appeler
-                                </button>
+                                <div className="grid grid-cols-2 gap-3">
+                                    <button
+                                        onClick={() => navigate('/airbnb/messages')}
+                                        className="px-6 py-3 border border-gray-900 rounded-lg font-medium text-gray-900 hover:bg-gray-50 flex items-center justify-center gap-2"
+                                    >
+                                        <MessageSquare className="w-5 h-5" />
+                                        Envoyer un message
+                                    </button>
+                                    <button className="px-6 py-3 border border-gray-900 rounded-lg font-medium text-gray-900 hover:bg-gray-50 flex items-center justify-center gap-2">
+                                        <Phone className="w-5 h-5" />
+                                        Appeler
+                                    </button>
+                                </div>
                             </div>
 
                             <p className="text-xs text-gray-600 text-center mt-3">
@@ -268,7 +281,7 @@ function ReservationDetail() {
                             </p>
                         </div>
 
-                        <hr className="my-8 border-gray-200" />
+                        <div className="my-8 -mx-8 h-3 bg-gray-100" />
 
                         {/* Détails de la réservation */}
                         <div className="mb-8">
@@ -315,36 +328,170 @@ function ReservationDetail() {
                             </div>
                         </div>
 
-                        <hr className="my-8 border-gray-200" />
+                        <div className="my-8 -mx-8 h-3 bg-gray-100" />
+
+                        {/* Détails du paiement du voyageur + Versement de l'hôte */}
+                        {(() => {
+                            const fmtEur = (v) => v.toFixed(2).replace('.', ',') + '\u00a0€'
+                            const nights = reservation.nights
+                            const nightlyRate = 50
+                            const voyageurServiceFee = 0
+                            const touristTax = parseFloat((nights * 1.65).toFixed(2))
+                            const voyageurTotal = parseFloat((nightlyRate * nights + touristTax).toFixed(2))
+                            const hostRoomRate = 50
+                            const hostServiceFee = parseFloat((hostRoomRate * nights * 0.186).toFixed(2))
+                            const hostTotal = parseFloat((hostRoomRate * nights - hostServiceFee).toFixed(2))
+                            return (
+                                <>
+                                    {/* Détails du paiement du voyageur */}
+                                    <div className="mb-8">
+                                        <h2 className="text-2xl font-semibold text-gray-900 mb-4">Détails du paiement du voyageur</h2>
+                                        <div className="space-y-2 text-sm">
+                                            <div className="flex justify-between">
+                                                <span className="text-gray-700">{fmtEur(nightlyRate)} x {nights} nuit{nights > 1 ? 's' : ''}</span>
+                                                <span className="text-gray-900">{fmtEur(nightlyRate * nights)}</span>
+                                            </div>
+                                            <div className="flex justify-between">
+                                                <span className="text-gray-700">Frais de service voyageur</span>
+                                                <span className="text-gray-900">{fmtEur(voyageurServiceFee)}</span>
+                                            </div>
+                                            <div className="flex justify-between">
+                                                <span className="text-gray-700">Taxes de séjour</span>
+                                                <span className="text-gray-900">{fmtEur(touristTax)}</span>
+                                            </div>
+                                            <div className="flex justify-between font-semibold pt-2 border-t border-gray-200 mt-2">
+                                                <span className="text-gray-900">Total (EUR)</span>
+                                                <span className="text-gray-900">{fmtEur(voyageurTotal)}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div className="my-8 -mx-8 h-3 bg-gray-100" />
+
+                                    {/* Versement de l'hôte */}
+                                    <div className="mb-8">
+                                        <h2 className="text-2xl font-semibold text-gray-900 mb-4">Versement de l'hôte</h2>
+                                        <div className="space-y-2 text-sm">
+                                            <div className="flex justify-between">
+                                                <span className="text-gray-700">Frais de chambre pour {nights} nuit{nights > 1 ? 's' : ''}</span>
+                                                <span className="text-gray-900">{fmtEur(hostRoomRate * nights)}</span>
+                                            </div>
+                                            <button className="text-sm text-gray-900 underline font-medium text-left">Afficher les décomptes</button>
+                                            <div className="flex justify-between">
+                                                <span className="text-gray-700">Frais de service hôte (15,5&nbsp;% + TVA)</span>
+                                                <span className="text-gray-900">-{fmtEur(hostServiceFee)}</span>
+                                            </div>
+                                            <div className="flex justify-between font-semibold pt-2 border-t border-gray-200 mt-2">
+                                                <span className="text-gray-900">Total (EUR)</span>
+                                                <span className="text-gray-900">{fmtEur(hostTotal)}</span>
+                                            </div>
+                                        </div>
+
+                                        {/* Facture & historique */}
+                                        <div className="border-t border-gray-200 mt-6" />
+                                        <div className="flex flex-col divide-y divide-gray-100">
+                                            <Link to={`/airbnb/facture/${reservation.id}`} className="flex items-center justify-between py-4 hover:bg-gray-50 transition-colors text-left w-full">
+                                                <span className="text-sm text-gray-900">Facture avec TVA *****</span>
+                                                <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
+                                            </Link>
+                                            <button className="flex items-center justify-between py-4 hover:bg-gray-50 transition-colors text-left w-full">
+                                                <div className="flex items-center gap-3">
+                                                    <svg className="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <rect x="1" y="4" width="22" height="16" rx="2" ry="2" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                                                        <line x1="1" y1="10" x2="23" y2="10" strokeWidth="2" />
+                                                    </svg>
+                                                    <span className="text-sm text-gray-900">Historique des transactions</span>
+                                                </div>
+                                                <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <div className="my-8 -mx-8 h-3 bg-gray-100" />
+
+                                    {/* Note calendrier */}
+                                    <div className="mb-8">
+                                        <h2 className="text-2xl font-semibold text-gray-900 mb-4">Note calendrier</h2>
+                                        <div className="flex items-center gap-2 mb-2">
+                                            <svg className="w-4 h-4 text-gray-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <rect x="3" y="11" width="18" height="11" rx="2" ry="2" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                                                <path d="M7 11V7a5 5 0 0110 0v4" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                                            </svg>
+                                            <p className="text-xs text-gray-500">Ajoutez un rappel privé pour ces dates, qui ne sera visible que pour vous</p>
+                                        </div>
+                                        <textarea
+                                            className="w-full border border-gray-200 rounded-lg p-3 text-sm text-gray-700 placeholder-gray-400 resize-none focus:outline-none focus:ring-1 focus:ring-gray-300"
+                                            rows={3}
+                                            placeholder="Écrivez un message"
+                                        />
+                                        <button className="mt-2 w-full py-2 border border-gray-200 rounded-lg text-sm text-gray-400 cursor-default">
+                                            Enregistrer
+                                        </button>
+                                    </div>
+
+                                    <div className="my-8 -mx-8 h-3 bg-gray-100" />
+
+                                    {/* Aircover pour les hôtes */}
+                                    <div className="mb-8">
+                                        <img src="/aircover.avif" alt="AirCover" className="h-8 mb-1" />
+                                        <p className="text-sm text-gray-700 leading-relaxed mb-3">
+                                            Une protection complète, à chaque fois que vous accueillez des voyageurs.
+                                        </p>
+                                        <Link to="/airbnb/aircover" className="text-sm text-gray-900 underline font-medium hover:text-[#FF385C] transition-colors">En savoir plus</Link>
+                                    </div>
+
+                                    <div className="my-8 -mx-8 h-3 bg-gray-100" />
+                                </>
+                            )
+                        })()}
 
                         {/* Assistance */}
                         <div className="mb-8">
                             <h2 className="text-2xl font-semibold text-gray-900 mb-6">Assistance</h2>
 
-                            <div className="space-y-4">
-                                <button className="w-full flex items-center justify-between p-4 hover:bg-gray-50 rounded-lg">
+                            <div className="flex flex-col divide-y divide-gray-200">
+                                <button onClick={() => navigate(`/airbnb/reservation/${reservation.id}/modifier`)} className="flex items-center justify-between py-5 hover:bg-gray-50 transition-colors text-left w-full">
                                     <div className="flex items-center gap-3">
-                                        <span className="text-xl">🛡️</span>
+                                        <Pencil className="w-5 h-5 text-gray-700" />
+                                        <span className="text-gray-900">Modifier la réservation</span>
+                                    </div>
+                                    <ChevronLeft className="w-5 h-5 text-gray-400 rotate-180" />
+                                </button>
+
+                                <button className="flex items-center justify-between py-5 hover:bg-gray-50 transition-colors text-left w-full">
+                                    <div className="flex items-center gap-3">
+                                        <Shield className="w-5 h-5 text-gray-700" />
                                         <span className="text-gray-900">Assistance sécurité</span>
                                     </div>
-                                    <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                                    </svg>
+                                    <ChevronLeft className="w-5 h-5 text-gray-400 rotate-180" />
                                 </button>
 
-                                <button className="w-full flex items-center justify-between p-4 hover:bg-gray-50 rounded-lg">
+                                <button onClick={() => navigate('/airbnb/centre-aide')} className="flex items-center justify-between py-5 hover:bg-gray-50 transition-colors text-left w-full">
                                     <div className="flex items-center gap-3">
-                                        <span className="text-xl">❓</span>
+                                        <HelpCircle className="w-5 h-5 text-gray-700" />
                                         <span className="text-gray-900">Consulter le Centre d'aide</span>
                                     </div>
-                                    <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                                    </svg>
+                                    <ChevronLeft className="w-5 h-5 text-gray-400 rotate-180" />
+                                </button>
+
+                                <button className="flex items-center justify-between py-5 hover:bg-gray-50 transition-colors text-left w-full">
+                                    <div className="flex items-center gap-3">
+                                        <Ban className="w-5 h-5 text-gray-700" />
+                                        <span className="text-gray-900">Annuler la réservation</span>
+                                    </div>
+                                    <ChevronLeft className="w-5 h-5 text-gray-400 rotate-180" />
                                 </button>
                             </div>
+
+                            <p className="text-sm text-gray-600 mt-6 leading-relaxed">
+                                Si vous annulez, des frais pourraient vous être facturés et ces dates pourraient être bloquées. Si vous annulez trop souvent, vous pourriez perdre le statut de Superhôte et votre annonce pourrait être suspendue ou supprimée.
+                            </p>
+                            <button className="text-sm font-medium text-gray-900 underline mt-3 hover:text-gray-700">
+                                En savoir plus sur l'annulation
+                            </button>
                         </div>
 
-                        <hr className="my-8 border-gray-200" />
+                        <div className="my-8 -mx-8 h-3 bg-gray-100" />
 
                         {/* Questions fréquentes */}
                         <div className="mb-8">
@@ -396,7 +543,7 @@ function ReservationDetail() {
                 </div>
             </main>
 
-            <AirbnbFooter />
+
 
             {/* Modal de filtrage */}
             {isFilterOpen && (

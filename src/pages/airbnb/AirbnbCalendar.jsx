@@ -247,12 +247,12 @@ function AirbnbCalendar() {
                     {/* ── LEFT: property list ── */}
                     <div className="w-64 flex-shrink-0 border-r border-gray-200 flex flex-col overflow-hidden bg-white">
                         {/* Count */}
-                        <div className="px-4 pt-4 pb-2">
+                        <div className="px-4 pt-3 pb-1">
                             <h2 className="text-2xl font-bold text-gray-900">{properties.length} annonces</h2>
                         </div>
 
                         {/* Search */}
-                        <div className="px-4 pb-3 flex items-center gap-2">
+                        <div className="px-4 pb-2 flex items-center gap-2">
                             <div className="flex-1 flex items-center gap-2 border border-gray-300 rounded-full px-3 py-1.5 text-sm text-gray-500">
                                 <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -265,12 +265,7 @@ function AirbnbCalendar() {
                                     className="bg-transparent outline-none w-full text-gray-700 placeholder-gray-400"
                                 />
                             </div>
-                            {/* Filter icon */}
-                            <button className="p-1.5 hover:bg-gray-100 rounded-full">
-                                <svg className="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
-                                </svg>
-                            </button>
+
                         </div>
 
                         {/* Property rows */}
@@ -618,7 +613,7 @@ function AirbnbCalendar() {
                 </div>
             </main>
 
-            <AirbnbFooter />
+
 
             {/* ── RULE SET MODAL ── */}
             {isRuleModalOpen && (() => {
