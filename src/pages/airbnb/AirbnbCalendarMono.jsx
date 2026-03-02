@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
-import { ChevronLeft, ChevronRight, Pencil, Link as LinkIcon, Flag, HelpCircle } from 'lucide-react'
+import { ChevronLeft, ChevronRight, Pencil, Link as LinkIcon, HelpCircle, Shield, Ban } from 'lucide-react'
 import AirbnbHeader from '../../components/airbnb/AirbnbHeader'
 import properties from '../../data/airbnb/properties.json'
 import reservations from '../../data/airbnb/reservations.json'
@@ -1854,9 +1854,17 @@ export default function AirbnbCalendarMono() {
                                     <h4 className="text-base font-bold text-gray-900 mb-2">Assistance</h4>
 
                                     <div className="flex flex-col divide-y divide-gray-100">
-                                        <button onClick={() => setShowReportModal(true)} className="flex items-center gap-3 py-4 hover:bg-gray-50 transition-colors text-left w-full">
-                                            <Flag className="w-4 h-4 text-gray-500 flex-shrink-0" />
-                                            <span className="text-sm text-gray-900 flex-1">Signaler ce voyageur</span>
+                                        <button
+                                            onClick={() => navigate(`/airbnb/reservation/${selectedRes.id}/modifier`)}
+                                            className="flex items-center gap-3 py-4 hover:bg-gray-50 transition-colors text-left w-full"
+                                        >
+                                            <Pencil className="w-4 h-4 text-gray-500 flex-shrink-0" />
+                                            <span className="text-sm text-gray-900 flex-1">Modifier la réservation</span>
+                                            <ChevronRight className="w-4 h-4 text-gray-400" />
+                                        </button>
+                                        <button className="flex items-center gap-3 py-4 hover:bg-gray-50 transition-colors text-left w-full">
+                                            <Shield className="w-4 h-4 text-gray-500 flex-shrink-0" />
+                                            <span className="text-sm text-gray-900 flex-1">Assistance sécurité</span>
                                             <ChevronRight className="w-4 h-4 text-gray-400" />
                                         </button>
                                         <button
@@ -1867,7 +1875,19 @@ export default function AirbnbCalendarMono() {
                                             <span className="text-sm text-gray-900 flex-1">Consulter le Centre d'aide</span>
                                             <ChevronRight className="w-4 h-4 text-gray-400" />
                                         </button>
+                                        <button className="flex items-center gap-3 py-4 hover:bg-gray-50 transition-colors text-left w-full">
+                                            <Ban className="w-4 h-4 text-gray-500 flex-shrink-0" />
+                                            <span className="text-sm text-gray-900 flex-1">Annuler la réservation</span>
+                                            <ChevronRight className="w-4 h-4 text-gray-400" />
+                                        </button>
                                     </div>
+
+                                    <p className="text-sm text-gray-600 mt-4 leading-relaxed">
+                                        Si vous annulez, des frais pourraient vous être facturés et ces dates pourraient être bloquées. Si vous annulez trop souvent, vous pourriez perdre le statut de Superhôte et votre annonce pourrait être suspendue ou supprimée.
+                                    </p>
+                                    <button className="text-sm font-medium text-gray-900 underline mt-3 hover:text-gray-700">
+                                        En savoir plus sur l'annulation
+                                    </button>
                                     <div className="border-t border-gray-200 my-4" />
 
                                     <h4 className="text-base font-bold text-gray-900 mb-4">Questions fréquentes</h4>

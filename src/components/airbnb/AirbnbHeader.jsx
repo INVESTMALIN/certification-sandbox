@@ -46,7 +46,7 @@ function AirbnbHeader() {
                     </div>
 
                     {/* Navigation centrale - absolument centrée */}
-                    <nav className="absolute left-1/2 -translate-x-1/2 hidden md:flex items-center gap-8">
+                    <nav className="absolute left-[44%] -translate-x-1/2 hidden md:flex items-center gap-8">
                         <Link
                             to="/airbnb/dashboard"
                             className={`font-medium pb-3 border-b-2 transition-colors ${location.pathname === '/airbnb/dashboard'
