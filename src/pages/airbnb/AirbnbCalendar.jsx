@@ -56,6 +56,14 @@ function isFirstVisibleDay(propertyId, date, visibleDays) {
     })
 }
 
+// Prix par nuit avec ajustement week-end / lundi (même logique que CalendarMono)
+function getDayPrice(base, date) {
+    const dow = date.getDay()
+    if (dow === 5 || dow === 6) return Math.ceil(base * 1.2)
+    if (dow === 1) return Math.floor(base * 0.9)
+    return base
+}
+
 // ── Calendar grid ─────────────────────────────────────────────────────────────
 
 const DAY_LABELS = ['L', 'M', 'M', 'J', 'V', 'S', 'D']
@@ -101,6 +109,7 @@ function AirbnbCalendar() {
     const [searchQuery, setSearchQuery] = useState('')
     const [isDrawerOpen, setIsDrawerOpen] = useState(true)
     const [selectedReservation, setSelectedReservation] = useState(null)
+    const [tooltip, setTooltip] = useState(null) // { x, y, firstName, totalFmt, isInProgress, res }
     const [isRuleModalOpen, setIsRuleModalOpen] = useState(false)
     const [ruleName, setRuleName] = useState('')
     const [ruleColor, setRuleColor] = useState(0)
@@ -386,6 +395,7 @@ function AirbnbCalendar() {
                                             const firstVisible = isFirstVisibleDay(property.propertyId, day, days)
                                             const today = isToday(day)
                                             const blocked = !res && isBlockedDay(property.propertyId, day, blockedDates)
+                                            const past = !today && day < new Date()
 
                                             return (
                                                 <div
@@ -394,7 +404,7 @@ function AirbnbCalendar() {
                                                         ${today ? 'border-l-2 border-l-[#222222]' : ''}
                                                     `}
                                                     style={{
-                                                        background: res ? '#f7f7f7' : blocked ? '#f7f7f7' : '#f7f7f7'
+                                                        background: (blocked || past) ? '#f7f7f7' : '#ffffff'
                                                     }}
                                                 >
                                                     {blocked && (
@@ -410,31 +420,47 @@ function AirbnbCalendar() {
                                                             />
                                                         </svg>
                                                     )}
-                                                    {/* Reservation bar: render only on checkIn day to avoid duplicates */}
+                                                    {/* Tarif — cellules libres (passées et futures, sauf bloquées) */}
+                                                    {!res && !blocked && (
+                                                        <span className="absolute top-1 right-1.5 text-xs text-gray-500 pointer-events-none">
+                                                            {getDayPrice(property.pricePerNight, day)} €
+                                                        </span>
+                                                    )}
+
+                                                    {/* Barre de réservation */}
                                                     {res && firstVisible && (() => {
-                                                        // How many days does this reservation span within our visible window?
                                                         const checkOut = new Date(res.checkOut)
                                                         checkOut.setHours(0, 0, 0, 0)
                                                         const lastVisibleDay = days[days.length - 1]
                                                         const endDay = checkOut <= lastVisibleDay ? checkOut : addDays(lastVisibleDay, 1)
                                                         const spanDays = Math.round((endDay - day) / (1000 * 60 * 60 * 24))
                                                         const widthPct = spanDays * 100
+                                                        const isInProgress = res.statusDetail === 'Séjour en cours'
+                                                        const firstName = res.guestName.split(' ')[0]
+                                                        const totalFmt = res.totalAmount?.toLocaleString('fr-FR') + ' €'
 
                                                         return (
                                                             <div
+                                                                className="absolute top-1/2 -translate-y-1/2 left-0 z-10 cursor-pointer"
+                                                                style={{ width: `${widthPct}%`, minWidth: '60px' }}
                                                                 onClick={(e) => { e.stopPropagation(); setSelectedReservation(res); setIsDrawerOpen(true) }}
-                                                                className="absolute top-1/2 -translate-y-1/2 left-0 h-9 rounded-lg flex items-center px-3 z-10 overflow-hidden cursor-pointer hover:brightness-110 transition-all"
-                                                                style={{
-                                                                    width: `${widthPct}%`,
-                                                                    backgroundColor: '#1a8a7a',
-                                                                    minWidth: '60px'
+                                                                onMouseEnter={(e) => {
+                                                                    const rect = e.currentTarget.getBoundingClientRect()
+                                                                    setTooltip({ x: rect.left, y: rect.top, firstName, totalFmt, isInProgress, res })
                                                                 }}
+                                                                onMouseLeave={() => setTooltip(null)}
                                                             >
-                                                                <span className="text-white text-xs font-semibold truncate">
-                                                                    {res.statusDetail === 'Séjour en cours' || (res.checkInOffset < 0 && res.checkOutOffset > 0)
-                                                                        ? 'Séjour en cours'
-                                                                        : res.guestName.split(' ')[0]}
-                                                                </span>
+                                                                <div
+                                                                    className="w-full h-7 rounded-lg flex items-center justify-between px-3 overflow-hidden hover:brightness-110 transition-all"
+                                                                    style={{ backgroundColor: '#1a8a7a' }}
+                                                                >
+                                                                    <span className="text-white text-xs font-semibold truncate">
+                                                                        {firstName}&nbsp;&nbsp;{totalFmt}
+                                                                    </span>
+                                                                    {isInProgress && (
+                                                                        <span className="text-white text-xs flex-shrink-0 ml-3">Séjour en cours</span>
+                                                                    )}
+                                                                </div>
                                                             </div>
                                                         )
                                                     })()}
@@ -1009,6 +1035,23 @@ function AirbnbCalendar() {
                     </div>
                 )
             })()}
+
+            {/* Tooltip flottant (fixed — échappe aux overflow des conteneurs) */}
+            {tooltip && (
+                <div
+                    className="fixed bg-white rounded-xl shadow-xl border border-gray-100 px-4 py-3 w-52 pointer-events-none z-[200]"
+                    style={{
+                        left: tooltip.x,
+                        top: tooltip.y - 8,
+                        transform: 'translateY(-100%)',
+                    }}
+                >
+                    <p className="font-bold text-sm text-gray-900 mb-1">{tooltip.firstName}</p>
+                    <p className="text-xs text-gray-500">{tooltip.isInProgress ? 'Séjour en cours' : 'Confirmée'}</p>
+                    <p className="text-xs text-gray-500">{tooltip.res.guestCount}&nbsp;·&nbsp;{tooltip.res.nights} nuit{tooltip.res.nights > 1 ? 's' : ''}</p>
+                    <p className="text-sm font-semibold text-gray-900 mt-1">{tooltip.totalFmt}</p>
+                </div>
+            )}
         </div>
     )
 }

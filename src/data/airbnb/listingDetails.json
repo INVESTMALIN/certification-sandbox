@@ -1,0 +1,172 @@
+{
+  "default": {
+    "photos": {
+      "rooms": [
+        { "id": "salon",        "label": "Salon",                  "photoId": "1502672260266-1c1ef2d93688", "count": 4 },
+        { "id": "cuisine",      "label": "Cuisine entière",        "photoId": "1484154218962-a197022b5858",                                                                              "count": 4 },
+        { "id": "espace_repas", "label": "Espace repas",           "photoId": "1565996939960-f42172c9e2bd",                                                                             "count": 4 },
+        { "id": "chambre1",     "label": "Chambre 1",              "photoUrl": "https://plus.unsplash.com/premium_photo-1675537843200-78c1a0ea1736?w=600&h=400&fit=crop",               "count": 3 },
+        { "id": "chambre2",     "label": "Chambre 2",              "photoId": "1598928506311-c55ded91a20c",                                                                             "count": 4 },
+        { "id": "sdb",          "label": "Salle de bain",          "photoId": "1584622650111-993a426fbf0a",                                                                             "count": 4 },
+        { "id": "exterieur",    "label": "Extérieur",              "photoId": "1499793983690-e29da59ef1c2", "count": 0 },
+        { "id": "supplement",   "label": "Photos supplémentaires", "photoId": "1484154218962-a197022b5858", "count": 4 }
+      ]
+    },
+    "type": {
+      "category": "Logement entier",
+      "subType": "Appartement"
+    },
+    "capacity": {
+      "guests": 4,
+      "bedrooms": 2,
+      "beds": 3,
+      "bathrooms": 1
+    },
+    "description": {
+      "paragraphs": [
+        "Bienvenue dans cet appartement lumineux et confortable, idéalement situé au cœur de la ville. Entièrement rénové en 2022, il allie le charme de l'architecture ancienne au confort moderne.",
+        "Le séjour spacieux ouvre sur une grande terrasse ensoleillée, parfaite pour profiter des douces soirées d'été. La cuisine entièrement équipée vous permettra de préparer vos repas dans les meilleures conditions.",
+        "Les deux chambres disposent chacune d'une literie de qualité et de rangements suffisants. L'appartement est situé à 5 minutes à pied des commerces, restaurants et transports en commun."
+      ]
+    },
+    "amenities": {
+      "categories": [
+        {
+          "label": "Salle de bain",
+          "icon": "Droplets",
+          "items": ["Baignoire", "Gel douche", "Shampoing", "Sèche-cheveux", "Serviettes de bain"]
+        },
+        {
+          "label": "Chambre et linge",
+          "icon": "BedDouble",
+          "items": ["Draps", "Couvertures supplémentaires", "Oreillers supplémentaires", "Cintres"]
+        },
+        {
+          "label": "Cuisine et salle à manger",
+          "icon": "UtensilsCrossed",
+          "items": ["Cuisine équipée", "Réfrigérateur", "Micro-ondes", "Cafetière", "Machine Nespresso", "Lave-vaisselle", "Ustensiles de cuisine"]
+        },
+        {
+          "label": "Chauffage et climatisation",
+          "icon": "Thermometer",
+          "items": ["Climatisation", "Chauffage central", "Ventilateur de plafond"]
+        },
+        {
+          "label": "Services à domicile",
+          "icon": "WashingMachine",
+          "items": ["Lave-linge", "Sèche-linge", "Fer à repasser", "Produits de nettoyage"]
+        },
+        {
+          "label": "Divertissement",
+          "icon": "Tv",
+          "items": ["Télévision", "Netflix", "Livres et magazines"]
+        },
+        {
+          "label": "Internet et bureau",
+          "icon": "Wifi",
+          "items": ["Wifi fibre optique", "Bureau avec chaise", "Prises USB"]
+        },
+        {
+          "label": "Stationnement",
+          "icon": "Car",
+          "items": ["Parking gratuit sur place", "Ascenseur dans le bâtiment"]
+        },
+        {
+          "label": "Extérieur",
+          "icon": "TreePine",
+          "items": ["Terrasse", "Salon de jardin", "Barbecue"]
+        },
+        {
+          "label": "Sécurité",
+          "icon": "ShieldCheck",
+          "items": ["Extincteur", "Trousse de premiers secours", "Serrure sur la porte de la chambre"]
+        }
+      ],
+      "notIncluded": ["Piscine", "Salle de sport", "Jacuzzi"]
+    },
+    "accessibility": [
+      { "icon": "Accessibility", "label": "Entrée de plain-pied",        "detail": "Pas de marches ni de seuils à l'entrée" },
+      { "icon": "DoorOpen",      "label": "Porte large (80 cm minimum)", "detail": "Adapté aux fauteuils roulants standard" },
+      { "icon": "BedDouble",     "label": "Lit accessible en fauteuil",  "detail": "Espace dégagé de chaque côté du lit" },
+      { "icon": "Bath",          "label": "Douche à l'italienne",        "detail": "Avec siège disponible sur demande" },
+      { "icon": "ParkingCircle", "label": "Parking accessible PMR",      "detail": "Place réservée à l'entrée du bâtiment" }
+    ],
+    "location": {
+      "mapUrl": "https://images.unsplash.com/photo-1524661135-423995f22d0b?w=800&h=400&fit=crop",
+      "description": "Situé dans le quartier historique, à 200 m de la place principale. Commerces, boulangeries et arrêts de bus à portée de marche. Gare à 1,2 km."
+    },
+    "instantBooking": {
+      "enabled": true,
+      "detail": "Les voyageurs peuvent réserver instantanément sans votre approbation préalable"
+    },
+    "rules": {
+      "checkIn": "16:00",
+      "checkOut": "10:00",
+      "maxGuests": 6,
+      "pets": false,
+      "smoking": false,
+      "parties": false,
+      "additionalRules": [
+        "Respect des voisins après 22h",
+        "Pas de chaussures à l'intérieur",
+        "Laisser le logement dans l'état de propreté initial",
+        "Pas de visites extérieures sans accord",
+        "Consommation responsable des ressources"
+      ]
+    },
+    "safety": [
+      { "icon": "Flame",      "label": "Détecteur de fumée",               "present": true  },
+      { "icon": "Wind",       "label": "Détecteur de monoxyde de carbone", "present": true  },
+      { "icon": "Zap",        "label": "Extincteur",                       "present": true  },
+      { "icon": "HeartPulse", "label": "Trousse de premiers secours",      "present": true  },
+      { "icon": "Camera",     "label": "Caméra de sécurité extérieure",    "present": false }
+    ],
+    "cancellation": {
+      "policy": "Ferme",
+      "description": "Pour un remboursement intégral, les voyageurs doivent annuler dans les 48 heures suivant la réservation et au moins 14 jours avant l'arrivée. Passé ce délai, ils percevront 50 % du remboursement si l'annulation intervient au moins 7 jours avant l'arrivée. Dans le cas contraire, aucun remboursement ne sera effectué.",
+      "highlights": [
+        "Annulation dans les 48h après réservation : remboursement intégral si +14 jours avant l'arrivée",
+        "Annulation 7 à 14 jours avant l'arrivée : 50 % remboursé",
+        "Annulation moins de 7 jours avant l'arrivée : aucun remboursement"
+      ]
+    },
+    "customLink": {
+      "url": "airbnb.fr/h/"
+    },
+    "internalName": "1644",
+    "guide": {
+      "horaires": {
+        "checkIn": "16:00",
+        "checkInEnd": "Flexible",
+        "checkOut": "10:00"
+      },
+      "itineraire": "Bienvenue et merci de nous avoir choisi pour votre séjour !\n\nPour accéder à l'immeuble, composez le code indiqué sur le digicode à l'entrée, puis poussez la porte.\n\nTraversez le hall et prenez l'ascenseur ou l'escalier jusqu'à votre étage. Le logement se trouve au fond du couloir.\n\nLa boîte à clés est fixée sur le mur à droite de la porte d'entrée. Composez le code communiqué lors de la confirmation de réservation, puis récupérez votre clé.\n\nN'hésitez pas à nous contacter si vous avez la moindre question avant ou pendant votre séjour. Bonne arrivée !",
+      "procedure": {
+        "type": "Boîte à clé sécurisée",
+        "instructions": "La boîte à clés se trouve à droite de la porte d'entrée du bâtiment, fixée au mur. Code : 4782. Récupérez la clé numéro 2 (étiquette verte).",
+        "parking": "Parking visiteurs accessible depuis la rue des Lilas, code barrière : 1234."
+      },
+      "wifi": {
+        "network": "Livebox - DA00",
+        "password": "2PadcCimMWqGdYRV3k"
+      },
+      "manuel": "",
+      "depart": [
+        { "icon": "Shirt",      "text": "Rassembler les serviettes sales dans la baignoire" },
+        { "icon": "Trash2",     "text": "Jeter les ordures dans les bacs à l'entrée du bâtiment" },
+        { "icon": "Lightbulb",  "text": "Éteindre les lumières et les appareils" },
+        { "icon": "Lock",       "text": "Fermer les fenêtres et les volets" },
+        { "icon": "Key",        "text": "Déposer les clés sur la table de l'entrée" }
+      ],
+      "localRecs": [
+        { "category": "Restaurants", "name": "La Table du Port",   "detail": "Poisson frais, terrasse avec vue mer",         "distance": "400 m" },
+        { "category": "Restaurants", "name": "Brasserie Centrale", "detail": "Cuisine française, ouvert tous les jours",      "distance": "200 m" },
+        { "category": "Café",        "name": "Café des Artistes",  "detail": "Meilleur café de la ville, croissants maison", "distance": "150 m" },
+        { "category": "Activités",   "name": "Plage Macé",         "detail": "Plage publique gratuite",                      "distance": "1,2 km" },
+        { "category": "Shopping",    "name": "Rue d'Antibes",      "detail": "Principale rue commerçante",                   "distance": "800 m" },
+        { "category": "Supermarché", "name": "Monoprix",           "detail": "Ouvert jusqu'à 21h",                           "distance": "350 m" }
+      ],
+      "preferences": "Je ne serai pas disponible en personne, et je préfère communiquer par le biais de l'application. Je répondrai dans les meilleurs délais, généralement sous 1 heure."
+    }
+  }
+}
