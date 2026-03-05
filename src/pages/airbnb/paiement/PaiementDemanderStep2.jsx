@@ -105,11 +105,10 @@ function PaiementDemanderStep2() {
                             className="flex items-center gap-4 mb-4 cursor-pointer group"
                             onClick={() => setMotif('services')}
                         >
-                            <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-colors ${
-                                motif === 'services'
+                            <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-colors ${motif === 'services'
                                     ? 'border-gray-900'
                                     : 'border-gray-400 group-hover:border-gray-600'
-                            }`}>
+                                }`}>
                                 {motif === 'services' && (
                                     <div className="w-2.5 h-2.5 rounded-full bg-gray-900" />
                                 )}
@@ -122,11 +121,10 @@ function PaiementDemanderStep2() {
                             className="flex items-center gap-4 cursor-pointer group"
                             onClick={() => setMotif('degats')}
                         >
-                            <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-colors ${
-                                motif === 'degats'
+                            <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-colors ${motif === 'degats'
                                     ? 'border-gray-900'
                                     : 'border-gray-400 group-hover:border-gray-600'
-                            }`}>
+                                }`}>
                                 {motif === 'degats' && (
                                     <div className="w-2.5 h-2.5 rounded-full bg-gray-900" />
                                 )}
@@ -149,11 +147,10 @@ function PaiementDemanderStep2() {
                 <button
                     onClick={handleSuivant}
                     disabled={!motif}
-                    className={`px-6 py-3 rounded-lg text-sm font-semibold transition-colors ${
-                        motif
+                    className={`px-6 py-3 rounded-lg text-sm font-semibold transition-colors ${motif
                             ? 'bg-gray-900 text-white hover:bg-gray-800'
                             : 'bg-gray-200 text-gray-400 cursor-not-allowed'
-                    }`}
+                        }`}
                 >
                     Suivant
                 </button>

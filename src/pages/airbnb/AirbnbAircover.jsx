@@ -1,10 +1,11 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { ChevronRight, ThumbsUp, ThumbsDown } from 'lucide-react'
 import AirbnbHeader from '../../components/airbnb/AirbnbHeader'
 import AirbnbFooter from '../../components/airbnb/AirbnbFooter'
 
 function AirbnbAircover() {
+    const navigate = useNavigate()
     const [helpful, setHelpful] = useState(null)
 
     return (
@@ -47,7 +48,10 @@ function AirbnbAircover() {
                                 La <strong>protection contre les dommages</strong> vous couvre si un voyageur cause des dommages à votre logement ou à vos biens au cours d'un séjour réservé sur Airbnb. Vous pouvez obtenir un remboursement pour certains dommages causés à votre logement ou à vos biens si le voyageur qui en est responsable ne vous verse pas d'indemnisation. La protection contre les dommages couvre en outre les coûts liés aux services de nettoyage spécialisés applicables à certains cas, pour retirer des taches laissées par les voyageurs (ou leurs invités), remédier à des dégâts causés par les animaux de compagnie ou éliminer les odeurs de fumée.
                             </p>
 
-                            <button className="mb-6 px-5 py-2.5 border border-gray-800 rounded-lg text-sm font-medium text-gray-900 hover:bg-gray-50 transition-colors">
+                            <button
+                                onClick={() => navigate('/airbnb/aircover/demande/res_airbnb_008/step1')}
+                                className="mb-6 px-5 py-2.5 border border-gray-800 rounded-lg text-sm font-medium text-gray-900 hover:bg-gray-50 transition-colors"
+                            >
                                 Démarrer une demande de remboursement
                             </button>
 

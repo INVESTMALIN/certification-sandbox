@@ -37,8 +37,7 @@ function PaiementEnvoyerStep2() {
     const peutContinuer = motif !== null && parseFloat(montant) > 0
 
     const handleSuivant = () => {
-        if (!peutContinuer) return
-        navigate(`/airbnb/paiement/${reservationId}/envoyer/step3`)
+        // TODO: navigation désactivée (page suivante non encore créée)
     }
 
     const handleMontant = (e) => {

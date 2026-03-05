@@ -160,7 +160,7 @@ function DashboardGroup() {
                     </h1>
                 </div>
 
-                {/* Alerte coordonnées bancaires
+                {/* Bandeau pédagogique */}
                 <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-6 rounded">
                     <div className="flex items-start">
                         <div className="flex-shrink-0">
@@ -170,17 +170,14 @@ function DashboardGroup() {
                         </div>
                         <div className="ml-3 flex-1">
                             <h3 className="text-sm font-semibold text-gray-900">
-                                Action requise : ajoutez les coordonnées bancaires de vos établissements
+                                Outil pédagogique
                             </h3>
                             <p className="mt-1 text-sm text-gray-700">
-                                Veuillez ajouter vos coordonnées bancaires pour recevoir des versements dans le cadre des Paiements par Booking.com. Si ces informations ne sont pas enregistrées dans notre système, nous ne pouvons pas vous payer et des conséquences réglementaires pourraient s'ensuivre.
+                                Cet outil reproduit l'interface Airbnb pour vous permettre de vous exercer en toute tranquillité, sans risque pour vos vraies annonces. Airbnb fait régulièrement évoluer son design et ses fonctionnalités, il est donc possible que vous remarquiez de légères différences avec la plateforme réelle.
                             </p>
-                            <button className="mt-2 text-sm font-medium text-[#0071c2] hover:underline">
-                                Ajouter mes coordonnées bancaires
-                            </button>
                         </div>
                     </div>
-                </div> */}
+                </div>
 
                 {/* Encadré Programme Genius */}
                 <div className="bg-white border border-gray-200 rounded p-6 mb-6 relative">

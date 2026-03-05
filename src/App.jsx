@@ -79,6 +79,11 @@ import PaiementStep1 from './pages/airbnb/paiement/PaiementStep1'
 import PaiementEnvoyerStep2 from './pages/airbnb/paiement/PaiementEnvoyerStep2'
 import PaiementDemanderStep2 from './pages/airbnb/paiement/PaiementDemanderStep2'
 import AircoverDemande from './pages/airbnb/AircoverDemande'
+import AircoverStep1 from './pages/airbnb/aircover/AircoverStep1'
+import AircoverStep2 from './pages/airbnb/aircover/AircoverStep2'
+import AircoverStep3 from './pages/airbnb/aircover/AircoverStep3'
+import AircoverStep4 from './pages/airbnb/aircover/AircoverStep4'
+import AircoverStep5 from './pages/airbnb/aircover/AircoverStep5'
 
 function App() {
   return (
@@ -741,6 +746,47 @@ function App() {
         element={
           <ProtectedRoute>
             <AircoverDemande />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/airbnb/aircover/demande/:reservationId/step1"
+        element={
+          <ProtectedRoute>
+            <AircoverStep1 />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/airbnb/aircover/demande/:reservationId/step2"
+        element={
+          <ProtectedRoute>
+            <AircoverStep2 />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/airbnb/aircover/demande/:reservationId/step3"
+        element={
+          <ProtectedRoute>
+            <AircoverStep3 />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/airbnb/aircover/demande/:reservationId/step4"
+        element={
+          <ProtectedRoute>
+            <AircoverStep4 />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/airbnb/aircover/demande/:reservationId/step5"
+        element={
+          <ProtectedRoute>
+            <AircoverStep5 />
           </ProtectedRoute>
         }
       />

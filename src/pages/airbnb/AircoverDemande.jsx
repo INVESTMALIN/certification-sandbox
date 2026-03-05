@@ -1,8 +1,9 @@
-import { useParams } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router-dom'
 import AirbnbHeader from '../../components/airbnb/AirbnbHeader'
 
 function AircoverDemande() {
     const { reservationId } = useParams()
+    const navigate = useNavigate()
 
     return (
         <div className="min-h-screen bg-white flex flex-col" style={{ fontFamily: 'Circular, -apple-system, BlinkMacSystemFont, Roboto, sans-serif' }}>
@@ -63,7 +64,10 @@ function AircoverDemande() {
                     <div className="border-t border-gray-200 mb-8" />
 
                     {/* CTA */}
-                    <button className="px-8 py-4 bg-gray-900 text-white text-sm font-semibold rounded-xl cursor-default">
+                    <button
+                        onClick={() => navigate(`/airbnb/aircover/demande/${reservationId}/step1`)}
+                        className="px-8 py-4 bg-gray-900 text-white text-sm font-semibold rounded-xl hover:bg-gray-700 transition-colors"
+                    >
                         Commencer
                     </button>
 
