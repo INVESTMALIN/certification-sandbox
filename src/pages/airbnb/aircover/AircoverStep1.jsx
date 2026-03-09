@@ -127,7 +127,18 @@ function AircoverStep1() {
                         <p className="text-xs text-gray-500 mt-1">pour les hôtes</p>
                     </div>
 
-                    <h1 className="text-2xl font-semibold text-gray-900 mb-8">Aperçu de l'élément</h1>
+                    {elements.length === 0 ? (
+                        <div className="mb-8">
+                            <h1 className="text-2xl font-semibold text-gray-900 mb-2">
+                                Ajoutons votre premier élément endommagé
+                            </h1>
+                            <p className="text-sm text-gray-500">
+                                Vous pouvez ajouter autant d'éléments que nécessaire.
+                            </p>
+                        </div>
+                    ) : (
+                        <h1 className="text-2xl font-semibold text-gray-900 mb-8">Aperçu de l'élément</h1>
+                    )}
 
                     {elements.length > 0 && (
                         <div className="mb-8">
