@@ -257,12 +257,6 @@ function ReservationDetail() {
 
                             {/* Boutons actions */}
                             <div className="mt-6 flex flex-col gap-3">
-                                <button
-                                    onClick={() => navigate(`/airbnb/paiement/${reservation.id}/step1`)}
-                                    className="w-full px-6 py-3 border border-gray-900 rounded-lg font-medium text-gray-900 hover:bg-gray-50 transition-colors"
-                                >
-                                    Envoyer ou demander de l'argent
-                                </button>
                                 <div className="grid grid-cols-2 gap-3">
                                     <button
                                         onClick={() => navigate('/airbnb/messages')}
