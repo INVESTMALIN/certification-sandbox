@@ -2,9 +2,14 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Search, Settings, X, Phone, Star, ShieldCheck, ChevronRight, Plus, Smile, AlertCircle, HelpCircle, Trophy, MapPin, Home } from 'lucide-react'
 import AirbnbHeader from '../../components/airbnb/AirbnbHeader'
+import GererReservationModal from '../../components/airbnb/GererReservationModal'
+import { getReservationById, getPropertyById, formatStayRange } from '../../data/airbnb/reservationLookup'
+import { formatDateLong } from '../../data/airbnb/dateUtils'
 
 // ─── DONNÉES DES CONVERSATIONS ────────────────────────────────────────────────
-const conversations = [
+// Chaque conversation pointe vers sa réservation canonique (reservations.json) :
+// dates, statut, code et logement en sont dérivés. Seul le profil voyageur est local.
+const rawConversations = [
     {
         id: 'conv_001',
         participants: 'Anaëlle et 2 autres',
@@ -12,25 +17,13 @@ const conversations = [
         time: '08:42',
         preview: 'Nous : Bonjour Anaëlle, Merci pour votre réservation !',
         isUnread: false,
-        status: '● Confirmée · 20–24 févr. · 2791',
-        reservation: {
-            guestName: 'Anaëlle Fontaine',
+        reservationId: 'res_airbnb_008',
+        guestProfile: {
             listingId: '1405',
-            listingName: 'Appartement lumineux avec vue sur jardin',
-            nights: 4,
-            guestCount: '2 voyageurs',
-            checkIn: 'Jeu. 20 févr. 2026',
-            checkOut: 'Lun. 24 févr. 2026',
-            bookedOn: '5 déc. 2025',
-            confirmCode: 'HM4AB2C6DE',
-            accessCode: '2468',
-            totalAmount: '520 €',
             rating: '4,8 basée sur 3 commentaires',
-            identityVerified: true,
             memberSince: '2021',
             hostSince: 'Hôte à Hauts-de-France',
             location: 'Cannes, France',
-            avatar: 'https://i.pravatar.cc/150?img=10',
         },
         messages: [
             {
@@ -63,25 +56,13 @@ const conversations = [
         time: '07:25',
         preview: 'Rossy : Demande d\'information en...',
         isUnread: true,
-        status: '● Confirmée · 20–22 févr. · 1281',
-        reservation: {
-            guestName: 'Rossy',
+        reservationId: 'res_airbnb_009',
+        guestProfile: {
             listingId: '1281',
-            listingName: 'Studio moderne centre-ville avec parking',
-            nights: 4,
-            guestCount: '3 voyageurs',
-            checkIn: 'Jeu. 20 févr. 2026',
-            checkOut: 'Dim. 22 févr. 2026',
-            bookedOn: '10 janv. 2026',
-            confirmCode: 'HM6CD3E7FG',
-            accessCode: '1357',
-            totalAmount: '480 €',
             rating: null,
-            identityVerified: false,
             memberSince: '2023',
             hostSince: null,
             location: 'Marseille, France',
-            avatar: 'https://i.pravatar.cc/150?img=11',
         },
         messages: [
             {
@@ -114,25 +95,13 @@ const conversations = [
         time: 'Hier',
         preview: 'Nous : Merci pour votre séjour, à bientôt !',
         isUnread: false,
-        status: '● Séjour terminé · 15–19 févr. · 1511',
-        reservation: {
-            guestName: 'Clotaire',
+        reservationId: 'res_airbnb_010',
+        guestProfile: {
             listingId: '1511',
-            listingName: 'Vue imprenable à 360° au pied des 3 Vallées',
-            nights: 4,
-            guestCount: '2 voyageurs',
-            checkIn: 'Sam. 15 févr. 2026',
-            checkOut: 'Mer. 19 févr. 2026',
-            bookedOn: '2 janv. 2026',
-            confirmCode: 'HM1CL5T8HI',
-            accessCode: '3579',
-            totalAmount: '380 €',
             rating: null,
-            identityVerified: true,
             memberSince: '2019',
             hostSince: null,
             location: 'Lyon, France',
-            avatar: 'https://i.pravatar.cc/150?img=12',
         },
         messages: [
             {
@@ -166,6 +135,40 @@ const conversations = [
         ],
     },
 ]
+
+const capitalize = (s) => s.charAt(0).toUpperCase() + s.slice(1)
+
+// Vue réservation d'une conversation, dérivée de la réservation canonique
+function buildConvReservation(conv) {
+    const res = getReservationById(conv.reservationId)
+    const property = getPropertyById(res.propertyId)
+    return {
+        ...conv.guestProfile,
+        canonical: res,
+        guestName: res.guestName,
+        listingName: property?.name,
+        nights: res.nights,
+        guestCount: res.guestCount,
+        checkIn: capitalize(formatDateLong(res.checkIn)),
+        checkOut: capitalize(formatDateLong(res.checkOut)),
+        bookedOn: formatDateLong(res.bookedOn),
+        confirmCode: res.confirmationCode,
+        accessCode: res.suggestedAccessCode,
+        identityVerified: res.identityVerified,
+        avatar: res.guestAvatar,
+        statusLabel: res.status === 'past' ? 'Séjour terminé' : 'Confirmée',
+        stayRange: formatStayRange(res.checkIn, res.checkOut),
+    }
+}
+
+const conversations = rawConversations.map(conv => {
+    const reservation = buildConvReservation(conv)
+    return {
+        ...conv,
+        reservation,
+        status: `● ${reservation.statusLabel} · ${reservation.stayRange} · ${reservation.listingId}`,
+    }
+})
 
 // ─── CONVERSATION ASSISTANCE AIRBNB ──────────────────────────────────────────
 const assistanceConv = {
@@ -214,6 +217,7 @@ function MessageBubble({ msg, guestAvatar }) {
 // ─── SOUS-COMPOSANT : PANNEAU RÉSERVATION ─────────────────────────────────────
 function ReservationPanel({ reservation, onClose, onAssistanceClick }) {
     const navigate = useNavigate()
+    const [showGerer, setShowGerer] = useState(false)
     if (!reservation) return null
     const r = reservation
 
@@ -230,7 +234,7 @@ function ReservationPanel({ reservation, onClose, onAssistanceClick }) {
             <div className="p-4 space-y-5">
                 {/* Statut + nom */}
                 <div>
-                    <p className="text-xs text-gray-500 mb-1">Confirmée</p>
+                    <p className="text-xs text-gray-500 mb-1">{r.statusLabel}</p>
                     <div className="flex items-center justify-between">
                         <p className="text-base font-bold text-gray-900 leading-tight">{r.guestName}</p>
                         <img src={r.avatar} alt={r.guestName} className="w-12 h-12 rounded-full object-cover flex-shrink-0" />
@@ -317,6 +321,12 @@ function ReservationPanel({ reservation, onClose, onAssistanceClick }) {
                             <p className="text-gray-900 font-medium">{r.checkOut}</p>
                         </div>
                         <hr className="border-gray-200 mb-4" />
+                        <button
+                            onClick={() => setShowGerer(true)}
+                            className="w-full border border-gray-900 rounded-xl py-2.5 mb-4 text-sm font-medium text-gray-900 hover:bg-gray-50 transition-colors"
+                        >
+                            Gérer la réservation
+                        </button>
                         <div className="pb-4">
                             <p className="text-gray-500 mb-0.5">Date de réservation</p>
                             <p className="text-gray-900 font-medium">{r.bookedOn}</p>
@@ -324,7 +334,7 @@ function ReservationPanel({ reservation, onClose, onAssistanceClick }) {
                         <hr className="border-gray-200 mb-4" />
                         <div className="pb-2">
                             <p className="text-gray-500 mb-0.5">Code de confirmation</p>
-                            <p className="text-gray-900 font-mono font-medium">{r.confirmCode}</p>
+                            <p className="text-gray-900 font-mono font-medium select-all">{r.confirmCode}</p>
                         </div>
                     </div>
                     <button className="mt-4 text-sm text-gray-900 font-semibold underline">Afficher le calendrier</button>
@@ -384,6 +394,10 @@ function ReservationPanel({ reservation, onClose, onAssistanceClick }) {
                     <button className="mt-4 text-xs text-gray-900 font-medium underline">Afficher plus de sujets</button>
                 </div>
             </div>
+
+            {showGerer && (
+                <GererReservationModal reservation={r.canonical} onClose={() => setShowGerer(false)} />
+            )}
         </div>
     )
 }
@@ -627,7 +641,7 @@ function AirbnbMessages() {
                                 </div>
                                 <div className="text-center mb-6">
                                     <span className="text-xs text-[#FF385C]">
-                                        Réservation confirmée · {selectedConv.reservation.nights} jours, {selectedConv.reservation.checkIn} – {selectedConv.reservation.checkOut}
+                                        {selectedConv.reservation.statusLabel === 'Confirmée' ? 'Réservation confirmée' : selectedConv.reservation.statusLabel} · {selectedConv.reservation.nights} nuits, {selectedConv.reservation.checkIn} – {selectedConv.reservation.checkOut}
                                     </span>
                                 </div>
                                 {selectedConv.messages.map(msg => (

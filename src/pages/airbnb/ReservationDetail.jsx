@@ -1,6 +1,7 @@
 import { useParams, Link, useNavigate } from 'react-router-dom'
 import { ChevronLeft, Phone, MessageSquare, Star, ShieldCheck, Home, Award, X, Pencil, Shield, HelpCircle, Ban } from 'lucide-react'
 import AirbnbHeader from '../../components/airbnb/AirbnbHeader'
+import GererReservationModal from '../../components/airbnb/GererReservationModal'
 import reservations from '../../data/airbnb/reservations.json'
 import properties from '../../data/airbnb/properties.json'
 import { useState } from 'react'
@@ -11,6 +12,7 @@ function ReservationDetail() {
     const navigate = useNavigate()
     const [isFilterOpen, setIsFilterOpen] = useState(false)
     const [selectedProperties, setSelectedProperties] = useState([])
+    const [showGerer, setShowGerer] = useState(false)
 
     // Trouver la réservation et la propriété
     const rawReservation = reservations.find(r => r.id === id)
@@ -312,6 +314,13 @@ function ReservationDetail() {
                                     <p className="text-gray-600">{formatDate(reservation.checkOut)}</p>
                                 </div>
 
+                                <button
+                                    onClick={() => setShowGerer(true)}
+                                    className="w-full px-6 py-3 border border-gray-900 rounded-lg font-medium text-gray-900 hover:bg-gray-50 transition-colors"
+                                >
+                                    Gérer la réservation
+                                </button>
+
                                 <div>
                                     <p className="text-gray-900 mb-1">Date de réservation</p>
                                     <p className="text-gray-600">{formatDate(reservation.bookedOn)}</p>
@@ -319,7 +328,7 @@ function ReservationDetail() {
 
                                 <div>
                                     <p className="text-gray-900 mb-1">Code de confirmation</p>
-                                    <p className="text-gray-600">{reservation.confirmationCode}</p>
+                                    <p className="text-gray-600 select-all">{reservation.confirmationCode}</p>
                                 </div>
 
                                 <button className="text-sm font-medium text-gray-900 underline hover:text-gray-700">
@@ -609,6 +618,10 @@ function ReservationDetail() {
                         </div>
                     </div>
                 </>
+            )}
+
+            {showGerer && (
+                <GererReservationModal reservation={reservation} onClose={() => setShowGerer(false)} />
             )}
         </div>
     )

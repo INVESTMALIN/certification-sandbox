@@ -2,9 +2,10 @@ import { useState, useRef, useEffect } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
 import { ChevronLeft, ChevronRight, Pencil, Link as LinkIcon, HelpCircle, Shield, Ban } from 'lucide-react'
 import AirbnbHeader from '../../components/airbnb/AirbnbHeader'
+import GererReservationModal from '../../components/airbnb/GererReservationModal'
 import properties from '../../data/airbnb/properties.json'
 import reservations from '../../data/airbnb/reservations.json'
-import { hydrateReservation } from '../../data/airbnb/dateUtils.js'
+import { hydrateReservation, formatDateLong } from '../../data/airbnb/dateUtils.js'
 
 const hydratedReservations = reservations.map(hydrateReservation)
 
@@ -117,6 +118,7 @@ export default function AirbnbCalendarMono() {
     const [showPriceForm, setShowPriceForm] = useState(false)
     const [showParamsForm, setShowParamsForm] = useState(false)
     const [selectedRes, setSelectedRes] = useState(null)
+    const [showGerer, setShowGerer] = useState(false)
     const [showReportModal, setShowReportModal] = useState(false)
     const [selectedReport, setSelectedReport] = useState(null)
     const [priceText, setPriceText] = useState('')
@@ -1714,32 +1716,39 @@ export default function AirbnbCalendarMono() {
                                         <div className="flex items-start justify-between py-3">
                                             <div>
                                                 <p className="text-sm font-semibold text-gray-900">Voyageurs</p>
-                                                <p className="text-sm text-gray-500 mt-0.5">2 adultes, 1 enfant</p>
+                                                <p className="text-sm text-gray-500 mt-0.5">{selectedRes.guestCount}</p>
                                             </div>
                                             <button className="text-sm font-semibold text-gray-900 underline">Voir</button>
                                         </div>
                                         <div className="flex items-start justify-between py-3">
                                             <div>
                                                 <p className="text-sm font-semibold text-gray-900">Code d'accès suggéré</p>
-                                                <p className="text-sm text-gray-500 mt-0.5">4485</p>
+                                                <p className="text-sm text-gray-500 mt-0.5">{selectedRes.suggestedAccessCode}</p>
                                             </div>
                                             <button className="text-sm font-semibold text-gray-900 underline">View</button>
                                         </div>
                                         <div className="py-3">
                                             <p className="text-sm font-semibold text-gray-900">Arrivée</p>
-                                            <p className="text-sm text-gray-500 mt-0.5">sam. {ci.getDate()} {MONTHS_FR[ci.getMonth()].slice(0, 4)}. {ci.getFullYear()}</p>
+                                            <p className="text-sm text-gray-500 mt-0.5">{formatDateLong(ci)}</p>
                                         </div>
                                         <div className="py-3">
                                             <p className="text-sm font-semibold text-gray-900">Départ</p>
-                                            <p className="text-sm text-gray-500 mt-0.5">sam. {co.getDate()} {MONTHS_FR[co.getMonth()].slice(0, 4)}. {co.getFullYear()}</p>
+                                            <p className="text-sm text-gray-500 mt-0.5">{formatDateLong(co)}</p>
+                                        </div>
+                                        <div className="py-3">
+                                            <button
+                                                onClick={() => setShowGerer(true)}
+                                                className="w-full border border-gray-900 rounded-xl py-3 text-sm font-semibold text-gray-900 hover:bg-gray-50 transition-colors">
+                                                Gérer la réservation
+                                            </button>
                                         </div>
                                         <div className="py-3">
                                             <p className="text-sm font-semibold text-gray-900">Date de réservation</p>
-                                            <p className="text-sm text-gray-500 mt-0.5">lun. 14 avr. 2025</p>
+                                            <p className="text-sm text-gray-500 mt-0.5">{formatDateLong(selectedRes.bookedOn)}</p>
                                         </div>
                                         <div className="py-3">
                                             <p className="text-sm font-semibold text-gray-900">Code de confirmation</p>
-                                            <p className="text-sm text-gray-500 mt-0.5">{selectedRes.confirmationCode || 'HMDAHF9TS8'}</p>
+                                            <p className="text-sm text-gray-500 mt-0.5 select-all">{selectedRes.confirmationCode}</p>
                                         </div>
                                     </div>
 
@@ -2034,6 +2043,10 @@ export default function AirbnbCalendarMono() {
                             </button>
                         </div>
                     </div>
+                )}
+
+                {showGerer && selectedRes && (
+                    <GererReservationModal reservation={selectedRes} onClose={() => setShowGerer(false)} />
                 )}
             </div>
         </div>

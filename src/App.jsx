@@ -79,11 +79,16 @@ import PaiementStep1 from './pages/airbnb/paiement/PaiementStep1'
 import PaiementEnvoyerStep2 from './pages/airbnb/paiement/PaiementEnvoyerStep2'
 import PaiementDemanderStep2 from './pages/airbnb/paiement/PaiementDemanderStep2'
 import AircoverDemande from './pages/airbnb/AircoverDemande'
-import AircoverStep1 from './pages/airbnb/aircover/AircoverStep1'
-import AircoverStep2 from './pages/airbnb/aircover/AircoverStep2'
-import AircoverStep3 from './pages/airbnb/aircover/AircoverStep3'
-import AircoverStep4 from './pages/airbnb/aircover/AircoverStep4'
-import AircoverStep5 from './pages/airbnb/aircover/AircoverStep5'
+import AircoverDepot from './pages/airbnb/aircover/AircoverDepot'
+import AircoverMessage from './pages/airbnb/aircover/AircoverMessage'
+import AircoverElements from './pages/airbnb/aircover/AircoverElements'
+import AircoverElement from './pages/airbnb/aircover/AircoverElement'
+import AircoverDate from './pages/airbnb/aircover/AircoverDate'
+import AircoverRecap from './pages/airbnb/aircover/AircoverRecap'
+import AircoverConfirmation from './pages/airbnb/aircover/AircoverConfirmation'
+import DeclarationDommages from './pages/airbnb/litige/DeclarationDommages'
+import DemanderPaiementDestinataire from './pages/airbnb/litige/DemanderPaiementDestinataire'
+import DemanderPaiementReservation from './pages/airbnb/litige/DemanderPaiementReservation'
 
 function App() {
   return (
@@ -750,43 +755,86 @@ function App() {
         }
       />
 
+      {/* Demande AirCover : dépôt, message, élément(s), date, récap, confirmation */}
       <Route
-        path="/airbnb/aircover/demande/:reservationId/step1"
+        path="/airbnb/aircover/demande/:reservationId/depot"
         element={
           <ProtectedRoute>
-            <AircoverStep1 />
+            <AircoverDepot />
           </ProtectedRoute>
         }
       />
       <Route
-        path="/airbnb/aircover/demande/:reservationId/step2"
+        path="/airbnb/aircover/demande/:reservationId/message"
         element={
           <ProtectedRoute>
-            <AircoverStep2 />
+            <AircoverMessage />
           </ProtectedRoute>
         }
       />
       <Route
-        path="/airbnb/aircover/demande/:reservationId/step3"
+        path="/airbnb/aircover/demande/:reservationId/elements"
         element={
           <ProtectedRoute>
-            <AircoverStep3 />
+            <AircoverElements />
           </ProtectedRoute>
         }
       />
       <Route
-        path="/airbnb/aircover/demande/:reservationId/step4"
+        path="/airbnb/aircover/demande/:reservationId/element/:index"
         element={
           <ProtectedRoute>
-            <AircoverStep4 />
+            <AircoverElement />
           </ProtectedRoute>
         }
       />
       <Route
-        path="/airbnb/aircover/demande/:reservationId/step5"
+        path="/airbnb/aircover/demande/:reservationId/date"
         element={
           <ProtectedRoute>
-            <AircoverStep5 />
+            <AircoverDate />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/airbnb/aircover/demande/:reservationId/recap"
+        element={
+          <ProtectedRoute>
+            <AircoverRecap />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/airbnb/aircover/demande/:reservationId/confirmation"
+        element={
+          <ProtectedRoute>
+            <AircoverConfirmation />
+          </ProtectedRoute>
+        }
+      />
+
+      {/* Parcours déclaration de litige (recherche de la réservation par code) */}
+      <Route
+        path="/airbnb/declaration-dommages"
+        element={
+          <ProtectedRoute>
+            <DeclarationDommages />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/airbnb/demander-paiement"
+        element={
+          <ProtectedRoute>
+            <DemanderPaiementDestinataire />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/airbnb/demander-paiement/reservation"
+        element={
+          <ProtectedRoute>
+            <DemanderPaiementReservation />
           </ProtectedRoute>
         }
       />

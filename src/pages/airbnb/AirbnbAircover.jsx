@@ -49,7 +49,7 @@ function AirbnbAircover() {
                             </p>
 
                             <button
-                                onClick={() => navigate('/airbnb/aircover/demande/res_airbnb_008/step1')}
+                                onClick={() => navigate('/airbnb/declaration-dommages')}
                                 className="mb-6 px-5 py-2.5 border border-gray-800 rounded-lg text-sm font-medium text-gray-900 hover:bg-gray-50 transition-colors"
                             >
                                 Démarrer une demande de remboursement

@@ -1,15 +1,14 @@
 import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { CheckCircle } from 'lucide-react'
+import { clearClaim } from '../../../data/airbnb/aircoverClaim'
 
-const STORAGE_KEY = 'aircover_claim'
-
-function AircoverStep5() {
+function AircoverConfirmation() {
     const navigate = useNavigate()
 
     // Nettoyer le brouillon une fois la demande envoyée
     useEffect(() => {
-        localStorage.removeItem(STORAGE_KEY)
+        clearClaim()
     }, [])
 
     return (
@@ -59,4 +58,4 @@ function AircoverStep5() {
     )
 }
 
-export default AircoverStep5
+export default AircoverConfirmation
