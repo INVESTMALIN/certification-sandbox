@@ -2,12 +2,11 @@ import { useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { Search, X } from 'lucide-react'
 import DemandePaiementLayout from '../../../components/airbnb/DemandePaiementLayout'
-import { findReservationByCode, getPropertyById, formatStayRange } from '../../../data/airbnb/reservationLookup'
+import { findReservationByCode, getPropertyById, formatStayRange, ELIGIBILITY_MESSAGES } from '../../../data/airbnb/reservationLookup'
 
 const MESSAGES_ERREUR = {
     unknown: 'Aucune réservation ne correspond à ce code.',
-    not_finished: 'Cette réservation n\'est pas terminée. Une demande ne peut être déposée qu\'après le départ du voyageur.',
-    expired: 'Le délai de 14 jours après le départ du voyageur est dépassé. Une demande ne peut plus être déposée pour cette réservation.',
+    ...ELIGIBILITY_MESSAGES,
 }
 
 /**

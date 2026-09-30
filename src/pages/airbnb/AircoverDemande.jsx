@@ -1,7 +1,8 @@
 import { useParams, useNavigate } from 'react-router-dom'
 import AirbnbHeader from '../../components/airbnb/AirbnbHeader'
 import ReservationIntrouvable from '../../components/airbnb/ReservationIntrouvable'
-import { getReservationById } from '../../data/airbnb/reservationLookup'
+import ParcoursBloque from '../../components/airbnb/ParcoursBloque'
+import { getReservationById, getClaimIneligibility, ELIGIBILITY_MESSAGES } from '../../data/airbnb/reservationLookup'
 
 const ETAPES = [
     {
@@ -22,7 +23,18 @@ function AircoverDemande() {
     const { reservationId } = useParams()
     const navigate = useNavigate()
 
-    if (!getReservationById(reservationId)) return <ReservationIntrouvable />
+    const reservation = getReservationById(reservationId)
+    if (!reservation) return <ReservationIntrouvable />
+    // Accès direct à une réservation non éligible : écran bloquant, retour au motif
+    const ineligibilite = getClaimIneligibility(reservation)
+    if (ineligibilite) {
+        return (
+            <ParcoursBloque
+                message={ELIGIBILITY_MESSAGES[ineligibilite]}
+                onRetour={() => navigate(`/airbnb/paiement/${reservationId}/demander/step2`)}
+            />
+        )
+    }
 
     return (
         <div className="min-h-screen bg-white flex flex-col" style={{ fontFamily: 'Circular, -apple-system, BlinkMacSystemFont, Roboto, sans-serif' }}>

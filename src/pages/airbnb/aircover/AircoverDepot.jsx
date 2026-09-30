@@ -21,6 +21,8 @@ function AircoverDepot() {
     const choisir = (valeur) => {
         if (valeur === 'oui') {
             setDepot('')
+            // La réponse corrigée remplace l'ancien « Non » enregistré
+            updateClaim(reservationId, { depot: '' })
             setBloque(true)
             return
         }

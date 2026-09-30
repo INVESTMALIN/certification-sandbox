@@ -29,6 +29,22 @@ export function normalizeCode(code) {
     return (code || '').replace(/\s+/g, '').toUpperCase()
 }
 
+// Messages affichés quand une réservation ne permet pas de demande d'indemnisation
+export const ELIGIBILITY_MESSAGES = {
+    not_finished: 'Cette réservation n\'est pas terminée. Une demande ne peut être déposée qu\'après le départ du voyageur.',
+    expired: 'Le délai de 14 jours après le départ du voyageur est dépassé. Une demande ne peut plus être déposée pour cette réservation.',
+}
+
+/**
+ * Une demande d'indemnisation n'est possible qu'après le départ du voyageur
+ * et dans les 14 jours. Retourne null si éligible, sinon 'not_finished' | 'expired'.
+ */
+export function getClaimIneligibility(reservation) {
+    if (reservation.status !== 'past') return 'not_finished'
+    if (reservation.checkOutOffset < -CLAIM_DELAY_DAYS) return 'expired'
+    return null
+}
+
 /**
  * Recherche par code de confirmation.
  * Retourne { reservation } si le séjour est terminé et dans le délai,
@@ -40,9 +56,8 @@ export function findReservationByCode(code) {
     const raw = reservations.find(r => normalizeCode(r.confirmationCode) === normalized)
     if (!raw) return { error: 'unknown' }
     const reservation = hydrateReservation(raw)
-    if (reservation.status !== 'past') return { error: 'not_finished' }
-    if (raw.checkOutOffset < -CLAIM_DELAY_DAYS) return { error: 'expired' }
-    return { reservation }
+    const error = getClaimIneligibility(reservation)
+    return error ? { error } : { reservation }
 }
 
 /** "20–24 févr." ou "28 févr.–3 mars" (avec l'année si withYear). */

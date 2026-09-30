@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom'
 import ParcoursBloque from '../../../components/airbnb/ParcoursBloque'
 import ReservationIntrouvable from '../../../components/airbnb/ReservationIntrouvable'
-import { getReservationById, getPropertyById } from '../../../data/airbnb/reservationLookup'
+import { getReservationById, getPropertyById, getClaimIneligibility, ELIGIBILITY_MESSAGES } from '../../../data/airbnb/reservationLookup'
 
 const MESSAGE_SERVICES = 'Les demandes liées à des services supplémentaires ne sont pas disponibles dans cet exercice. Revenez en arrière pour sélectionner le motif correspondant aux dommages.'
 
@@ -16,7 +16,7 @@ function PaiementDemanderStep2() {
     const [searchParams] = useSearchParams()
 
     const [motif, setMotif] = useState(null) // 'degats' : seul motif du parcours
-    const [bloque, setBloque] = useState(false)
+    const [bloque, setBloque] = useState(null) // message de l'écran bloquant
 
     // Parcours litige : retour à la recherche par code ; sinon au choix envoyer / demander
     const retourUrl = searchParams.get('source') === 'litige'
@@ -41,7 +41,7 @@ function PaiementDemanderStep2() {
     const choisirMotif = (valeur) => {
         if (valeur === 'services') {
             setMotif(null)
-            setBloque(true)
+            setBloque(MESSAGE_SERVICES)
             return
         }
         setMotif(valeur)
@@ -49,6 +49,12 @@ function PaiementDemanderStep2() {
 
     const handleSuivant = () => {
         if (motif !== 'degats') return
+        // Même règle que la recherche par code : séjour terminé depuis 14 jours au plus
+        const ineligibilite = getClaimIneligibility(reservation)
+        if (ineligibilite) {
+            setBloque(ELIGIBILITY_MESSAGES[ineligibilite])
+            return
+        }
         navigate(`/airbnb/aircover/demande/${reservationId}`)
     }
 
@@ -175,7 +181,7 @@ function PaiementDemanderStep2() {
                 </button>
             </footer>
 
-            {bloque && <ParcoursBloque message={MESSAGE_SERVICES} onRetour={() => setBloque(false)} />}
+            {bloque && <ParcoursBloque message={bloque} onRetour={() => setBloque(null)} />}
         </div>
     )
 }
