@@ -11,7 +11,7 @@
         "currency": "EUR",
         "status": "versé",
         "airbnbPaidTo": "Agnès Hilaire",
-        "incidentDate": -14,
+        "incidentDate": -9,
         "damagedItem": "Tiroir sur la structure du lit",
         "damagedItemType": "Élément endommagé",
         "damagedItemImage": "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=100&h=100&fit=crop",
@@ -25,21 +25,21 @@
             {
                 "id": 1,
                 "label": "Agnès Hilaire a demandé 199,99 € à Anaëlle Fontaine",
-                "dateOffset": -14,
+                "dateOffset": -8,
                 "heure": "09:40 CET",
                 "message": null
             },
             {
                 "id": 2,
                 "label": "Agnès Hilaire a demandé de l'aide à Airbnb, car Anaëlle ne lui a pas répondu",
-                "dateOffset": -11,
+                "dateOffset": -5,
                 "heure": "10:52 CET",
                 "message": "Bonjour, Je souhaite déposer une réclamation dans le cadre de la garantie AirCover, suite aux dégradations constatées dans mon logement après le départ du voyageur."
             },
             {
                 "id": 3,
                 "label": "Airbnb a versé 199,99 € EUR à Agnès Hilaire",
-                "dateOffset": -7,
+                "dateOffset": -2,
                 "heure": "18:24 CET",
                 "message": null
             }
@@ -53,11 +53,11 @@
         "guestAvatar": "https://i.pravatar.cc/150?img=11",
         "managedBy": "Yann & Fanny",
         "managedByAvatar": "https://i.pravatar.cc/150?img=21",
-        "totalAmount": 300.00,
+        "totalAmount": 300,
         "currency": "EUR",
         "status": "versé",
         "airbnbPaidTo": "Yann & Fanny",
-        "incidentDate": -12,
+        "incidentDate": -7,
         "damagedItem": "Canapé tâché et rideau déchiré",
         "damagedItemType": "Éléments endommagés",
         "damagedItemImage": "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=100&h=100&fit=crop",
@@ -70,21 +70,21 @@
             {
                 "id": 1,
                 "label": "Yann & Fanny a demandé 300,00 € à Rossy",
-                "dateOffset": -12,
+                "dateOffset": -6,
                 "heure": "09:40 CET",
                 "message": null
             },
             {
                 "id": 2,
                 "label": "Yann & Fanny a demandé de l'aide à Airbnb, car Rossy ne lui a pas répondu",
-                "dateOffset": -9,
+                "dateOffset": -3,
                 "heure": "10:52 CET",
                 "message": "Bonjour, Je souhaite déposer une réclamation dans le cadre de la garantie AirCover, suite aux dégradations constatées dans mon logement après le départ du voyageur."
             },
             {
                 "id": 3,
                 "label": "Airbnb a versé 300,00 € EUR à Yann & Fanny",
-                "dateOffset": -5,
+                "dateOffset": -1,
                 "heure": "18:24 CET",
                 "message": null
             }

@@ -2,7 +2,9 @@ import { useParams, useNavigate } from 'react-router-dom'
 import AircoverLayout, { FooterButton } from '../../../components/airbnb/AircoverLayout'
 import ReservationIntrouvable from '../../../components/airbnb/ReservationIntrouvable'
 import { getReservationById, getPropertyById, getFirstName, formatStayRange, getClaimIneligibility } from '../../../data/airbnb/reservationLookup'
-import { getClaim, isClaimComplete, REPARABLE_LABELS } from '../../../data/airbnb/aircoverClaim'
+import { getClaim, isClaimComplete, clearClaim } from '../../../data/airbnb/aircoverClaim'
+import { addDemandeEnvoyee } from '../../../data/airbnb/demandesArgent'
+import ElementsRecap from '../../../components/airbnb/ElementsRecap'
 
 function Section({ titre, onModifier, children }) {
     return (
@@ -38,12 +40,28 @@ function AircoverRecap() {
         ? new Date(claim.date + 'T12:00:00').toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', year: 'numeric' })
         : ''
 
+    // Envoi : la demande rejoint le Centre de résolution, puis le brouillon est supprimé
+    const handleEnvoyer = () => {
+        if (!complete) return
+        const demandeId = addDemandeEnvoyee({
+            reservationId,
+            motif: 'degats',
+            montant: total,
+            depot: claim.depot,
+            elements: claim.elements,
+            date: claim.date,
+            remarque: claim.message,
+        })
+        clearClaim(reservationId)
+        navigate(`${base}/confirmation`, { state: { envoyee: true, demandeId } })
+    }
+
     return (
         <AircoverLayout
             step={5}
             onRetour={() => navigate(`${base}/date`)}
             footerAction={
-                <FooterButton variant="rausch" onClick={() => navigate(`${base}/confirmation`, { state: { envoyee: true } })} disabled={!complete}>
+                <FooterButton variant="rausch" onClick={handleEnvoyer} disabled={!complete}>
                     Envoyer
                 </FooterButton>
             }
@@ -82,25 +100,7 @@ function AircoverRecap() {
             </Section>
 
             <Section titre={`Éléments (${claim.elements.length})`} onModifier={() => navigate(`${base}/elements`)}>
-                <div className="space-y-2 mt-2">
-                    {claim.elements.map((el, i) => (
-                        <div key={i} className="flex items-start justify-between py-1 gap-4">
-                            <div className="min-w-0">
-                                <p className="text-sm text-gray-900">
-                                    {el.nom || '(sans nom)'}{el.quantite > 1 ? ` × ${el.quantite}` : ''}
-                                </p>
-                                <p className="text-xs text-gray-500">
-                                    {el.type}
-                                    {el.reparable ? ` · ${REPARABLE_LABELS[el.reparable]}` : ''}
-                                    {el.recu ? ` · ${el.recu === 'oui' ? 'Avec reçu' : 'Sans reçu'}` : ''}
-                                </p>
-                            </div>
-                            <span className="text-sm text-gray-700 flex-shrink-0">
-                                {el.montant !== '' && el.montant !== undefined ? `${parseFloat(el.montant).toFixed(2)} EUR` : '—'}
-                            </span>
-                        </div>
-                    ))}
-                </div>
+                <ElementsRecap elements={claim.elements} />
             </Section>
 
             <Section titre="Moment des faits" onModifier={() => navigate(`${base}/date`)}>

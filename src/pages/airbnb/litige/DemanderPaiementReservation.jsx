@@ -9,30 +9,50 @@ const MESSAGES_ERREUR = {
     ...ELIGIBILITY_MESSAGES,
 }
 
+// Statut affiché sous le résultat (l'envoi d'argent accepte aussi les séjours non terminés)
+const STATUTS = { past: 'Terminée', confirmed: 'En cours', upcoming: 'À venir' }
+
 /**
  * « De quelle réservation s'agit-il ? » : l'apprenant colle le code de confirmation.
  * La suite du parcours porte sur la réservation trouvée (son id passe dans l'URL).
+ * `source` : 'centre' (boutons du Centre de résolution) ou parcours litige par défaut.
+ * `action=envoyer` : envoi d'argent, seul un code inconnu est refusé.
  */
 function DemanderPaiementReservation() {
     const navigate = useNavigate()
     const [searchParams, setSearchParams] = useSearchParams()
     const [code, setCode] = useState(searchParams.get('code') || '')
+    const depuisCentre = searchParams.get('source') === 'centre'
+    const envoyer = searchParams.get('action') === 'envoyer'
 
-    const { reservation, error } = findReservationByCode(code)
+    const { reservation, error } = findReservationByCode(code, { checkEligibility: !envoyer })
     const property = reservation ? getPropertyById(reservation.propertyId) : null
 
     const changerCode = (value) => {
         setCode(value)
         // Le code reste dans l'URL pour que « Retour » depuis l'écran motif le retrouve
-        setSearchParams(value ? { code: value } : {}, { replace: true })
+        const params = {}
+        if (depuisCentre) params.source = 'centre'
+        if (envoyer) params.action = 'envoyer'
+        if (value) params.code = value
+        setSearchParams(params, { replace: true })
     }
 
     const handleSelect = () => {
-        navigate(`/airbnb/paiement/${reservation.id}/demander/step2?source=litige&code=${encodeURIComponent(reservation.confirmationCode)}`)
+        if (envoyer) {
+            navigate(`/airbnb/paiement/${reservation.id}/envoyer/step2`)
+            return
+        }
+        const source = depuisCentre ? 'centre' : 'litige'
+        navigate(`/airbnb/paiement/${reservation.id}/demander/step2?source=${source}&code=${encodeURIComponent(reservation.confirmationCode)}`)
     }
 
     return (
-        <DemandePaiementLayout progress="w-2/6" onRetour={() => navigate('/airbnb/demander-paiement')}>
+        <DemandePaiementLayout
+            progress="w-2/6"
+            titre={envoyer ? 'Envoyer un paiement' : 'Demander un paiement'}
+            onRetour={() => navigate(depuisCentre ? '/airbnb/centre-resolution' : '/airbnb/demander-paiement')}
+        >
             <h1 className="text-3xl font-semibold text-gray-900 mb-8 leading-tight">
                 De quelle réservation s'agit-il ?
             </h1>
@@ -76,7 +96,7 @@ function DemanderPaiementReservation() {
                         </p>
                         <p className="text-sm font-semibold text-gray-900 truncate">{property?.name}</p>
                         <p className="text-sm text-gray-500">{formatStayRange(reservation.checkIn, reservation.checkOut)}</p>
-                        <p className="text-sm text-gray-500">Terminée</p>
+                        <p className="text-sm text-gray-500">{STATUTS[reservation.status]}</p>
                     </div>
                     <button
                         onClick={handleSelect}

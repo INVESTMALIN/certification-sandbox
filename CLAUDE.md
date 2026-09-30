@@ -133,6 +133,7 @@ Toutes les routes sont déclarées dans `src/App.jsx`. Toutes les routes post-lo
 | Récap réservation | `/airbnb/recap/:id` |
 | Workflow commentaire | `/airbnb/commentaire/:reservationId/step[1-7]` |
 | Déclaration de dommages (litige) | `/airbnb/declaration-dommages` → `/airbnb/demander-paiement` → `/airbnb/demander-paiement/reservation` (recherche par code) |
+| Centre de résolution | `/airbnb/centre-resolution`, détail `/airbnb/centre-resolution/demande/:id` |
 | Demande AirCover | `/airbnb/aircover/demande/:reservationId` puis `/[depot\|message\|elements\|element/:index\|date\|recap\|confirmation]` |
 
 ### Routes Booking

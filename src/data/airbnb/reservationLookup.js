@@ -49,14 +49,15 @@ export function getClaimIneligibility(reservation) {
  * Recherche par code de confirmation.
  * Retourne { reservation } si le séjour est terminé et dans le délai,
  * sinon { error: 'unknown' | 'not_finished' | 'expired' }.
+ * `checkEligibility: false` (envoi d'argent) ne refuse que les codes inconnus.
  */
-export function findReservationByCode(code) {
+export function findReservationByCode(code, { checkEligibility = true } = {}) {
     const normalized = normalizeCode(code)
     if (!normalized) return { error: 'empty' }
     const raw = reservations.find(r => normalizeCode(r.confirmationCode) === normalized)
     if (!raw) return { error: 'unknown' }
     const reservation = hydrateReservation(raw)
-    const error = getClaimIneligibility(reservation)
+    const error = checkEligibility ? getClaimIneligibility(reservation) : null
     return error ? { error } : { reservation }
 }
 

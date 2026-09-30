@@ -1,0 +1,75 @@
+[
+    {
+        "id": "dem_argent_001",
+        "reservationId": "res_airbnb_009",
+        "auteur": "cohote",
+        "motif": "services",
+        "montant": 45,
+        "statut": "en_attente",
+        "envoyeeOffsetHeures": -31,
+        "piecesJointes": [
+            { "nom": "recu_navette_gare.pdf" }
+        ],
+        "remarque": "Bonjour Rossy, comme convenu par message, voici la demande pour la navette depuis la gare le jour de votre arrivée. Le reçu du chauffeur est en pièce jointe. Merci d'avance !"
+    },
+    {
+        "id": "dem_argent_002",
+        "reservationId": "res_airbnb_010",
+        "auteur": "hote",
+        "motif": "degats",
+        "montant": 120,
+        "statut": "refusee",
+        "envoyeeOffsetHeures": -360,
+        "depot": "non",
+        "dateFaitsOffset": -16,
+        "elements": [
+            {
+                "type": "Nettoyage supplémentaire nécessaire",
+                "nom": "Taches sur le canapé et le tapis du salon",
+                "quantite": 1,
+                "anciennete": "3 ans",
+                "montant": 120
+            }
+        ],
+        "messageVoyageur": "Bonjour Clotaire, lors du ménage après votre départ, notre équipe a constaté d'importantes taches sur le canapé et le tapis du salon, qui ont nécessité un nettoyage professionnel. Vous trouverez les photos et la facture en pièces jointes. Merci de votre compréhension.",
+        "refus": {
+            "offsetHeures": -340,
+            "motif": "Je n'ai pas laissé de désordre excessif",
+            "reponse": "Bonjour, nous avons laissé le logement propre en partant, comme nous l'avions trouvé. Les taches sur le canapé étaient déjà présentes à notre arrivée et nous ne les avions pas signalées car elles nous semblaient anciennes. Je ne pense donc pas devoir payer ce nettoyage."
+        },
+        "examen": {
+            "offsetHeures": -320,
+            "message": "Bonjour, le voyageur conteste les taches alors que le canapé avait été nettoyé la veille de son arrivée. Je joins les photos prises avant et après le séjour ainsi que la facture du pressing."
+        },
+        "verificationOffsetHeures": -300,
+        "piecesJustificatives": [
+            { "nom": "canape_taches.jpg", "image": "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=200&h=200&fit=crop" },
+            { "nom": "tapis_salon.jpg" },
+            { "nom": "facture_pressing.pdf" }
+        ]
+    },
+    {
+        "id": "dem_argent_003",
+        "reservationId": "res_airbnb_010",
+        "auteur": "hote",
+        "motif": "autres",
+        "montant": 35,
+        "statut": "assistance",
+        "envoyeeOffsetHeures": -350,
+        "depot": "non",
+        "dateFaitsOffset": -16,
+        "messageVoyageur": "Bonjour Clotaire, le badge d'accès au parking n'a pas été restitué à votre départ. Son remplacement auprès du syndic coûte 35 €. Merci de bien vouloir régler ce montant.",
+        "refus": {
+            "offsetHeures": -330,
+            "motif": "Je ne suis pas responsable de ce problème",
+            "reponse": "Bonjour, j'ai laissé le badge sur la table de l'entrée avec les clés, comme indiqué dans les instructions de départ. Il a peut-être été égaré après notre passage."
+        },
+        "examen": {
+            "offsetHeures": -310,
+            "message": "Bonjour, le badge n'était pas dans le logement lors du ménage, le jour même du départ. Aucune autre personne n'est entrée entre-temps. Je joins la facture du syndic."
+        },
+        "piecesJustificatives": [
+            { "nom": "facture_badge_syndic.pdf" }
+        ]
+    }
+]

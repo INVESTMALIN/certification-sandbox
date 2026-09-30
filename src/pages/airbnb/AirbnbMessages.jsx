@@ -1,11 +1,12 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { Search, Settings, X, Phone, Star, ShieldCheck, ChevronRight, Plus, Smile, AlertCircle, HelpCircle, Trophy, MapPin, Home } from 'lucide-react'
+import { useNavigate, useSearchParams } from 'react-router-dom'
+import { Search, Settings, X, Phone, Star, ShieldCheck, ChevronRight, Plus, Smile, AlertCircle, HelpCircle, Trophy, MapPin, Home, HandCoins } from 'lucide-react'
 import AirbnbHeader from '../../components/airbnb/AirbnbHeader'
 import GererReservationModal from '../../components/airbnb/GererReservationModal'
 import CopyButton from '../../components/airbnb/CopyButton'
 import { getReservationById, getPropertyById, formatStayRange } from '../../data/airbnb/reservationLookup'
 import { formatDateLong } from '../../data/airbnb/dateUtils'
+import { getDemandeOuverte } from '../../data/airbnb/demandesArgent'
 
 // ─── DONNÉES DES CONVERSATIONS ────────────────────────────────────────────────
 // Chaque conversation pointe vers sa réservation canonique (reservations.json) :
@@ -221,6 +222,7 @@ function ReservationPanel({ reservation, onClose, onAssistanceClick }) {
     const [showGerer, setShowGerer] = useState(false)
     if (!reservation) return null
     const r = reservation
+    const demandeOuverte = getDemandeOuverte(r.canonical.id)
 
     return (
         <div className="w-[380px] flex-shrink-0 border-l border-gray-200 bg-white overflow-y-auto h-full">
@@ -246,6 +248,21 @@ function ReservationPanel({ reservation, onClose, onAssistanceClick }) {
                         <p>{r.guestCount}</p>
                     </div>
                 </div>
+
+                {/* Demande d'argent en cours pour cette réservation */}
+                {demandeOuverte && (
+                    <button
+                        onClick={() => navigate(demandeOuverte.lien)}
+                        className="w-full flex items-center gap-3 border border-gray-200 rounded-xl p-3 text-left hover:bg-gray-50 transition-colors"
+                    >
+                        <HandCoins className="w-6 h-6 text-gray-900 flex-shrink-0" strokeWidth={1.5} />
+                        <span className="flex-1 min-w-0">
+                            <span className="block text-sm font-semibold text-gray-900">Vérifiez votre demande</span>
+                            <span className="block text-xs text-gray-600">Vous avez demandé un paiement à {demandeOuverte.prenom}</span>
+                        </span>
+                        <ChevronRight className="w-4 h-4 text-gray-400 flex-shrink-0" />
+                    </button>
+                )}
 
                 <hr className="border-2 border-gray-100" />
 
@@ -493,7 +510,11 @@ function AssistanceDetailsPanel({ onClose }) {
 
 // ─── COMPOSANT PRINCIPAL ──────────────────────────────────────────────────────
 function AirbnbMessages() {
-    const [selectedConv, setSelectedConv] = useState(conversations[0])
+    const [searchParams] = useSearchParams()
+    // « Envoyer un message au voyageur » : ?reservation=:id ouvre la conversation de cette réservation
+    const [selectedConv, setSelectedConv] = useState(() =>
+        conversations.find(c => c.reservationId === searchParams.get('reservation')) || conversations[0]
+    )
     const [filter, setFilter] = useState('all')
     const [inputValue, setInputValue] = useState('')
     const [showReservation, setShowReservation] = useState(true)
