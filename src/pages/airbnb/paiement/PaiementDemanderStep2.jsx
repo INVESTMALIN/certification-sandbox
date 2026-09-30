@@ -1,8 +1,10 @@
 import { useState } from 'react'
-import { useParams, useNavigate } from 'react-router-dom'
-import reservations from '../../../data/airbnb/reservations.json'
-import properties from '../../../data/airbnb/properties.json'
-import { hydrateReservation } from '../../../data/airbnb/dateUtils.js'
+import { useParams, useNavigate, useSearchParams } from 'react-router-dom'
+import ParcoursBloque from '../../../components/airbnb/ParcoursBloque'
+import ReservationIntrouvable from '../../../components/airbnb/ReservationIntrouvable'
+import { getReservationById, getPropertyById, getClaimIneligibility, ELIGIBILITY_MESSAGES } from '../../../data/airbnb/reservationLookup'
+
+const MESSAGE_SERVICES = 'Les demandes liées à des services supplémentaires ne sont pas disponibles dans cet exercice. Revenez en arrière pour sélectionner le motif correspondant aux dommages.'
 
 const MONTHS_FR = ['janv.', 'févr.', 'mars', 'avr.', 'mai', 'juin',
     'juil.', 'août', 'sept.', 'oct.', 'nov.', 'déc.']
@@ -11,11 +13,19 @@ function PaiementDemanderStep2() {
     const { reservationId } = useParams()
     const navigate = useNavigate()
 
-    const [motif, setMotif] = useState(null) // 'services' | 'degats'
+    const [searchParams] = useSearchParams()
 
-    const rawRes = reservations.find(r => r.id === reservationId) || reservations[0]
-    const reservation = hydrateReservation(rawRes)
-    const property = properties.find(p => p.propertyId === reservation.propertyId) || properties[0]
+    const [motif, setMotif] = useState(null) // 'degats' : seul motif du parcours
+    const [bloque, setBloque] = useState(null) // message de l'écran bloquant
+
+    // Parcours litige : retour à la recherche par code ; sinon au choix envoyer / demander
+    const retourUrl = searchParams.get('source') === 'litige'
+        ? `/airbnb/demander-paiement/reservation?code=${encodeURIComponent(searchParams.get('code') || '')}`
+        : `/airbnb/paiement/${reservationId}/step1`
+
+    const reservation = getReservationById(reservationId)
+    if (!reservation) return <ReservationIntrouvable />
+    const property = getPropertyById(reservation.propertyId)
 
     const ci = new Date(reservation.checkIn)
     const co = new Date(reservation.checkOut)
@@ -28,8 +38,23 @@ function PaiementDemanderStep2() {
     const guestCount = parseInt(reservation.guestCount) || 1
     const voyageurLabel = `${guestCount} voyageur${guestCount > 1 ? 's' : ''}`
 
+    const choisirMotif = (valeur) => {
+        if (valeur === 'services') {
+            setMotif(null)
+            setBloque(MESSAGE_SERVICES)
+            return
+        }
+        setMotif(valeur)
+    }
+
     const handleSuivant = () => {
-        if (!motif) return
+        if (motif !== 'degats') return
+        // Même règle que la recherche par code : séjour terminé depuis 14 jours au plus
+        const ineligibilite = getClaimIneligibility(reservation)
+        if (ineligibilite) {
+            setBloque(ELIGIBILITY_MESSAGES[ineligibilite])
+            return
+        }
         navigate(`/airbnb/aircover/demande/${reservationId}`)
     }
 
@@ -47,7 +72,7 @@ function PaiementDemanderStep2() {
                     {/* Breadcrumb centré */}
                     <div className="hidden md:flex items-center gap-2 text-sm">
                         <button
-                            onClick={() => navigate(`/airbnb/paiement/${reservationId}/step1`)}
+                            onClick={() => navigate(retourUrl)}
                             className="text-gray-500 hover:underline"
                         >
                             Demander un paiement
@@ -86,7 +111,7 @@ function PaiementDemanderStep2() {
                             <div>
                                 <p className="text-sm font-semibold text-gray-900">{reservation.guestName}</p>
                                 <p className="text-sm text-gray-500">{datesLabel} • {voyageurLabel}</p>
-                                <p className="text-sm text-gray-500">{property.name}</p>
+                                <p className="text-sm text-gray-500">{property?.name}</p>
                             </div>
                         </div>
                     </div>
@@ -103,7 +128,7 @@ function PaiementDemanderStep2() {
                         {/* Option 1 */}
                         <label
                             className="flex items-center gap-4 mb-4 cursor-pointer group"
-                            onClick={() => setMotif('services')}
+                            onClick={() => choisirMotif('services')}
                         >
                             <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-colors ${motif === 'services'
                                     ? 'border-gray-900'
@@ -119,7 +144,7 @@ function PaiementDemanderStep2() {
                         {/* Option 2 */}
                         <label
                             className="flex items-center gap-4 cursor-pointer group"
-                            onClick={() => setMotif('degats')}
+                            onClick={() => choisirMotif('degats')}
                         >
                             <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-colors ${motif === 'degats'
                                     ? 'border-gray-900'
@@ -139,7 +164,7 @@ function PaiementDemanderStep2() {
             {/* Footer */}
             <footer className="border-t border-gray-200 px-8 py-4 flex items-center justify-between">
                 <button
-                    onClick={() => navigate(`/airbnb/paiement/${reservationId}/step1`)}
+                    onClick={() => navigate(retourUrl)}
                     className="text-sm font-semibold text-gray-900 underline hover:text-gray-700 transition-colors flex items-center gap-1"
                 >
                     ‹ Retour
@@ -156,6 +181,7 @@ function PaiementDemanderStep2() {
                 </button>
             </footer>
 
+            {bloque && <ParcoursBloque message={bloque} onRetour={() => setBloque(null)} />}
         </div>
     )
 }

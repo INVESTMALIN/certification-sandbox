@@ -1,16 +1,26 @@
 import { useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams, useLocation, Navigate } from 'react-router-dom'
 import { CheckCircle } from 'lucide-react'
+import ReservationIntrouvable from '../../../components/airbnb/ReservationIntrouvable'
+import { getReservationById } from '../../../data/airbnb/reservationLookup'
+import { clearClaim } from '../../../data/airbnb/aircoverClaim'
 
-const STORAGE_KEY = 'aircover_claim'
-
-function AircoverStep5() {
+function AircoverConfirmation() {
     const navigate = useNavigate()
+    const { reservationId } = useParams()
+    const location = useLocation()
+    const reservation = getReservationById(reservationId)
+    // Seul le bouton « Envoyer » du récap mène ici (état de navigation)
+    const envoyee = location.state?.envoyee === true
 
-    // Nettoyer le brouillon une fois la demande envoyée
+    // Nettoyer le brouillon de CETTE réservation une fois la demande envoyée
     useEffect(() => {
-        localStorage.removeItem(STORAGE_KEY)
-    }, [])
+        if (reservation && envoyee) clearClaim(reservationId)
+    }, [reservation, envoyee, reservationId])
+
+    if (!reservation) return <ReservationIntrouvable />
+    // Accès direct par URL : rien n'a été envoyé, retour au récap
+    if (!envoyee) return <Navigate to={`/airbnb/aircover/demande/${reservationId}/recap`} replace />
 
     return (
         <div className="min-h-screen bg-white flex flex-col" style={{ fontFamily: 'Circular, -apple-system, BlinkMacSystemFont, Roboto, sans-serif' }}>
@@ -59,4 +69,4 @@ function AircoverStep5() {
     )
 }
 
-export default AircoverStep5
+export default AircoverConfirmation

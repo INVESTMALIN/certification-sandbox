@@ -2,8 +2,7 @@
     {
         "guestId": "guest_001",
         "reservationIds": [
-            "res_airbnb_001",
-            "res_airbnb_008"
+            "res_airbnb_001"
         ],
         "guestAvatar": "https://i.pravatar.cc/150?img=1",
         "guestName": "Pascale Andree Claude Pierron",
