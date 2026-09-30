@@ -57,10 +57,15 @@ function buildMonth(year, month) {
     return weeks
 }
 
-function buildMonths(count = 12) {
+// `count` mois à partir du mois courant, précédés des mois passés depuis `from` si fourni
+// (ex. arrivée d'une réservation passée ouverte via « Afficher sur le calendrier »)
+function buildMonths(count = 12, from = null) {
     const now = new Date()
-    return Array.from({ length: count }, (_, i) => {
-        const d = new Date(now.getFullYear(), now.getMonth() + i, 1)
+    const pastMonths = from
+        ? Math.max(0, (now.getFullYear() - from.getFullYear()) * 12 + now.getMonth() - from.getMonth())
+        : 0
+    return Array.from({ length: count + pastMonths }, (_, i) => {
+        const d = new Date(now.getFullYear(), now.getMonth() - pastMonths + i, 1)
         return { year: d.getFullYear(), month: d.getMonth(), weeks: buildMonth(d.getFullYear(), d.getMonth()) }
     })
 }
@@ -220,7 +225,9 @@ export default function AirbnbCalendarMono() {
     }, [])
 
     const property = properties.find(p => p.propertyId === propertyId)
-    const allMonths = buildMonths(12)
+    // Le mois d'arrivée de la réservation demandée par l'URL doit être rendu pour pouvoir y défiler
+    const requestedRes = hydratedReservations.find(r => r.id === searchParams.get('reservation') && r.propertyId === propertyId)
+    const allMonths = buildMonths(12, requestedRes ? new Date(requestedRes.checkIn) : null)
 
     const handleDispoDropdown = (index) => {
         const newIndex = openDispoDropdown === index ? null : index
