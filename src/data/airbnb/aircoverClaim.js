@@ -12,6 +12,11 @@ export const REPARABLE_LABELS = {
     remplacer: 'Non, il doit être remplacé',
 }
 
+/** Un élément sans ancienneté ou sans valeur ne permet pas d'envoyer la demande. */
+export function isElementIncomplete(el) {
+    return el.montant === '' || el.montant === undefined || el.montant === null || !el.anciennete
+}
+
 function emptyClaim(reservationId) {
     return { reservationId, depot: '', message: '', elements: [], date: '' }
 }

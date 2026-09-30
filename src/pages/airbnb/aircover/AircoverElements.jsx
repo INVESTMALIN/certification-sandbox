@@ -3,7 +3,7 @@ import { FileText } from 'lucide-react'
 import AircoverLayout, { FooterButton } from '../../../components/airbnb/AircoverLayout'
 import ReservationIntrouvable from '../../../components/airbnb/ReservationIntrouvable'
 import { getReservationById } from '../../../data/airbnb/reservationLookup'
-import { getClaim } from '../../../data/airbnb/aircoverClaim'
+import { getClaim, isElementIncomplete } from '../../../data/airbnb/aircoverClaim'
 
 /** Aperçu des éléments déjà ajoutés ; chaque ajout ou modification ouvre la page élément. */
 function AircoverElements() {
@@ -19,14 +19,17 @@ function AircoverElements() {
         return <Navigate to={`/airbnb/aircover/demande/${reservationId}/element/nouveau`} replace />
     }
 
-    const hasIncomplete = elements.some(el => el.montant === '' || !el.anciennete)
+    const hasIncomplete = elements.some(isElementIncomplete)
 
     return (
         <AircoverLayout
             step={3}
             onRetour={() => navigate(`/airbnb/aircover/demande/${reservationId}/message`)}
             footerAction={
-                <FooterButton onClick={() => navigate(`/airbnb/aircover/demande/${reservationId}/date`)}>
+                <FooterButton
+                    onClick={() => navigate(`/airbnb/aircover/demande/${reservationId}/date`)}
+                    disabled={hasIncomplete}
+                >
                     Suivant →
                 </FooterButton>
             }
@@ -35,7 +38,9 @@ function AircoverElements() {
 
             <div className="mb-8">
                 {hasIncomplete && (
-                    <p className="text-sm font-medium text-gray-700 mb-3">Saisie incomplète des éléments</p>
+                    <p className="text-sm font-medium text-gray-700 mb-3">
+                        Saisie incomplète des éléments : indiquez l'ancienneté et la valeur de chaque élément pour continuer.
+                    </p>
                 )}
                 <div className="divide-y divide-gray-100">
                     {elements.map((el, i) => (
