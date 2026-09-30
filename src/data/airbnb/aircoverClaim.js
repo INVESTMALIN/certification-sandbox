@@ -12,16 +12,45 @@ export const REPARABLE_LABELS = {
     remplacer: 'Non, il doit être remplacé',
 }
 
+// Réponse à « Avez-vous un reçu… ? » (éléments endommagés ou manquants)
+export const RECU_LABELS = {
+    oui: 'Oui, j\'ai un reçu',
+    non: 'Non, je n\'ai pas de reçu',
+}
+
+// Types proposés dans « Que s'est-il passé ? » (libellés de la vraie procédure)
 export const TYPE_ENDOMMAGE = 'Élément endommagé'
+export const TYPE_MANQUANT = 'Élément manquant'
+export const TYPE_NETTOYAGE = 'Nettoyage supplémentaire nécessaire'
+export const TYPES = [TYPE_ENDOMMAGE, TYPE_MANQUANT, TYPE_NETTOYAGE]
+
+// Ancien libellé du type nettoyage, converti à la lecture des brouillons
+const LEGACY_TYPES = { 'Nettoyage imprévu ou odeur de fumée': TYPE_NETTOYAGE }
+
+/** Question « réparé / remplacé » : éléments endommagés uniquement. */
+export function needsReparable(type) {
+    return type === TYPE_ENDOMMAGE
+}
+
+/** Question du reçu : éléments endommagés ou manquants (pas le nettoyage). */
+export function needsRecu(type) {
+    return type === TYPE_ENDOMMAGE || type === TYPE_MANQUANT
+}
 
 /**
- * Un élément sans ancienneté, sans valeur ou, s'il est endommagé, sans réponse
- * « réparé / remplacé » (cas des brouillons antérieurs) ne permet pas d'envoyer la demande.
+ * Un élément sans ancienneté, sans valeur, ou sans réponse aux questions propres
+ * à son type (réparé / remplacé, reçu) ne permet pas d'envoyer la demande.
+ * Les brouillons antérieurs sans ces réponses sont donc traités comme incomplets.
  */
 export function isElementIncomplete(el) {
     const sansMontant = el.montant === '' || el.montant === undefined || el.montant === null
-    const sansReparation = el.type === TYPE_ENDOMMAGE && !REPARABLE_LABELS[el.reparable]
-    return sansMontant || !el.anciennete || sansReparation
+    const sansReparation = needsReparable(el.type) && !REPARABLE_LABELS[el.reparable]
+    const sansRecu = needsRecu(el.type) && !RECU_LABELS[el.recu]
+    return !el.nom || sansMontant || !el.anciennete || sansReparation || sansRecu
+}
+
+function migrateElement(el) {
+    return LEGACY_TYPES[el.type] ? { ...el, type: LEGACY_TYPES[el.type] } : el
 }
 
 /** Demande complète : dépôt « Non », au moins un élément, tous complets, date renseignée. */
@@ -42,7 +71,11 @@ export function getClaim(reservationId) {
         const c = JSON.parse(raw)
         if (c.reservationId !== reservationId) return emptyClaim(reservationId)
         // Les anciens brouillons n'ont pas les nouveaux champs : on complète
-        return { ...emptyClaim(reservationId), ...c, elements: Array.isArray(c.elements) ? c.elements : [] }
+        return {
+            ...emptyClaim(reservationId),
+            ...c,
+            elements: Array.isArray(c.elements) ? c.elements.map(migrateElement) : [],
+        }
     } catch {
         return emptyClaim(reservationId)
     }

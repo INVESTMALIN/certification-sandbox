@@ -15,7 +15,7 @@ function PaiementDemanderStep2() {
 
     const [searchParams] = useSearchParams()
 
-    const [motif, setMotif] = useState(null) // 'degats' : seul motif du parcours
+    const [motif, setMotif] = useState(null) // 'degats' | 'modifier' ('services' est bloquant)
     const [bloque, setBloque] = useState(null) // message de l'écran bloquant
 
     // Parcours litige : retour à la recherche par code ; sinon au choix envoyer / demander
@@ -48,6 +48,11 @@ function PaiementDemanderStep2() {
     }
 
     const handleSuivant = () => {
+        // Modification des dates ou des voyageurs : page de modification existante
+        if (motif === 'modifier') {
+            navigate(`/airbnb/reservation/${reservationId}/modifier`)
+            return
+        }
         if (motif !== 'degats') return
         // Même règle que la recherche par code : séjour terminé depuis 14 jours au plus
         const ineligibilite = getClaimIneligibility(reservation)
@@ -143,7 +148,7 @@ function PaiementDemanderStep2() {
 
                         {/* Option 2 */}
                         <label
-                            className="flex items-center gap-4 cursor-pointer group"
+                            className="flex items-center gap-4 mb-4 cursor-pointer group"
                             onClick={() => choisirMotif('degats')}
                         >
                             <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-colors ${motif === 'degats'
@@ -155,6 +160,22 @@ function PaiementDemanderStep2() {
                                 )}
                             </div>
                             <span className="text-sm text-gray-900">Dégâts, éléments manquants ou nettoyage imprévu</span>
+                        </label>
+
+                        {/* Option 3 */}
+                        <label
+                            className="flex items-center gap-4 cursor-pointer group"
+                            onClick={() => choisirMotif('modifier')}
+                        >
+                            <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-colors ${motif === 'modifier'
+                                    ? 'border-gray-900'
+                                    : 'border-gray-400 group-hover:border-gray-600'
+                                }`}>
+                                {motif === 'modifier' && (
+                                    <div className="w-2.5 h-2.5 rounded-full bg-gray-900" />
+                                )}
+                            </div>
+                            <span className="text-sm text-gray-900">Modifier les dates ou les voyageurs</span>
                         </label>
                     </div>
 

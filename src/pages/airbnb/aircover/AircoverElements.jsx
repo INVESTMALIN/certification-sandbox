@@ -30,7 +30,7 @@ function AircoverElements() {
                     onClick={() => navigate(`/airbnb/aircover/demande/${reservationId}/date`)}
                     disabled={hasIncomplete}
                 >
-                    Suivant →
+                    Suivant
                 </FooterButton>
             }
         >
@@ -39,7 +39,7 @@ function AircoverElements() {
             <div className="mb-8">
                 {hasIncomplete && (
                     <p className="text-sm font-medium text-gray-700 mb-3">
-                        Saisie incomplète des éléments : indiquez l'ancienneté, la valeur et, pour un élément endommagé, s'il peut être réparé.
+                        Saisie incomplète des éléments : complétez chaque élément (ancienneté, valeur, réparation et reçu selon le type) pour continuer.
                     </p>
                 )}
                 <div className="divide-y divide-gray-100">

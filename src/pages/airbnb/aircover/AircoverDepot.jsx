@@ -52,7 +52,7 @@ function AircoverDepot() {
             <AircoverLayout
                 step={1}
                 onRetour={() => navigate(`/airbnb/aircover/demande/${reservationId}`)}
-                footerAction={<FooterButton onClick={handleSuivant} disabled={depot !== 'non'}>Suivant →</FooterButton>}
+                footerAction={<FooterButton onClick={handleSuivant} disabled={depot !== 'non'}>Suivant</FooterButton>}
             >
                 <h1 className="text-2xl font-semibold text-gray-900 mb-2">
                     Avez-vous exigé un dépôt de garantie ou une assurance dommages ?

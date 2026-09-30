@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { Search, Settings, X, Phone, Star, ShieldCheck, ChevronRight, Plus, Smile, AlertCircle, HelpCircle, Trophy, MapPin, Home } from 'lucide-react'
 import AirbnbHeader from '../../components/airbnb/AirbnbHeader'
 import GererReservationModal from '../../components/airbnb/GererReservationModal'
+import CopyButton from '../../components/airbnb/CopyButton'
 import { getReservationById, getPropertyById, formatStayRange } from '../../data/airbnb/reservationLookup'
 import { formatDateLong } from '../../data/airbnb/dateUtils'
 
@@ -334,7 +335,7 @@ function ReservationPanel({ reservation, onClose, onAssistanceClick }) {
                         <hr className="border-gray-200 mb-4" />
                         <div className="pb-2">
                             <p className="text-gray-500 mb-0.5">Code de confirmation</p>
-                            <p className="text-gray-900 font-mono font-medium select-all">{r.confirmCode}</p>
+                            <CopyButton value={r.confirmCode} className="text-gray-900 font-mono font-medium" />
                         </div>
                     </div>
                     <button className="mt-4 text-sm text-gray-900 font-semibold underline">Afficher le calendrier</button>

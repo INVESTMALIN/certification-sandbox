@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 import { useNavigate, useParams, useLocation, Navigate } from 'react-router-dom'
 import { CheckCircle } from 'lucide-react'
 import ReservationIntrouvable from '../../../components/airbnb/ReservationIntrouvable'
-import { getReservationById } from '../../../data/airbnb/reservationLookup'
+import { getReservationById, getFirstName } from '../../../data/airbnb/reservationLookup'
 import { clearClaim } from '../../../data/airbnb/aircoverClaim'
 
 function AircoverConfirmation() {
@@ -21,6 +21,7 @@ function AircoverConfirmation() {
     if (!reservation) return <ReservationIntrouvable />
     // Accès direct par URL : rien n'a été envoyé, retour au récap
     if (!envoyee) return <Navigate to={`/airbnb/aircover/demande/${reservationId}/recap`} replace />
+    const prenom = getFirstName(reservation.guestName)
 
     return (
         <div className="min-h-screen bg-white flex flex-col" style={{ fontFamily: 'Circular, -apple-system, BlinkMacSystemFont, Roboto, sans-serif' }}>
@@ -48,13 +49,12 @@ function AircoverConfirmation() {
                     </h1>
 
                     <p className="text-sm text-gray-600 leading-relaxed mb-4">
-                        Votre demande a bien été envoyée au voyageur. Ce dernier dispose de 24 heures pour répondre
-                        et effectuer le paiement demandé.
+                        Votre demande a bien été envoyée à {prenom}.
                     </p>
 
+                    {/* Règle affichée dans la vraie procédure */}
                     <p className="text-sm text-gray-600 leading-relaxed mb-10">
-                        Si le voyageur ne répond pas ou refuse de payer, Airbnb interviendra pour vous aider
-                        à résoudre la situation dans le cadre de la Garantie dommages des hôtes.
+                        Si {prenom} refuse de payer la totalité du montant ou ne répond pas dans un délai de 72 heures, vous pouvez demander à Airbnb d'intervenir.
                     </p>
 
                     <button
