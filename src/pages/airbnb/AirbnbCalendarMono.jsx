@@ -1694,11 +1694,6 @@ export default function AirbnbCalendarMono() {
                                     <div className="border-t border-gray-200 my-4" />
 
                                     <button
-                                        onClick={() => navigate(`/airbnb/paiement/${selectedRes.id}/step1`)}
-                                        className="w-full border border-gray-300 rounded-xl py-3 text-sm font-semibold text-gray-900 hover:bg-gray-50 transition-colors mb-2">
-                                        Envoyer ou demander de l'argent
-                                    </button>
-                                    <button
                                         onClick={() => navigate('/airbnb/messages')}
                                         className="w-full border border-gray-300 rounded-xl py-3 text-sm font-semibold text-gray-900 hover:bg-gray-50 transition-colors">
                                         Envoyer un message
