@@ -39,7 +39,7 @@ function AircoverElements() {
             <div className="mb-8">
                 {hasIncomplete && (
                     <p className="text-sm font-medium text-gray-700 mb-3">
-                        Saisie incomplète des éléments : indiquez l'ancienneté et la valeur de chaque élément pour continuer.
+                        Saisie incomplète des éléments : indiquez l'ancienneté, la valeur et, pour un élément endommagé, s'il peut être réparé.
                     </p>
                 )}
                 <div className="divide-y divide-gray-100">

@@ -12,9 +12,22 @@ export const REPARABLE_LABELS = {
     remplacer: 'Non, il doit être remplacé',
 }
 
-/** Un élément sans ancienneté ou sans valeur ne permet pas d'envoyer la demande. */
+export const TYPE_ENDOMMAGE = 'Élément endommagé'
+
+/**
+ * Un élément sans ancienneté, sans valeur ou, s'il est endommagé, sans réponse
+ * « réparé / remplacé » (cas des brouillons antérieurs) ne permet pas d'envoyer la demande.
+ */
 export function isElementIncomplete(el) {
-    return el.montant === '' || el.montant === undefined || el.montant === null || !el.anciennete
+    const sansMontant = el.montant === '' || el.montant === undefined || el.montant === null
+    const sansReparation = el.type === TYPE_ENDOMMAGE && !REPARABLE_LABELS[el.reparable]
+    return sansMontant || !el.anciennete || sansReparation
+}
+
+/** Demande complète : dépôt « Non », au moins un élément, tous complets, date renseignée. */
+export function isClaimComplete(claim) {
+    return claim.depot === 'non' && claim.elements.length > 0
+        && !claim.elements.some(isElementIncomplete) && claim.date !== ''
 }
 
 function emptyClaim(reservationId) {
@@ -46,8 +59,11 @@ export function updateClaim(reservationId, fields) {
     return updated
 }
 
-export function clearClaim() {
+/** Supprime le brouillon, uniquement s'il appartient à cette réservation. */
+export function clearClaim(reservationId) {
     try {
+        const raw = localStorage.getItem(STORAGE_KEY)
+        if (!raw || JSON.parse(raw).reservationId !== reservationId) return
         localStorage.removeItem(STORAGE_KEY)
     } catch {
         // rien à nettoyer

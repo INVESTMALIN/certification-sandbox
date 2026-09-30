@@ -2,7 +2,7 @@ import { useParams, useNavigate } from 'react-router-dom'
 import AircoverLayout, { FooterButton } from '../../../components/airbnb/AircoverLayout'
 import ReservationIntrouvable from '../../../components/airbnb/ReservationIntrouvable'
 import { getReservationById, getPropertyById, getFirstName, formatStayRange } from '../../../data/airbnb/reservationLookup'
-import { getClaim, isElementIncomplete, REPARABLE_LABELS } from '../../../data/airbnb/aircoverClaim'
+import { getClaim, isClaimComplete, REPARABLE_LABELS } from '../../../data/airbnb/aircoverClaim'
 
 function Section({ titre, onModifier, children }) {
     return (
@@ -32,8 +32,7 @@ function AircoverRecap() {
     const base = `/airbnb/aircover/demande/${reservationId}`
 
     // Envoi possible seulement si tout est renseigné (sinon le total compterait 0 €)
-    const complete = claim.depot === 'non' && claim.elements.length > 0
-        && !claim.elements.some(isElementIncomplete) && claim.date !== ''
+    const complete = isClaimComplete(claim)
     const total = claim.elements.reduce((sum, el) => sum + (parseFloat(el.montant) || 0), 0)
     const claimDateDisplay = claim.date
         ? new Date(claim.date + 'T12:00:00').toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', year: 'numeric' })
@@ -44,7 +43,7 @@ function AircoverRecap() {
             step={5}
             onRetour={() => navigate(`${base}/date`)}
             footerAction={
-                <FooterButton variant="rausch" onClick={() => navigate(`${base}/confirmation`)} disabled={!complete}>
+                <FooterButton variant="rausch" onClick={() => navigate(`${base}/confirmation`, { state: { envoyee: true } })} disabled={!complete}>
                     Envoyer
                 </FooterButton>
             }

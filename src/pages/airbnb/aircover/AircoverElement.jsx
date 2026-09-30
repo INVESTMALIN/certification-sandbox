@@ -4,9 +4,8 @@ import { Image as ImageIcon } from 'lucide-react'
 import AircoverLayout, { FooterButton } from '../../../components/airbnb/AircoverLayout'
 import ReservationIntrouvable from '../../../components/airbnb/ReservationIntrouvable'
 import { getReservationById } from '../../../data/airbnb/reservationLookup'
-import { getClaim, updateClaim, REPARABLE_LABELS } from '../../../data/airbnb/aircoverClaim'
+import { getClaim, updateClaim, REPARABLE_LABELS, TYPE_ENDOMMAGE } from '../../../data/airbnb/aircoverClaim'
 
-const TYPE_ENDOMMAGE = 'Élément endommagé'
 const TYPE_MANQUANT = 'Élément manquant'
 const TYPE_NETTOYAGE = 'Nettoyage imprévu ou odeur de fumée'
 const TYPES = [TYPE_ENDOMMAGE, TYPE_MANQUANT, TYPE_NETTOYAGE]
