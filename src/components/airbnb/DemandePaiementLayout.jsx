@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom'
  * Gabarit des écrans « Demander un paiement » du parcours de litige :
  * logo, titre centré, Quitter, barre de progression, pied avec ‹ Retour.
  */
-function DemandePaiementLayout({ progress, onRetour, children }) {
+function DemandePaiementLayout({ progress, onRetour, titre = 'Demander un paiement', children }) {
     const navigate = useNavigate()
 
     return (
@@ -15,7 +15,7 @@ function DemandePaiementLayout({ progress, onRetour, children }) {
                 </div>
                 <div className="flex items-center justify-between px-8 py-4">
                     <img src="/airbnb-logo-simple.png" alt="Airbnb" className="h-7" />
-                    <span className="text-sm font-medium text-gray-700 hidden md:block">Demander un paiement</span>
+                    <span className="text-sm font-medium text-gray-700 hidden md:block">{titre}</span>
                     <button
                         onClick={() => navigate('/airbnb/dashboard')}
                         className="text-sm font-semibold text-gray-900 underline hover:text-gray-700 transition-colors"

@@ -1,10 +1,12 @@
 import { useState } from 'react'
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom'
+import { CloudUpload } from 'lucide-react'
 import ParcoursBloque from '../../../components/airbnb/ParcoursBloque'
 import ReservationIntrouvable from '../../../components/airbnb/ReservationIntrouvable'
-import { getReservationById, getPropertyById, getClaimIneligibility, ELIGIBILITY_MESSAGES } from '../../../data/airbnb/reservationLookup'
+import { getReservationById, getPropertyById, getClaimIneligibility, getFirstName, ELIGIBILITY_MESSAGES } from '../../../data/airbnb/reservationLookup'
+import { addDemandeEnvoyee } from '../../../data/airbnb/demandesArgent'
 
-const MESSAGE_SERVICES = 'Les demandes liées à des services supplémentaires ne sont pas disponibles dans cet exercice. Revenez en arrière pour sélectionner le motif correspondant aux dommages.'
+const REMARQUE_MAX = 1000
 
 const MONTHS_FR = ['janv.', 'févr.', 'mars', 'avr.', 'mai', 'juin',
     'juil.', 'août', 'sept.', 'oct.', 'nov.', 'déc.']
@@ -15,13 +17,21 @@ function PaiementDemanderStep2() {
 
     const [searchParams] = useSearchParams()
 
-    const [motif, setMotif] = useState(null) // 'degats' | 'modifier' ('services' est bloquant)
+    const [motif, setMotif] = useState(null) // 'services' | 'degats' | 'modifier'
     const [bloque, setBloque] = useState(null) // message de l'écran bloquant
+    // Formulaire « Services supplémentaires », déplié sous l'option
+    const [montantServices, setMontantServices] = useState('')
+    const [remarque, setRemarque] = useState('')
 
-    // Parcours litige : retour à la recherche par code ; sinon au choix envoyer / demander
-    const retourUrl = searchParams.get('source') === 'litige'
-        ? `/airbnb/demander-paiement/reservation?code=${encodeURIComponent(searchParams.get('code') || '')}`
-        : `/airbnb/paiement/${reservationId}/step1`
+    // Recherche par code (parcours litige ou Centre de résolution) : retour à la recherche ;
+    // sinon au choix envoyer / demander
+    const source = searchParams.get('source')
+    const codeParam = encodeURIComponent(searchParams.get('code') || '')
+    const retourUrl = source === 'centre'
+        ? `/airbnb/demander-paiement/reservation?source=centre&code=${codeParam}`
+        : source === 'litige'
+            ? `/airbnb/demander-paiement/reservation?code=${codeParam}`
+            : `/airbnb/paiement/${reservationId}/step1`
 
     const reservation = getReservationById(reservationId)
     if (!reservation) return <ReservationIntrouvable />
@@ -38,16 +48,26 @@ function PaiementDemanderStep2() {
     const guestCount = parseInt(reservation.guestCount) || 1
     const voyageurLabel = `${guestCount} voyageur${guestCount > 1 ? 's' : ''}`
 
-    const choisirMotif = (valeur) => {
-        if (valeur === 'services') {
-            setMotif(null)
-            setBloque(MESSAGE_SERVICES)
-            return
-        }
-        setMotif(valeur)
-    }
+    const prenom = getFirstName(reservation.guestName)
+    const servicesComplet = parseFloat(montantServices) > 0 && remarque.trim() !== ''
+    const peutContinuer = motif === 'services' ? servicesComplet : motif !== null
+
+    const choisirMotif = (valeur) => setMotif(valeur)
 
     const handleSuivant = () => {
+        // Services supplémentaires : la demande est envoyée, puis sa page détail s'ouvre
+        if (motif === 'services') {
+            if (!servicesComplet) return
+            const id = addDemandeEnvoyee({
+                reservationId,
+                motif: 'services',
+                montant: parseFloat(montantServices),
+                remarque: remarque.trim(),
+                piecesJointes: [],
+            })
+            navigate(`/airbnb/centre-resolution/demande/${id}`)
+            return
+        }
         // Modification des dates ou des voyageurs : page de modification existante
         if (motif === 'modifier') {
             navigate(`/airbnb/reservation/${reservationId}/modifier`)
@@ -146,6 +166,59 @@ function PaiementDemanderStep2() {
                             <span className="text-sm text-gray-900">Services supplémentaires</span>
                         </label>
 
+                        {/* Formulaire déplié sous l'option, comme dans la vraie procédure */}
+                        {motif === 'services' && (
+                            <div className="ml-9 mb-6 space-y-6">
+                                <p className="text-sm text-gray-600">
+                                    Demandez un paiement pour des services ou des articles fournis en plus de la réservation (par exemple : repas, frais de transport ou équipements non compris dans la description de l'annonce).
+                                </p>
+
+                                <div>
+                                    <p className="text-sm font-semibold text-gray-900 mb-2">
+                                        Quel montant souhaitez-vous demander à {prenom} ?
+                                    </p>
+                                    <div className="flex items-center gap-2 border border-gray-300 rounded-xl px-4 py-3 focus-within:border-gray-900 transition-colors">
+                                        <span className="text-sm text-gray-900">€</span>
+                                        <input
+                                            type="number"
+                                            min="0"
+                                            value={montantServices}
+                                            onChange={e => setMontantServices(e.target.value)}
+                                            placeholder="Montant (EUR)"
+                                            aria-label="Montant (EUR)"
+                                            className="flex-1 text-sm text-gray-900 focus:outline-none bg-transparent"
+                                        />
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <p className="text-sm font-semibold text-gray-900 mb-1">Pièces jointes</p>
+                                    <p className="text-sm text-gray-500 mb-3">
+                                        (Facultatif) Ajoutez des photos pertinentes, notamment celles de reçus ou de toute autre pièce justificative. Assurez-vous que les photos soient claires et le texte bien lisible, notamment le prix et le nom des articles. Formats acceptés : PNG, JPG ou PDF
+                                    </p>
+                                    {/* Zone d'envoi simulée */}
+                                    <div className="border border-dashed border-gray-400 rounded-xl py-8 flex flex-col items-center gap-1 cursor-default">
+                                        <CloudUpload className="w-6 h-6 text-gray-600" />
+                                        <p className="text-sm font-semibold text-gray-900 underline">Télécharger les fichiers</p>
+                                        <p className="text-sm text-gray-500">ou faites-les glisser ici</p>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <p className="text-sm font-semibold text-gray-900 mb-1">Remarque</p>
+                                    <p className="text-sm text-gray-500 mb-3">Expliquez à {prenom} pourquoi vous demandez un paiement.</p>
+                                    <textarea
+                                        value={remarque}
+                                        onChange={e => setRemarque(e.target.value.slice(0, REMARQUE_MAX))}
+                                        rows={5}
+                                        aria-label="Remarque"
+                                        className="w-full border border-gray-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-gray-900 transition-colors resize-none"
+                                    />
+                                    <p className="text-xs text-gray-500 mt-1">{REMARQUE_MAX - remarque.length} caractères restants</p>
+                                </div>
+                            </div>
+                        )}
+
                         {/* Option 2 */}
                         <label
                             className="flex items-center gap-4 mb-4 cursor-pointer group"
@@ -192,8 +265,8 @@ function PaiementDemanderStep2() {
                 </button>
                 <button
                     onClick={handleSuivant}
-                    disabled={!motif}
-                    className={`px-6 py-3 rounded-lg text-sm font-semibold transition-colors ${motif
+                    disabled={!peutContinuer}
+                    className={`px-6 py-3 rounded-lg text-sm font-semibold transition-colors ${peutContinuer
                             ? 'bg-gray-900 text-white hover:bg-gray-800'
                             : 'bg-gray-200 text-gray-400 cursor-not-allowed'
                         }`}

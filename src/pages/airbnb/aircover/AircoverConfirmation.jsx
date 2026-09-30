@@ -1,22 +1,16 @@
-import { useEffect } from 'react'
-import { useNavigate, useParams, useLocation, Navigate } from 'react-router-dom'
+import { useNavigate, useParams, useLocation, Navigate, Link } from 'react-router-dom'
 import { CheckCircle } from 'lucide-react'
 import ReservationIntrouvable from '../../../components/airbnb/ReservationIntrouvable'
 import { getReservationById, getFirstName } from '../../../data/airbnb/reservationLookup'
-import { clearClaim } from '../../../data/airbnb/aircoverClaim'
 
 function AircoverConfirmation() {
     const navigate = useNavigate()
     const { reservationId } = useParams()
     const location = useLocation()
     const reservation = getReservationById(reservationId)
-    // Seul le bouton « Envoyer » du récap mène ici (état de navigation)
+    // Seul le bouton « Envoyer » du récap mène ici (état de navigation) ;
+    // le récap a déjà enregistré la demande et supprimé le brouillon
     const envoyee = location.state?.envoyee === true
-
-    // Nettoyer le brouillon de CETTE réservation une fois la demande envoyée
-    useEffect(() => {
-        if (reservation && envoyee) clearClaim(reservationId)
-    }, [reservation, envoyee, reservationId])
 
     if (!reservation) return <ReservationIntrouvable />
     // Accès direct par URL : rien n'a été envoyé, retour au récap
@@ -63,6 +57,13 @@ function AircoverConfirmation() {
                     >
                         Retour au tableau de bord
                     </button>
+
+                    <p className="mt-6 text-sm text-gray-600">
+                        Suivez l'avancement de votre demande dans le{' '}
+                        <Link to="/airbnb/centre-resolution" className="font-semibold text-gray-900 underline">
+                            Centre de résolution
+                        </Link>
+                    </p>
                 </div>
             </main>
         </div>

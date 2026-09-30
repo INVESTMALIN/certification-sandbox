@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react'
 import { Link, useNavigate, useLocation } from 'react-router-dom'
-import { Menu, X, Bell, Home, Wallet, BarChart3, Settings, Globe, BookOpen, HelpCircle, Users, Plus, UserPlus, LogOut, ArrowLeft } from 'lucide-react'
+import { Menu, X, Bell, Home, Wallet, BarChart3, Settings, Globe, BookOpen, HelpCircle, Users, Plus, UserPlus, LogOut, ArrowLeft, Scale } from 'lucide-react'
 
 function AirbnbHeader() {
     const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -180,6 +180,12 @@ function AirbnbHeader() {
                         <Link to="/airbnb/performance/qualite/globale" onClick={() => setIsMenuOpen(false)} className="flex items-center gap-3 p-4 hover:bg-gray-50 rounded-xl transition-colors">
                             <BarChart3 className="w-5 h-5 text-gray-700" />
                             <span className="text-gray-900">Points clés</span>
+                        </Link>
+
+                        {/* Centre de résolution — cliquable */}
+                        <Link to="/airbnb/centre-resolution" onClick={() => setIsMenuOpen(false)} className="flex items-center gap-3 p-4 hover:bg-gray-50 rounded-xl transition-colors">
+                            <Scale className="w-5 h-5 text-gray-700" />
+                            <span className="text-gray-900">Centre de résolution</span>
                         </Link>
 
                         <div className="h-px bg-gray-200 my-4"></div>

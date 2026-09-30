@@ -89,6 +89,8 @@ import AircoverConfirmation from './pages/airbnb/aircover/AircoverConfirmation'
 import DeclarationDommages from './pages/airbnb/litige/DeclarationDommages'
 import DemanderPaiementDestinataire from './pages/airbnb/litige/DemanderPaiementDestinataire'
 import DemanderPaiementReservation from './pages/airbnb/litige/DemanderPaiementReservation'
+import CentreResolution from './pages/airbnb/centre/CentreResolution'
+import DemandeArgentDetail from './pages/airbnb/centre/DemandeArgentDetail'
 
 function App() {
   return (
@@ -835,6 +837,24 @@ function App() {
         element={
           <ProtectedRoute>
             <DemanderPaiementReservation />
+          </ProtectedRoute>
+        }
+      />
+
+      {/* Centre de résolution : liste et détail des demandes d'argent */}
+      <Route
+        path="/airbnb/centre-resolution"
+        element={
+          <ProtectedRoute>
+            <CentreResolution />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/airbnb/centre-resolution/demande/:id"
+        element={
+          <ProtectedRoute>
+            <DemandeArgentDetail />
           </ProtectedRoute>
         }
       />
