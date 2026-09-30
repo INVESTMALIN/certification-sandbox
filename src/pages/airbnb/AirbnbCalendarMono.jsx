@@ -1,8 +1,9 @@
 import { useState, useRef, useEffect } from 'react'
-import { useParams, useNavigate, Link } from 'react-router-dom'
+import { useParams, useNavigate, Link, useSearchParams } from 'react-router-dom'
 import { ChevronLeft, ChevronRight, Pencil, Link as LinkIcon, HelpCircle, Shield, Ban } from 'lucide-react'
 import AirbnbHeader from '../../components/airbnb/AirbnbHeader'
 import GererReservationModal from '../../components/airbnb/GererReservationModal'
+import CopyButton from '../../components/airbnb/CopyButton'
 import properties from '../../data/airbnb/properties.json'
 import reservations from '../../data/airbnb/reservations.json'
 import { hydrateReservation, formatDateLong } from '../../data/airbnb/dateUtils.js'
@@ -56,10 +57,15 @@ function buildMonth(year, month) {
     return weeks
 }
 
-function buildMonths(count = 12) {
+// `count` mois à partir du mois courant, précédés des mois passés depuis `from` si fourni
+// (ex. arrivée d'une réservation passée ouverte via « Afficher sur le calendrier »)
+function buildMonths(count = 12, from = null) {
     const now = new Date()
-    return Array.from({ length: count }, (_, i) => {
-        const d = new Date(now.getFullYear(), now.getMonth() + i, 1)
+    const pastMonths = from
+        ? Math.max(0, (now.getFullYear() - from.getFullYear()) * 12 + now.getMonth() - from.getMonth())
+        : 0
+    return Array.from({ length: count + pastMonths }, (_, i) => {
+        const d = new Date(now.getFullYear(), now.getMonth() - pastMonths + i, 1)
         return { year: d.getFullYear(), month: d.getMonth(), weeks: buildMonth(d.getFullYear(), d.getMonth()) }
     })
 }
@@ -117,7 +123,11 @@ export default function AirbnbCalendarMono() {
     const [showNoteForm, setShowNoteForm] = useState(false)
     const [showPriceForm, setShowPriceForm] = useState(false)
     const [showParamsForm, setShowParamsForm] = useState(false)
-    const [selectedRes, setSelectedRes] = useState(null)
+    const [searchParams] = useSearchParams()
+    // « Afficher sur le calendrier » : ?reservation=:id ouvre directement le panneau de cette réservation
+    const [selectedRes, setSelectedRes] = useState(() =>
+        hydratedReservations.find(r => r.id === searchParams.get('reservation') && r.propertyId === propertyId) || null
+    )
     const [showGerer, setShowGerer] = useState(false)
     const [showReportModal, setShowReportModal] = useState(false)
     const [selectedReport, setSelectedReport] = useState(null)
@@ -195,6 +205,16 @@ export default function AirbnbCalendarMono() {
         return () => observer.disconnect()
     }, [])
 
+    // Réservation demandée par l'URL : on fait défiler jusqu'au mois de son arrivée (s'il est affiché)
+    useEffect(() => {
+        if (!selectedRes) return
+        const ci = new Date(selectedRes.checkIn)
+        const el = monthRefs.current[`${ci.getFullYear()}-${ci.getMonth()}`]
+        if (el) el.scrollIntoView({ block: 'start' })
+        // Uniquement à l'ouverture de la page
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
+
     // Close picker on outside click
     useEffect(() => {
         const handler = (e) => {
@@ -205,7 +225,9 @@ export default function AirbnbCalendarMono() {
     }, [])
 
     const property = properties.find(p => p.propertyId === propertyId)
-    const allMonths = buildMonths(12)
+    // Le mois d'arrivée de la réservation demandée par l'URL doit être rendu pour pouvoir y défiler
+    const requestedRes = hydratedReservations.find(r => r.id === searchParams.get('reservation') && r.propertyId === propertyId)
+    const allMonths = buildMonths(12, requestedRes ? new Date(requestedRes.checkIn) : null)
 
     const handleDispoDropdown = (index) => {
         const newIndex = openDispoDropdown === index ? null : index
@@ -1743,7 +1765,7 @@ export default function AirbnbCalendarMono() {
                                         </div>
                                         <div className="py-3">
                                             <p className="text-sm font-semibold text-gray-900">Code de confirmation</p>
-                                            <p className="text-sm text-gray-500 mt-0.5 select-all">{selectedRes.confirmationCode}</p>
+                                            <CopyButton value={selectedRes.confirmationCode} className="text-sm text-gray-500 mt-0.5" />
                                         </div>
                                     </div>
 
@@ -2041,7 +2063,7 @@ export default function AirbnbCalendarMono() {
                 )}
 
                 {showGerer && selectedRes && (
-                    <GererReservationModal reservation={selectedRes} onClose={() => setShowGerer(false)} />
+                    <GererReservationModal reservation={selectedRes} variant="calendrier" onClose={() => setShowGerer(false)} />
                 )}
             </div>
         </div>

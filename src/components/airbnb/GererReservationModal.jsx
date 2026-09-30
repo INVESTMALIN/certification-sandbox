@@ -1,8 +1,9 @@
 import { useEffect } from 'react'
 import { createPortal } from 'react-dom'
 import { useNavigate } from 'react-router-dom'
-import { X, ChevronRight, Banknote, ShieldAlert, Printer } from 'lucide-react'
-import { getPropertyById } from '../../data/airbnb/reservationLookup'
+import { X, ChevronRight, Banknote, ShieldAlert, Printer, CalendarDays, Phone, Pencil, Copy } from 'lucide-react'
+import CopyButton from './CopyButton'
+import { getPropertyById, getFirstName } from '../../data/airbnb/reservationLookup'
 import { formatDateLong } from '../../data/airbnb/dateUtils'
 
 /**
@@ -38,8 +39,10 @@ function ReservationPrintSheet({ reservation, property }) {
  * Fenêtre « Gérer la réservation », partagée par le calendrier mono,
  * le détail de réservation et la messagerie.
  * `reservation` doit être la réservation canonique hydratée.
+ * `variant` : 'complet' (messagerie, détail : 6 lignes comme dans la vraie procédure)
+ * ou 'calendrier' (3 lignes, comme la capture prise depuis le calendrier).
  */
-function GererReservationModal({ reservation, onClose }) {
+function GererReservationModal({ reservation, onClose, variant = 'complet' }) {
     const navigate = useNavigate()
     const property = getPropertyById(reservation.propertyId)
 
@@ -62,7 +65,7 @@ function GererReservationModal({ reservation, onClose }) {
         window.print()
     }
 
-    const rows = [
+    const actions = [
         {
             key: 'argent',
             icon: Banknote,
@@ -83,6 +86,31 @@ function GererReservationModal({ reservation, onClose }) {
             onClick: handlePrint,
         },
     ]
+    const modifier = {
+        key: 'modifier',
+        icon: Pencil,
+        title: 'Modifier la réservation',
+        onClick: () => navigate(`/airbnb/reservation/${reservation.id}/modifier`),
+    }
+    const rows = variant === 'calendrier' ? actions : [modifier, ...actions]
+
+    const renderRow = (row) => {
+        const Icon = row.icon
+        return (
+            <button
+                key={row.key}
+                onClick={row.onClick}
+                className="w-full flex items-center gap-4 py-4 text-left hover:bg-gray-50 -mx-2 px-2 rounded-lg transition-colors"
+            >
+                <Icon className="w-6 h-6 text-gray-800 flex-shrink-0" strokeWidth={1.5} />
+                <span className="flex-1 min-w-0">
+                    <span className="block text-sm font-semibold text-gray-900">{row.title}</span>
+                    {row.subtitle && <span className="block text-xs text-gray-500 mt-0.5">{row.subtitle}</span>}
+                </span>
+                <ChevronRight className="w-4 h-4 text-gray-500 flex-shrink-0" />
+            </button>
+        )
+    }
 
     return (
         <>
@@ -111,24 +139,36 @@ function GererReservationModal({ reservation, onClose }) {
                         </h2>
                     </div>
 
-                    <div className="px-6 py-2 divide-y divide-gray-100">
-                        {rows.map(row => {
-                            const Icon = row.icon
-                            return (
-                                <button
-                                    key={row.key}
-                                    onClick={row.onClick}
-                                    className="w-full flex items-center gap-4 py-4 text-left hover:bg-gray-50 -mx-2 px-2 rounded-lg transition-colors"
-                                >
-                                    <Icon className="w-6 h-6 text-gray-800 flex-shrink-0" strokeWidth={1.5} />
-                                    <span className="flex-1 min-w-0">
-                                        <span className="block text-sm font-semibold text-gray-900">{row.title}</span>
-                                        {row.subtitle && <span className="block text-xs text-gray-500 mt-0.5">{row.subtitle}</span>}
-                                    </span>
-                                    <ChevronRight className="w-4 h-4 text-gray-500 flex-shrink-0" />
-                                </button>
-                            )
-                        })}
+                    <div className="px-6 py-2">
+                        {variant !== 'calendrier' && (
+                            <>
+                                <div className="divide-y divide-gray-100">
+                                    {renderRow({
+                                        key: 'calendrier',
+                                        icon: CalendarDays,
+                                        title: 'Afficher sur le calendrier',
+                                        onClick: () => navigate(`/airbnb/calendar/${reservation.propertyId}?reservation=${reservation.id}`),
+                                    })}
+                                    <div className="flex items-center gap-4 py-4">
+                                        <Phone className="w-6 h-6 text-gray-800 flex-shrink-0" strokeWidth={1.5} />
+                                        <span className="flex-1 min-w-0">
+                                            <span className="block text-sm font-semibold text-gray-900">
+                                                Numéro de téléphone : {getFirstName(reservation.guestName)}
+                                            </span>
+                                            <span className="block text-xs text-gray-500 mt-0.5">{reservation.guestPhone}</span>
+                                        </span>
+                                        <CopyButton value={reservation.guestPhone} label="Copier le numéro de téléphone" className="p-1.5 rounded-full hover:bg-gray-100 hover:no-underline">
+                                            <Copy className="w-4 h-4 text-gray-700" />
+                                        </CopyButton>
+                                    </div>
+                                </div>
+                                {/* Séparateur entre informations et actions */}
+                                <div className="-mx-6 h-2 bg-gray-100" />
+                            </>
+                        )}
+                        <div className="divide-y divide-gray-100">
+                            {rows.map(renderRow)}
+                        </div>
                     </div>
                 </div>
             </div>

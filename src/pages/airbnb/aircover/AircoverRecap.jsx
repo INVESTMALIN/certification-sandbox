@@ -92,6 +92,7 @@ function AircoverRecap() {
                                 <p className="text-xs text-gray-500">
                                     {el.type}
                                     {el.reparable ? ` · ${REPARABLE_LABELS[el.reparable]}` : ''}
+                                    {el.recu ? ` · ${el.recu === 'oui' ? 'Avec reçu' : 'Sans reçu'}` : ''}
                                 </p>
                             </div>
                             <span className="text-sm text-gray-700 flex-shrink-0">

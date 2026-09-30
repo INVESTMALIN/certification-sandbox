@@ -28,7 +28,7 @@ function AircoverMessage() {
         <AircoverLayout
             step={2}
             onRetour={() => navigate(`/airbnb/aircover/demande/${reservationId}/depot`)}
-            footerAction={<FooterButton onClick={handleSuivant}>Suivant →</FooterButton>}
+            footerAction={<FooterButton onClick={handleSuivant}>Suivant</FooterButton>}
         >
             <div className="flex items-start justify-between gap-6 mb-2">
                 <h1 className="text-2xl font-semibold text-gray-900">

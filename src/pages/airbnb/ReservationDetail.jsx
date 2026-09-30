@@ -2,6 +2,7 @@ import { useParams, Link, useNavigate } from 'react-router-dom'
 import { ChevronLeft, Phone, MessageSquare, Star, ShieldCheck, Home, Award, X, Pencil, Shield, HelpCircle, Ban } from 'lucide-react'
 import AirbnbHeader from '../../components/airbnb/AirbnbHeader'
 import GererReservationModal from '../../components/airbnb/GererReservationModal'
+import CopyButton from '../../components/airbnb/CopyButton'
 import reservations from '../../data/airbnb/reservations.json'
 import properties from '../../data/airbnb/properties.json'
 import { useState } from 'react'
@@ -322,7 +323,7 @@ function ReservationDetail() {
 
                                 <div>
                                     <p className="text-gray-900 mb-1">Code de confirmation</p>
-                                    <p className="text-gray-600 select-all">{reservation.confirmationCode}</p>
+                                    <CopyButton value={reservation.confirmationCode} className="text-gray-600" />
                                 </div>
 
                                 <button className="text-sm font-medium text-gray-900 underline hover:text-gray-700">

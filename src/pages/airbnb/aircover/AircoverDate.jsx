@@ -33,7 +33,7 @@ function AircoverDate() {
         <AircoverLayout
             step={4}
             onRetour={() => navigate(`/airbnb/aircover/demande/${reservationId}/elements`)}
-            footerAction={<FooterButton onClick={handleSuivant} disabled={!date}>Suivant →</FooterButton>}
+            footerAction={<FooterButton onClick={handleSuivant} disabled={!date}>Suivant</FooterButton>}
         >
             <h1 className="text-2xl font-semibold text-gray-900 mb-8">Quand est-ce arrivé ?</h1>
 

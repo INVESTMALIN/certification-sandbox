@@ -1,11 +1,13 @@
 import { useNavigate } from 'react-router-dom'
+import { ArrowLeft } from 'lucide-react'
 
 // Largeur de la barre de progression par étape (dépôt → récap)
 const PROGRESS = ['w-1/6', 'w-2/6', 'w-3/6', 'w-4/6', 'w-5/6']
 
 /**
- * Gabarit commun des écrans AirCover : en-tête « Enregistrer et quitter »,
- * barre de progression, logo AirCover pour les hôtes, pied Retour / action.
+ * Gabarit commun des écrans AirCover, aligné sur la vraie procédure :
+ * flèche retour en haut, barre de progression, logo AirCover pour les hôtes,
+ * pied de page « Enregistrer et quitter » à gauche et action à droite.
  */
 function AircoverLayout({ step, onRetour, footerAction, children }) {
     const navigate = useNavigate()
@@ -13,13 +15,14 @@ function AircoverLayout({ step, onRetour, footerAction, children }) {
     return (
         <div className="min-h-screen bg-white flex flex-col" style={{ fontFamily: 'Circular, -apple-system, BlinkMacSystemFont, Roboto, sans-serif' }}>
 
-            <header className="flex items-center justify-between px-8 py-4 border-b border-gray-100">
-                <img src="/airbnb-logo.png" alt="Airbnb" className="h-8" />
+            <header className="flex items-center px-8 py-4">
                 <button
-                    onClick={() => navigate('/airbnb/dashboard')}
-                    className="text-sm font-medium text-gray-900 underline hover:text-gray-700 transition-colors"
+                    type="button"
+                    onClick={onRetour}
+                    aria-label="Retour"
+                    className="w-9 h-9 rounded-full flex items-center justify-center hover:bg-gray-100 transition-colors"
                 >
-                    Enregistrer et quitter
+                    <ArrowLeft className="w-5 h-5 text-gray-900" />
                 </button>
             </header>
 
@@ -39,10 +42,11 @@ function AircoverLayout({ step, onRetour, footerAction, children }) {
 
             <footer className="border-t border-gray-200 px-8 py-4 flex items-center justify-between">
                 <button
-                    onClick={onRetour}
-                    className="text-sm font-medium text-gray-900 underline hover:text-gray-700 transition-colors"
+                    type="button"
+                    onClick={() => navigate('/airbnb/dashboard')}
+                    className="text-sm font-semibold text-gray-900 underline hover:text-gray-700 transition-colors"
                 >
-                    ← Retour
+                    Enregistrer et quitter
                 </button>
                 {footerAction}
             </footer>
@@ -57,6 +61,7 @@ export function FooterButton({ onClick, disabled, children, variant = 'dark' }) 
         : 'bg-gray-900 text-white hover:bg-gray-700'
     return (
         <button
+            type="button"
             onClick={onClick}
             disabled={disabled}
             className={`px-6 py-3 rounded-xl text-sm font-semibold transition-colors ${disabled ? 'bg-gray-200 text-gray-400 cursor-not-allowed' : enabled}`}
